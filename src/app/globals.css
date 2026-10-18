@@ -144,10 +144,19 @@ button {
 .modal-backdrop {
   animation: fade-in 0.28s var(--motion-settle) both;
   backdrop-filter: blur(5px);
+  overscroll-behavior: contain;
 }
 
 .modal-panel {
   animation: fade-in-scale 0.28s var(--motion-enter) both;
+  overscroll-behavior: contain;
+}
+
+html.scroll-locked,
+body.scroll-locked {
+  overflow: hidden !important;
+  height: 100% !important;
+  overscroll-behavior: none !important;
 }
 
 .spinner {

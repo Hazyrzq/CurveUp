@@ -21,6 +21,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import { useProject } from '@/components/ProjectContext';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 function formatDate(val) {
   if (!val) return '—';
@@ -41,6 +42,8 @@ export default function PengawasDashboard() {
   const [reportFilter, setReportFilter] = useState('pending');
   const [successToast, setSuccessToast] = useState(null);
   const successToastTimeout = useRef(null);
+
+  useScrollLock(!!selectedReport);
 
   useEffect(() => () => clearTimeout(successToastTimeout.current), []);
 

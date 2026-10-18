@@ -22,6 +22,7 @@ import StatCard from '@/components/StatCard';
 import StatusBadge from '@/components/StatusBadge';
 import ActionToast from '@/components/ActionToast';
 import { useProject } from '@/components/ProjectContext';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 function formatDate(val) {
   if (!val) return '—';
@@ -59,6 +60,8 @@ export default function MandorDashboard() {
   const [reportToDelete, setReportToDelete] = useState(null);
   const [deletingReportId, setDeletingReportId] = useState(null);
   const [portalReady, setPortalReady] = useState(false);
+
+  useScrollLock(!!reportToDelete);
   const actionMsgTimeout = useRef(null);
   const reportSuccessTimeout = useRef(null);
   const reportStatusesRef = useRef({ projectId: null, statuses: null });

@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 import { LogOut, Pencil, User, X } from 'lucide-react';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
   const router = useRouter();
@@ -14,6 +15,8 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
   const [msg, setMsg] = useState('');
   const [form, setForm] = useState({ nama: '', username: '', password: '' });
   const wrapRef = useRef(null);
+
+  useScrollLock(editOpen);
 
   const initial = (userNama || 'U').trim().charAt(0).toUpperCase();
 

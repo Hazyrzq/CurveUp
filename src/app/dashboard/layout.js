@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import { ProjectProvider } from '@/components/ProjectContext';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 const ROLE_HOME = {
   manajemen: '/dashboard/manajemen',
@@ -35,6 +36,8 @@ function DashboardShell({ children }) {
   const [ready, setReady] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
+  useScrollLock(mobileSidebarOpen);
+
   const closeMobileSidebar = useCallback(() => setMobileSidebarOpen(false), []);
 
   useEffect(() => {
@@ -49,13 +52,6 @@ function DashboardShell({ children }) {
     document.addEventListener('keydown', closeOnEscape);
     return () => document.removeEventListener('keydown', closeOnEscape);
   }, [mobileSidebarOpen, closeMobileSidebar]);
-
-  useEffect(() => {
-    document.body.style.overflow = mobileSidebarOpen ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [mobileSidebarOpen]);
 
   useEffect(() => {
     const storedRole = localStorage.getItem('user_role');

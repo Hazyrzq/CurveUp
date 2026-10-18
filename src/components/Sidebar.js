@@ -15,6 +15,7 @@ import {
   Download,
 } from 'lucide-react';
 import { useProject } from '@/components/ProjectContext';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 const ROLE_TITLE = {
   manajemen: 'Management',
@@ -42,6 +43,8 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState('');
   const [portalReady, setPortalReady] = useState(false);
+
+  useScrollLock(adding);
 
   useEffect(() => setPortalReady(true), []);
 
@@ -160,7 +163,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
     <aside
       id="dashboard-sidebar"
       aria-label="Main navigation"
-      className={`fixed inset-y-0 left-0 z-50 flex h-[100dvh] w-[min(84vw,300px)] shrink-0 flex-col border-r border-slate-200 bg-white p-4 shadow-xl transition-[transform,box-shadow] duration-300 ease-out md:relative md:inset-auto md:z-auto md:h-full md:w-[220px] md:translate-x-0 md:border-r md:bg-slate-50/70 md:p-4 md:shadow-none lg:w-[250px] lg:p-5 ${
+      className={`fixed top-0 bottom-0 left-0 z-50 flex h-full max-h-[100dvh] w-[min(84vw,300px)] shrink-0 flex-col border-r border-slate-200 bg-white p-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-xl transition-[transform,box-shadow] duration-300 ease-out md:relative md:inset-auto md:z-auto md:h-full md:w-[220px] md:translate-x-0 md:border-r md:bg-slate-50/70 md:p-4 md:shadow-none lg:w-[250px] lg:p-5 ${
       mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
     }`}
     >
@@ -270,7 +273,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
         />
       </label>
 
-      <div className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain">
+      <div className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain pb-24 md:pb-3">
         {filtered.length === 0 ? (
           <p className="px-2 py-5 text-center text-xs text-slate-400">No projects found.</p>
         ) : (
@@ -315,12 +318,12 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
     </aside>
     {portalReady && adding && role === 'manajemen' && createPortal(
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 p-4 modal-backdrop"
+        className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overscroll-contain bg-slate-950/45 p-3 sm:p-4 modal-backdrop"
         onMouseDown={(event) => {
           if (event.target === event.currentTarget && !saving) setAdding(false);
         }}
       >
-        <form onSubmit={addProject} role="dialog" aria-modal="true" aria-labelledby="add-project-title" className="modal-panel max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
+        <form onSubmit={addProject} role="dialog" aria-modal="true" aria-labelledby="add-project-title" className="modal-panel max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white shadow-2xl">
           <div className="flex items-start justify-between border-b border-slate-100 px-5 py-4 sm:px-6">
             <div>
               <h2 id="add-project-title" className="text-lg font-semibold text-slate-900">Add project</h2>
