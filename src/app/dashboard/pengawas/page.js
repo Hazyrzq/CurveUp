@@ -449,7 +449,7 @@ export default function PengawasDashboard() {
       {/* ── Review Modal ── */}
       {selectedReport && createPortal(
         <div
-          className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-slate-950/45 p-3 modal-backdrop sm:items-center sm:p-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-slate-950/45 modal-backdrop"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget && !saving) setSelectedReport(null);
           }}
@@ -458,9 +458,9 @@ export default function PengawasDashboard() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="review-dialog-title"
-            className="modal-panel my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white shadow-2xl sm:max-h-[calc(100dvh-2rem)]"
+            className="modal-panel flex flex-col max-h-[calc(100dvh-1.5rem)] w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
           >
-            <div className="flex items-start justify-between border-b border-slate-100 px-5 py-4 sm:px-6">
+            <div className="shrink-0 flex items-start justify-between border-b border-slate-100 px-5 py-4 sm:px-6">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-teal-700">Progress Report</p>
                 <h3 id="review-dialog-title" className="mt-1 text-lg font-semibold text-slate-900">
@@ -478,7 +478,7 @@ export default function PengawasDashboard() {
               </button>
             </div>
 
-            <div className="space-y-4 px-4 py-4 sm:space-y-5 sm:px-6 sm:py-5">
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-4 px-4 py-4 sm:space-y-5 sm:px-6 sm:py-5">
               <div>
                 <p className="text-xs text-slate-500">Work Item</p>
                 <p className="mt-1 text-sm font-medium text-slate-900">

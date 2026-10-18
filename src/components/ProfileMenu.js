@@ -128,13 +128,13 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
 
       {editOpen && portalReady && createPortal(
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-950/45 p-4 modal-backdrop"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-slate-950/45 modal-backdrop"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget && !saving) setEditOpen(false);
           }}
         >
-          <form onSubmit={saveProfile} role="dialog" aria-modal="true" aria-labelledby="profile-dialog-title" className="modal-panel w-full max-w-md overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
-            <div className="flex items-start justify-between border-b border-slate-100 px-5 py-4 sm:px-6">
+          <form onSubmit={saveProfile} role="dialog" aria-modal="true" aria-labelledby="profile-dialog-title" className="modal-panel flex flex-col max-h-[calc(100dvh-1.5rem)] w-full max-w-md overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+            <div className="shrink-0 flex items-start justify-between border-b border-slate-100 px-5 py-4 sm:px-6">
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
                   <User className="h-5 w-5" />
@@ -154,7 +154,7 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <div className="space-y-4 px-5 py-5 sm:px-6">
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-4 px-5 py-5 sm:px-6">
               <label className="block">
                 <span className="mb-1.5 block text-xs font-medium text-slate-600">Full name</span>
                 <input required autoComplete="name" value={form.nama} onChange={(e) => setForm({ ...form, nama: e.target.value })} className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
@@ -169,7 +169,7 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
               </label>
               {msg && <p role="alert" className="text-sm text-rose-600">{msg}</p>}
             </div>
-            <div className="flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/70 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+            <div className="shrink-0 flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/70 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
               <button type="button" onClick={() => setEditOpen(false)} disabled={saving} className="rounded-lg px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-50">
                 Cancel
               </button>

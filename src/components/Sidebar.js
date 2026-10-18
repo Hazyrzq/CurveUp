@@ -318,13 +318,13 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
     </aside>
     {portalReady && adding && role === 'manajemen' && createPortal(
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overscroll-contain bg-slate-950/45 p-3 sm:p-4 modal-backdrop"
+        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/45 modal-backdrop"
         onMouseDown={(event) => {
           if (event.target === event.currentTarget && !saving) setAdding(false);
         }}
       >
-        <form onSubmit={addProject} role="dialog" aria-modal="true" aria-labelledby="add-project-title" className="modal-panel max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white shadow-2xl">
-          <div className="flex items-start justify-between border-b border-slate-100 px-5 py-4 sm:px-6">
+        <form onSubmit={addProject} role="dialog" aria-modal="true" aria-labelledby="add-project-title" className="modal-panel flex flex-col max-h-[calc(100dvh-1.5rem)] w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+          <div className="shrink-0 flex items-start justify-between border-b border-slate-100 px-5 py-4 sm:px-6">
             <div>
               <h2 id="add-project-title" className="text-lg font-semibold text-slate-900">Add project</h2>
               <p className="mt-1 text-sm text-slate-500">Enter the project details and attach its RAB file.</p>
@@ -333,7 +333,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
               <X className="h-4 w-4" />
             </button>
           </div>
-          <div className="space-y-4 px-5 py-5 sm:px-6">
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-4 px-5 py-5 sm:px-6">
             <label className="block">
               <span className="mb-1.5 block text-xs font-medium text-slate-600">Project name</span>
               <input required autoFocus value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Project name" className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
@@ -379,7 +379,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
             </div>
             {err && <p role="alert" className="text-sm text-rose-600">{err}</p>}
           </div>
-          <div className="flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/70 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+          <div className="shrink-0 flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/70 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
             <button type="button" onClick={() => setAdding(false)} disabled={saving} className="rounded-lg px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-50">Cancel</button>
             <button type="submit" disabled={saving} className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700 disabled:opacity-60">
               {saving && <span className="spinner" />}
