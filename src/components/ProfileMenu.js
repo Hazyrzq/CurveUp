@@ -128,20 +128,20 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
 
       {editOpen && portalReady && createPortal(
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-slate-950/45 modal-backdrop"
+          className="fixed inset-0 z-[100] flex flex-col bg-white sm:bg-slate-950/45 sm:items-center sm:justify-center sm:p-4 modal-backdrop"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget && !saving) setEditOpen(false);
           }}
         >
-          <form onSubmit={saveProfile} role="dialog" aria-modal="true" aria-labelledby="profile-dialog-title" className="modal-panel flex flex-col max-h-[calc(100dvh-1.5rem)] w-full max-w-md overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
-            <div className="shrink-0 flex items-start justify-between border-b border-slate-100 px-5 py-4 sm:px-6">
+          <form onSubmit={saveProfile} role="dialog" aria-modal="true" aria-labelledby="profile-dialog-title" className="modal-panel flex flex-col w-full h-full sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:max-w-md rounded-none sm:rounded-2xl border-0 sm:border border-slate-200 bg-white shadow-none sm:shadow-2xl overflow-hidden">
+            <div className="shrink-0 flex items-center justify-between border-b border-slate-100 px-4 py-3.5 sm:px-6 sm:py-4 bg-white">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
+                <span className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
                   <User className="h-5 w-5" />
                 </span>
                 <div>
                   <h3 id="profile-dialog-title" className="text-base font-semibold text-slate-900">Edit profile</h3>
-                  <p className="mt-0.5 text-xs text-slate-500">Update your account details.</p>
+                  <p className="text-xs text-slate-500">Update your account details.</p>
                 </div>
               </div>
               <button
@@ -151,25 +151,25 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
                 aria-label="Close profile dialog"
                 className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 disabled:opacity-50"
               >
-                <X className="h-4 w-4" />
+                <X className="h-5 w-5 sm:h-4 sm:w-4" />
               </button>
             </div>
-            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-4 px-5 py-5 sm:px-6">
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-4 px-4 py-4 sm:px-6 sm:py-5 pb-8 sm:pb-5">
               <label className="block">
                 <span className="mb-1.5 block text-xs font-medium text-slate-600">Full name</span>
-                <input required autoComplete="name" value={form.nama} onChange={(e) => setForm({ ...form, nama: e.target.value })} className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
+                <input required autoComplete="name" value={form.nama} onChange={(e) => setForm({ ...form, nama: e.target.value })} className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-base sm:text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
               </label>
               <label className="block">
                 <span className="mb-1.5 block text-xs font-medium text-slate-600">Username</span>
-                <input required autoComplete="username" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
+                <input required autoComplete="username" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-base sm:text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
               </label>
               <label className="block">
                 <span className="mb-1.5 block text-xs font-medium text-slate-600">New password <span className="font-normal text-slate-400">(optional)</span></span>
-                <input type="password" autoComplete="new-password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
+                <input type="password" autoComplete="new-password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-base sm:text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
               </label>
               {msg && <p role="alert" className="text-sm text-rose-600">{msg}</p>}
             </div>
-            <div className="shrink-0 flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/70 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+            <div className="shrink-0 flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/90 px-4 py-3 sm:flex-row sm:justify-end sm:px-6 sm:py-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
               <button type="button" onClick={() => setEditOpen(false)} disabled={saving} className="rounded-lg px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-50">
                 Cancel
               </button>

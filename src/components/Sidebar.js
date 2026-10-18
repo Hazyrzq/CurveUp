@@ -318,38 +318,38 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
     </aside>
     {portalReady && adding && role === 'manajemen' && createPortal(
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/45 modal-backdrop"
+        className="fixed inset-0 z-50 flex flex-col bg-white sm:bg-slate-950/45 sm:items-center sm:justify-center sm:p-4 modal-backdrop"
         onMouseDown={(event) => {
           if (event.target === event.currentTarget && !saving) setAdding(false);
         }}
       >
-        <form onSubmit={addProject} role="dialog" aria-modal="true" aria-labelledby="add-project-title" className="modal-panel flex flex-col max-h-[calc(100dvh-1.5rem)] w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
-          <div className="shrink-0 flex items-start justify-between border-b border-slate-100 px-5 py-4 sm:px-6">
+        <form onSubmit={addProject} role="dialog" aria-modal="true" aria-labelledby="add-project-title" className="modal-panel flex flex-col w-full h-full sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:max-w-lg rounded-none sm:rounded-2xl border-0 sm:border border-slate-200 bg-white shadow-none sm:shadow-2xl overflow-hidden">
+          <div className="shrink-0 flex items-center justify-between border-b border-slate-100 px-4 py-3.5 sm:px-6 sm:py-4 bg-white">
             <div>
-              <h2 id="add-project-title" className="text-lg font-semibold text-slate-900">Add project</h2>
-              <p className="mt-1 text-sm text-slate-500">Enter the project details and attach its RAB file.</p>
+              <h2 id="add-project-title" className="text-base sm:text-lg font-semibold text-slate-900">Add project</h2>
+              <p className="mt-0.5 text-xs text-slate-500">Enter project details and attach RAB file.</p>
             </div>
             <button type="button" onClick={() => setAdding(false)} disabled={saving} aria-label="Close add project dialog" className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 disabled:opacity-50">
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5 sm:h-4 sm:w-4" />
             </button>
           </div>
-          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-4 px-5 py-5 sm:px-6">
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-4 px-4 py-4 sm:px-6 sm:py-5 pb-8 sm:pb-5">
             <label className="block">
               <span className="mb-1.5 block text-xs font-medium text-slate-600">Project name</span>
-              <input required autoFocus value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Project name" className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
+              <input required autoFocus value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Project name" className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-base sm:text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
             </label>
             <label className="block">
               <span className="mb-1.5 block text-xs font-medium text-slate-600">Location <span className="font-normal text-slate-400">(optional)</span></span>
-              <input value={lokasi} onChange={(e) => setLokasi(e.target.value)} placeholder="City or site address" className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
+              <input value={lokasi} onChange={(e) => setLokasi(e.target.value)} placeholder="City or site address" className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-base sm:text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
             </label>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <label className="block">
                 <span className="mb-1.5 block text-xs font-medium text-slate-600">Start date <span className="font-normal text-slate-400">(optional)</span></span>
-                <input type="date" value={tglMulai} onChange={(event) => setTglMulai(event.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
+                <input type="date" value={tglMulai} onChange={(event) => setTglMulai(event.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-base sm:text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
               </label>
               <label className="block">
                 <span className="mb-1.5 block text-xs font-medium text-slate-600">End date <span className="font-normal text-slate-400">(optional)</span></span>
-                <input type="date" value={tglSelesai} onChange={(event) => setTglSelesai(event.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
+                <input type="date" value={tglSelesai} onChange={(event) => setTglSelesai(event.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-base sm:text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
               </label>
             </div>
             <div className="block">
@@ -379,7 +379,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
             </div>
             {err && <p role="alert" className="text-sm text-rose-600">{err}</p>}
           </div>
-          <div className="shrink-0 flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/70 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+          <div className="shrink-0 flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/90 px-4 py-3 sm:flex-row sm:justify-end sm:px-6 sm:py-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <button type="button" onClick={() => setAdding(false)} disabled={saving} className="rounded-lg px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-50">Cancel</button>
             <button type="submit" disabled={saving} className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700 disabled:opacity-60">
               {saving && <span className="spinner" />}
