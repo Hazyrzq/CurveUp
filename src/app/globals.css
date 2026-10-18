@@ -7,6 +7,13 @@
   --motion-settle: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   color: #0f172a;
   background-color: #edf1ef;
@@ -16,6 +23,7 @@ body {
     linear-gradient(135deg, rgba(13, 148, 136, 0.055), transparent 48%);
   background-size: 40px 40px, 40px 40px, auto;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 input,
@@ -24,6 +32,15 @@ textarea,
 button {
   outline: none;
   transition: border-color 0.22s var(--motion-settle), background-color 0.22s var(--motion-settle), color 0.22s var(--motion-settle), box-shadow 0.22s var(--motion-settle), opacity 0.22s var(--motion-settle), transform 0.22s var(--motion-settle);
+}
+
+/* Prevent iOS Safari from zooming in on input focus */
+@media screen and (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
 }
 
 @keyframes fade-in {

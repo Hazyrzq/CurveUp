@@ -54,9 +54,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-canvas flex items-center justify-center p-4 sm:p-8 anim-fade">
-      <div className="w-full max-w-6xl bg-white rounded-[28px] shadow-shell overflow-hidden grid grid-cols-1 md:grid-cols-[0.95fr_1.05fr] min-h-[580px] md:min-h-[620px] border border-slate-200/80 anim-shell">
-        <div className="px-6 sm:px-10 xl:px-14 py-8 flex flex-col justify-center">
+    <div className="min-h-[100dvh] w-full max-w-full overflow-x-hidden bg-canvas flex items-center justify-center p-3 sm:p-8 anim-fade">
+      <div className="w-full max-w-6xl bg-white rounded-2xl sm:rounded-[28px] shadow-shell overflow-hidden grid grid-cols-1 md:grid-cols-[0.95fr_1.05fr] border border-slate-200/80 anim-shell">
+        <div className="px-5 sm:px-10 xl:px-14 py-7 sm:py-8 flex flex-col justify-center">
           <div className="flex items-center gap-2.5 mb-7 anim-up">
             <span className="h-2.5 w-2.5 rounded-sm bg-teal-600" />
             <p className="text-sm font-semibold text-gray-900">CurveUp</p>
@@ -106,7 +106,7 @@ export default function LoginPage() {
                 required
                 autoComplete="username"
                 placeholder="Enter your username"
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm placeholder:text-gray-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-50"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-base md:text-sm placeholder:text-gray-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-50"
               />
             </div>
 
@@ -120,7 +120,7 @@ export default function LoginPage() {
                   required
                   autoComplete="current-password"
                   placeholder="Enter your password"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm placeholder:text-gray-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-50 pr-11"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-base md:text-sm placeholder:text-gray-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-50 pr-11"
                 />
                 <button
                   type="button"
