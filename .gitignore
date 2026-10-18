@@ -18,3 +18,5 @@ yarn-error.log*
 # Folder upload lokal (jangan ikut di-upload ke Vercel)
 public/uploads/progress-reports/*
 !public/uploads/progress-reports/.gitkeep
+
+*.sql
