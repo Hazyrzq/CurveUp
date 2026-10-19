@@ -128,7 +128,7 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
 
       {editOpen && portalReady && createPortal(
         <div
-          className="fixed inset-0 z-[100] flex flex-col bg-white sm:bg-slate-950/45 sm:items-center sm:justify-center sm:p-4 modal-backdrop"
+          className="fixed inset-0 z-[100] flex flex-col min-h-screen bg-white sm:bg-slate-950/45 sm:items-center sm:justify-center sm:p-4 modal-backdrop"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget && !saving) setEditOpen(false);
           }}

@@ -156,14 +156,14 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
       aria-label="Close navigation menu"
       tabIndex={mobileOpen ? 0 : -1}
       onClick={onMobileClose}
-      className={`fixed inset-0 z-40 bg-slate-950/45 transition-opacity duration-300 ease-out md:hidden ${
+      className={`fixed inset-0 z-40 min-h-screen bg-slate-950/45 transition-opacity duration-300 ease-out md:hidden ${
         mobileOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
       }`}
     />
     <aside
       id="dashboard-sidebar"
       aria-label="Main navigation"
-      className={`fixed top-0 bottom-0 left-0 z-50 flex h-full max-h-[100dvh] w-[min(84vw,300px)] shrink-0 flex-col border-r border-slate-200 bg-white p-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-xl transition-[transform,box-shadow] duration-300 ease-out md:relative md:inset-auto md:z-auto md:h-full md:w-[220px] md:translate-x-0 md:border-r md:bg-slate-50/70 md:p-4 md:shadow-none lg:w-[250px] lg:p-5 ${
+      className={`fixed top-0 left-0 z-50 flex h-screen w-[min(84vw,300px)] shrink-0 flex-col border-r border-slate-200 bg-white p-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-xl transition-[transform,box-shadow] duration-300 ease-out md:relative md:inset-auto md:z-auto md:h-full md:w-[220px] md:translate-x-0 md:border-r md:bg-slate-50/70 md:p-4 md:shadow-none lg:w-[250px] lg:p-5 ${
       mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
     }`}
     >
@@ -318,7 +318,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
     </aside>
     {portalReady && adding && role === 'manajemen' && createPortal(
       <div
-        className="fixed inset-0 z-50 flex flex-col bg-white sm:bg-slate-950/45 sm:items-center sm:justify-center sm:p-4 modal-backdrop"
+        className="fixed inset-0 z-50 flex flex-col min-h-screen bg-white sm:bg-slate-950/45 sm:items-center sm:justify-center sm:p-4 modal-backdrop"
         onMouseDown={(event) => {
           if (event.target === event.currentTarget && !saving) setAdding(false);
         }}

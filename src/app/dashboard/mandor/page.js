@@ -1005,7 +1005,7 @@ export default function MandorDashboard() {
                 )}
                 {reportToDelete && portalReady && createPortal(
                   <div
-                    className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-950/45 p-4 modal-backdrop"
+                    className="fixed inset-0 z-[100] flex items-center justify-center min-h-screen overflow-y-auto bg-slate-950/45 p-4 modal-backdrop"
                     onMouseDown={(event) => {
                       if (event.target === event.currentTarget && !deletingReportId) {
                         setReportToDelete(null);

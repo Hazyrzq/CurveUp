@@ -449,7 +449,7 @@ export default function PengawasDashboard() {
       {/* ── Review Modal ── */}
       {selectedReport && createPortal(
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-slate-950/45 modal-backdrop"
+          className="fixed inset-0 z-[100] flex items-center justify-center min-h-screen p-3 sm:p-4 bg-slate-950/45 modal-backdrop"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget && !saving) setSelectedReport(null);
           }}

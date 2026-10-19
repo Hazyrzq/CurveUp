@@ -85,8 +85,8 @@ function DashboardShell({ children }) {
   }
 
   return (
-    <div className="h-[100dvh] w-full max-w-full overflow-hidden bg-white sm:bg-canvas sm:h-auto sm:min-h-[100dvh] sm:overflow-visible p-0 sm:p-6 lg:p-8 anim-fade">
-      <div className="relative mx-auto flex h-full w-full max-w-[1400px] flex-col overflow-hidden border-0 sm:border border-slate-200/70 bg-white shadow-none sm:shadow-shell sm:h-auto sm:min-h-[calc(100dvh-3rem)] md:h-[calc(100vh-3rem)] md:overflow-hidden md:rounded-[28px] lg:h-[calc(100vh-4rem)] md:flex-row anim-shell">
+    <div className="h-[100dvh] w-full max-w-full overflow-hidden bg-white sm:bg-canvas sm:h-auto sm:min-h-screen sm:overflow-visible p-0 sm:p-6 lg:p-8 anim-fade">
+      <div className="relative mx-auto flex h-full w-full max-w-[1400px] flex-col overflow-hidden border-0 sm:border border-slate-200/70 bg-white shadow-none sm:shadow-shell sm:h-auto sm:min-h-[calc(100vh-3rem)] md:h-[calc(100vh-3rem)] md:rounded-[28px] lg:h-[calc(100vh-4rem)] md:flex-row anim-shell">
         <Sidebar
           role={role}
           mobileOpen={mobileSidebarOpen}
@@ -100,7 +100,7 @@ function DashboardShell({ children }) {
             onLogout={handleLogout}
             onMenuClick={() => setMobileSidebarOpen(true)}
           />
-          <main key={pathname} className="min-w-0 w-full max-w-full flex-1 overflow-x-hidden overflow-y-auto overscroll-contain p-3 sm:p-6 md:min-h-0 md:flex-1 anim-page pb-6 bg-white">
+          <main key={pathname} className="min-w-0 w-full max-w-full flex-1 min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain p-3 sm:p-6 anim-page pb-6 bg-white">
             {children}
           </main>
         </div>
