@@ -58,27 +58,27 @@ button {
 
 @keyframes fade-up {
   from { opacity: 0; transform: translate3d(0, 12px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
+  to { opacity: 1; transform: none; }
 }
 
 @keyframes fade-in-scale {
   from { opacity: 0; transform: translate3d(0, 10px, 0) scale(0.99); }
-  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  to { opacity: 1; transform: none; }
 }
 
 @keyframes card-arrive {
   from { opacity: 0; transform: translate3d(0, 16px, 0) scale(0.985); }
-  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  to { opacity: 1; transform: none; }
 }
 
 @keyframes sidebar-arrive {
   from { opacity: 0; transform: translate3d(-18px, 0, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
+  to { opacity: 1; transform: none; }
 }
 
 @keyframes content-enter {
   from { opacity: 0; transform: translate3d(0, 10px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
+  to { opacity: 1; transform: none; }
 }
 
 @keyframes bar-grow {
@@ -163,7 +163,7 @@ button {
 html.scroll-locked,
 body.scroll-locked {
   overflow: hidden !important;
-  height: 100% !important;
+  min-height: 100% !important;
   overscroll-behavior: none !important;
 }
 

@@ -86,7 +86,7 @@ function DashboardShell({ children }) {
 
   return (
     <div className="h-[100dvh] w-full max-w-full overflow-hidden bg-white sm:bg-canvas sm:h-auto sm:min-h-screen sm:overflow-visible p-0 sm:p-6 lg:p-8 anim-fade">
-      <div className="relative mx-auto flex h-full w-full max-w-[1400px] flex-col overflow-hidden border-0 sm:border border-slate-200/70 bg-white shadow-none sm:shadow-shell sm:h-auto sm:min-h-[calc(100vh-3rem)] md:h-[calc(100vh-3rem)] md:rounded-[28px] lg:h-[calc(100vh-4rem)] md:flex-row anim-shell">
+      <div className="relative mx-auto flex h-full w-full max-w-[1400px] flex-col overflow-hidden border-0 sm:border border-slate-200/70 bg-white shadow-none sm:shadow-shell sm:rounded-2xl sm:h-auto sm:min-h-[calc(100vh-3rem)] md:h-[calc(100vh-3rem)] md:rounded-[28px] lg:h-[calc(100vh-4rem)] md:flex-row anim-shell">
         <Sidebar
           role={role}
           mobileOpen={mobileSidebarOpen}

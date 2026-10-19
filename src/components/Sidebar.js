@@ -163,7 +163,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
     <aside
       id="dashboard-sidebar"
       aria-label="Main navigation"
-      className={`fixed top-0 left-0 z-50 flex h-screen w-[min(84vw,300px)] shrink-0 flex-col border-r border-slate-200 bg-white p-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-xl transition-[transform,box-shadow] duration-300 ease-out md:relative md:inset-auto md:z-auto md:h-full md:w-[220px] md:translate-x-0 md:border-r md:bg-slate-50/70 md:p-4 md:shadow-none lg:w-[250px] lg:p-5 ${
+      className={`fixed inset-y-0 left-0 z-50 flex w-[min(84vw,300px)] shrink-0 flex-col border-r border-slate-200 bg-white p-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-xl transition-[transform,box-shadow] duration-300 ease-out md:relative md:inset-auto md:z-auto md:h-full md:w-[220px] md:translate-x-0 md:border-r md:bg-slate-50/70 md:p-4 md:shadow-none lg:w-[250px] lg:p-5 ${
       mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
     }`}
     >
