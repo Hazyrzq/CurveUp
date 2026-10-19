@@ -20,6 +20,7 @@ import {
   MapPin,
   Calendar,
 } from 'lucide-react';
+import ImageLightbox from '@/components/ImageLightbox';
 import { useProject } from '@/components/ProjectContext';
 import { useScrollLock } from '@/lib/useScrollLock';
 
@@ -41,6 +42,7 @@ export default function PengawasDashboard() {
   const [saving, setSaving] = useState(false);
   const [reportFilter, setReportFilter] = useState('pending');
   const [successToast, setSuccessToast] = useState(null);
+  const [lightboxPhoto, setLightboxPhoto] = useState(null);
   const successToastTimeout = useRef(null);
 
   useScrollLock(!!selectedReport);
@@ -157,7 +159,7 @@ export default function PengawasDashboard() {
             {projectsLoading ? (
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {Array.from({ length: 3 }, (_, index) => (
-                  <div key={index} className="h-36 animate-pulse rounded-xl bg-slate-100" />
+                  <div key={index} className="h-36 rounded-xl shimmer border border-slate-100" />
                 ))}
               </div>
             ) : projects.length ? (
@@ -513,14 +515,29 @@ export default function PengawasDashboard() {
               </dl>
 
               {selectedReport.foto_bukti ? (
-                <a href={selectedReport.foto_bukti} target="_blank" rel="noreferrer" className="block">
-                  <img
-                    src={selectedReport.foto_bukti}
-                    alt={`Progress evidence for week ${selectedReport.minggu_ke}`}
-                    className="max-h-[35vh] w-full rounded-lg border border-slate-200 object-contain sm:max-h-72"
-                  />
-                  <span className="mt-1 block text-xs text-teal-700">Open full-size photo</span>
-                </a>
+                <div className="group relative">
+                  <button
+                    type="button"
+                    onClick={() => setLightboxPhoto({
+                      src: selectedReport.foto_bukti,
+                      alt: `Week ${selectedReport.minggu_ke} · ${selectedReport.nama_pekerjaan}`,
+                      subtitle: `Submitted by ${selectedReport.mandor_nama || 'Foreman'} on ${formatDate(selectedReport.tgl_laporan)}`
+                    })}
+                    className="group relative block w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-900/5 transition hover:border-teal-500 focus:outline-none"
+                  >
+                    <img
+                      src={selectedReport.foto_bukti}
+                      alt={`Progress evidence for week ${selectedReport.minggu_ke}`}
+                      className="max-h-[35vh] w-full rounded-xl object-contain sm:max-h-72 transition duration-200 group-hover:scale-[1.02]"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-slate-900/30 opacity-0 group-hover:opacity-100 transition duration-200">
+                      <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-lg backdrop-blur-sm">
+                        Click to zoom
+                      </span>
+                    </div>
+                  </button>
+                  <span className="mt-1.5 block text-center text-xs text-slate-500">Tap photo to enlarge &amp; inspect</span>
+                </div>
               ) : (
                 <p className="text-xs text-slate-400">No progress photo attached.</p>
               )}
@@ -585,6 +602,14 @@ export default function PengawasDashboard() {
           }}
         />,
         document.body
+      )}
+      {lightboxPhoto && (
+        <ImageLightbox
+          src={lightboxPhoto.src}
+          alt={lightboxPhoto.alt}
+          subtitle={lightboxPhoto.subtitle}
+          onClose={() => setLightboxPhoto(null)}
+        />
       )}
     </div>
   );

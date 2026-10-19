@@ -58,26 +58,54 @@ export default function SCurveChart({
       {
         label: 'Planned',
         data: rencana,
-        borderColor: '#0f766e',
-        backgroundColor: 'rgba(15, 118, 110, 0.10)',
-        borderWidth: 2,
+        borderColor: '#0d9488',
+        backgroundColor: (context) => {
+          const chart = context.chart;
+          const { ctx, chartArea } = chart;
+          if (!chartArea) return 'rgba(13, 148, 136, 0.08)';
+          const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+          gradient.addColorStop(0, 'rgba(13, 148, 136, 0.22)');
+          gradient.addColorStop(0.7, 'rgba(13, 148, 136, 0.05)');
+          gradient.addColorStop(1, 'rgba(13, 148, 136, 0.0)');
+          return gradient;
+        },
+        borderWidth: 2.5,
         tension: 0.35,
         fill: true,
-        pointRadius: (context) => (context.dataIndex + 1 === selectedWeek ? 6 : 3),
-        pointHoverRadius: 6,
-        pointBackgroundColor: '#0f766e',
+        pointRadius: (context) => (context.dataIndex + 1 === selectedWeek ? 7 : 3.5),
+        pointHoverRadius: 7,
+        pointBackgroundColor: '#0d9488',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        pointHoverBackgroundColor: '#0d9488',
+        pointHoverBorderColor: '#ffffff',
+        pointHoverBorderWidth: 2.5,
       },
       {
         label: 'Actual',
         data: realisasi,
-        borderColor: '#111827',
-        backgroundColor: 'transparent',
-        borderWidth: 2,
+        borderColor: '#0f172a',
+        backgroundColor: (context) => {
+          const chart = context.chart;
+          const { ctx, chartArea } = chart;
+          if (!chartArea) return 'rgba(15, 23, 42, 0.04)';
+          const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+          gradient.addColorStop(0, 'rgba(15, 23, 42, 0.14)');
+          gradient.addColorStop(0.7, 'rgba(15, 23, 42, 0.03)');
+          gradient.addColorStop(1, 'rgba(15, 23, 42, 0.0)');
+          return gradient;
+        },
+        borderWidth: 2.5,
         tension: 0.35,
-        fill: false,
-        pointRadius: (context) => (context.dataIndex + 1 === selectedWeek ? 6 : 3),
-        pointHoverRadius: 6,
-        pointBackgroundColor: '#111827',
+        fill: true,
+        pointRadius: (context) => (context.dataIndex + 1 === selectedWeek ? 7 : 3.5),
+        pointHoverRadius: 7,
+        pointBackgroundColor: '#0f172a',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        pointHoverBackgroundColor: '#0f172a',
+        pointHoverBorderColor: '#ffffff',
+        pointHoverBorderWidth: 2.5,
       },
     ],
   };
@@ -85,15 +113,34 @@ export default function SCurveChart({
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      duration: 850,
+      easing: 'easeOutQuart',
+    },
     plugins: {
       legend: {
         position: 'top',
         align: 'end',
-        labels: { font: { size: 11 }, usePointStyle: true, boxWidth: 8 },
+        labels: {
+          font: { size: 12, weight: '500' },
+          usePointStyle: true,
+          pointStyle: 'circle',
+          boxWidth: 8,
+          padding: 16,
+        },
       },
       tooltip: {
         mode: 'index',
         intersect: false,
+        backgroundColor: 'rgba(15, 23, 42, 0.94)',
+        titleColor: '#ffffff',
+        bodyColor: '#e2e8f0',
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderWidth: 1,
+        padding: 12,
+        boxPadding: 6,
+        cornerRadius: 10,
+        usePointStyle: true,
         callbacks: {
           afterBody(items) {
             const point = items[0];
@@ -104,14 +151,14 @@ export default function SCurveChart({
             return [
               'Reported work:',
               ...weekReports.map((report) =>
-                `${report.kode_pekerjaan} · ${report.nama_pekerjaan}: ${Number(report.realisasi_bobot).toFixed(2)}% (${report.status_verifikasi})`
+                `• ${report.kode_pekerjaan} · ${report.nama_pekerjaan}: ${Number(report.realisasi_bobot).toFixed(2)}% (${report.status_verifikasi})`
               ),
             ];
           },
           label(context) {
             const name = context.dataset.label || '';
-            if (context.parsed.y === null) return `${name}: -`;
-            return `${name}: ${context.parsed.y}%`;
+            if (context.parsed.y === null) return ` ${name}: —`;
+            return ` ${name}: ${context.parsed.y}%`;
           },
         },
       },
@@ -136,24 +183,24 @@ export default function SCurveChart({
     scales: {
       x: {
         grid: { display: false },
-        ticks: { font: { size: 11 }, color: '#9ca3af' },
+        ticks: { font: { size: 11 }, color: '#94a3b8' },
       },
       y: {
         min: 0,
         max: 100,
         ticks: {
-          color: '#9ca3af',
+          color: '#94a3b8',
           callback(value) {
             return `${value}%`;
           },
         },
-        grid: { color: '#f3f4f6' },
+        grid: { color: 'rgba(241, 245, 249, 0.9)' },
       },
     },
   };
 
   return (
-    <div className={`w-full h-72 relative ${onWeekSelect ? 'cursor-pointer' : ''}`}>
+    <div className={`w-full h-72 sm:h-80 relative ${onWeekSelect ? 'cursor-pointer' : ''}`}>
       <Line data={data} options={options} />
     </div>
   );

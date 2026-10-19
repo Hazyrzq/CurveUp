@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import SCurveChart from '@/components/SCurveChart';
 import StatCard from '@/components/StatCard';
 import StatusBadge from '@/components/StatusBadge';
+import AnimatedCounter from '@/components/AnimatedCounter';
+import ImageLightbox from '@/components/ImageLightbox';
 import {
   Wallet,
   TrendingUp,
@@ -55,6 +57,7 @@ export default function ManajemenDashboard() {
   const [projectQuery, setProjectQuery] = useState('');
   const [selectedCurveWeek, setSelectedCurveWeek] = useState(null);
   const [selectedWorkItemId, setSelectedWorkItemId] = useState(null);
+  const [lightboxPhoto, setLightboxPhoto] = useState(null);
 
   useEffect(() => {
     setSelectedCurveWeek(null);
@@ -372,7 +375,7 @@ export default function ManajemenDashboard() {
             {projectsLoading ? (
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {Array.from({ length: 3 }, (_, index) => (
-                  <div key={index} className="h-40 animate-pulse rounded-xl bg-slate-100" />
+                  <div key={index} className="h-40 rounded-xl shimmer border border-slate-100" />
                 ))}
               </div>
             ) : visibleProjects.length > 0 ? (
@@ -555,11 +558,11 @@ export default function ManajemenDashboard() {
                     <p className="text-xs font-medium text-slate-500">Actual progress</p>
                     <Activity className="h-4 w-4 text-slate-300" />
                   </div>
-                  <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
-                    {loading ? '—' : lastRealisasi != null ? `${lastRealisasi}%` : '—'}
-                  </p>
+                  <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
+                    {loading ? '—' : lastRealisasi != null ? <AnimatedCounter value={lastRealisasi} suffix="%" /> : '—'}
+                  </div>
                   <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-100">
-                    <div className="h-full rounded-full bg-teal-600 transition-all" style={{ width: `${clampPct(lastRealisasi)}%` }} />
+                    <div className="h-full rounded-full bg-teal-600 transition-all duration-700 ease-out" style={{ width: `${clampPct(lastRealisasi)}%` }} />
                   </div>
                   <p className="mt-2 text-[11px] text-slate-400">Work completed so far</p>
                 </div>
@@ -572,9 +575,9 @@ export default function ManajemenDashboard() {
                     </p>
                     <TrendingUp className="h-4 w-4 text-slate-300" />
                   </div>
-                  <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
-                    {loading ? '—' : plannedDisplayValue != null ? `${plannedDisplayValue}%` : '—'}
-                  </p>
+                  <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
+                    {loading ? '—' : plannedDisplayValue != null ? <AnimatedCounter value={plannedDisplayValue} suffix="%" /> : '—'}
+                  </div>
                   <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-100">
                     <div className="h-full rounded-full bg-slate-400 transition-all" style={{ width: `${clampPct(plannedDisplayValue)}%` }} />
                   </div>
@@ -673,13 +676,21 @@ export default function ManajemenDashboard() {
                           </td>
                           <td className="px-4 py-3">
                             {report.foto_bukti ? (
-                              <a href={report.foto_bukti} target="_blank" rel="noreferrer" className="inline-block">
+                              <button
+                                type="button"
+                                onClick={() => setLightboxPhoto({
+                                  src: report.foto_bukti,
+                                  alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
+                                  subtitle: `Submitted by ${report.mandor_nama || 'Foreman'} on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
+                                })}
+                                className="group relative block overflow-hidden rounded-lg border border-slate-200 transition hover:border-teal-500 focus:outline-none"
+                              >
                                 <img
                                   src={report.foto_bukti}
                                   alt={`Evidence for ${report.nama_pekerjaan}, week ${report.minggu_ke}`}
-                                  className="h-16 w-24 rounded-lg border border-slate-200 object-cover transition hover:opacity-80"
+                                  className="h-16 w-24 rounded-lg object-cover transition duration-200 group-hover:scale-105"
                                 />
-                              </a>
+                              </button>
                             ) : (
                               <span className="text-xs text-slate-400">No photo attached</span>
                             )}
@@ -718,14 +729,22 @@ export default function ManajemenDashboard() {
                         </p>
                       </div>
                       {report.foto_bukti ? (
-                        <a href={report.foto_bukti} target="_blank" rel="noreferrer" className="inline-block">
+                        <button
+                          type="button"
+                          onClick={() => setLightboxPhoto({
+                            src: report.foto_bukti,
+                            alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
+                            subtitle: `Submitted by ${report.mandor_nama || 'Foreman'} on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
+                          })}
+                          className="group relative block overflow-hidden rounded-lg border border-slate-200 transition hover:border-teal-500 focus:outline-none"
+                        >
                           <img
                             src={report.foto_bukti}
                             alt={`Evidence for ${report.nama_pekerjaan}, week ${report.minggu_ke}`}
-                            className="h-28 w-40 rounded-lg border border-slate-200 object-cover"
+                            className="h-28 w-40 rounded-lg object-cover transition duration-200 group-hover:scale-105"
                           />
-                          <span className="mt-1 block text-xs text-slate-500">Open full-size photo</span>
-                        </a>
+                          <span className="mt-1 block text-left text-xs font-medium text-teal-700">Tap to enlarge photo</span>
+                        </button>
                       ) : (
                         <p className="text-xs text-slate-400">No photo evidence attached.</p>
                       )}
@@ -815,14 +834,17 @@ export default function ManajemenDashboard() {
                               <div className="flex shrink-0 items-center justify-between gap-3 sm:justify-end">
                                 <StatusBadge status={report.status_verifikasi} />
                                 {report.foto_bukti && (
-                                  <a
-                                    href={report.foto_bukti}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="text-xs font-medium text-slate-700 underline decoration-slate-300 underline-offset-2 hover:text-slate-900"
+                                  <button
+                                    type="button"
+                                    onClick={() => setLightboxPhoto({
+                                      src: report.foto_bukti,
+                                      alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
+                                      subtitle: `Submitted by ${report.mandor_nama || 'Foreman'} on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
+                                    })}
+                                    className="text-xs font-medium text-teal-700 underline decoration-teal-300 underline-offset-2 hover:text-teal-900 transition"
                                   >
                                     View evidence
-                                  </a>
+                                  </button>
                                 )}
                               </div>
                             </article>
@@ -1014,6 +1036,16 @@ export default function ManajemenDashboard() {
             </aside>
           </div>}
         </div>
+      )}
+
+      {/* Image Lightbox Portal */}
+      {lightboxPhoto && (
+        <ImageLightbox
+          src={lightboxPhoto.src}
+          alt={lightboxPhoto.alt}
+          subtitle={lightboxPhoto.subtitle}
+          onClose={() => setLightboxPhoto(null)}
+        />
       )}
     </div>
   );

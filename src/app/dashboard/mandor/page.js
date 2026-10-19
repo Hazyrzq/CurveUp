@@ -21,6 +21,7 @@ import DashboardHeader from '@/components/DashboardHeader';
 import StatCard from '@/components/StatCard';
 import StatusBadge from '@/components/StatusBadge';
 import ActionToast from '@/components/ActionToast';
+import ImageLightbox from '@/components/ImageLightbox';
 import { useProject } from '@/components/ProjectContext';
 import { useScrollLock } from '@/lib/useScrollLock';
 
@@ -60,6 +61,7 @@ export default function MandorDashboard() {
   const [reportToDelete, setReportToDelete] = useState(null);
   const [deletingReportId, setDeletingReportId] = useState(null);
   const [portalReady, setPortalReady] = useState(false);
+  const [lightboxPhoto, setLightboxPhoto] = useState(null);
 
   useScrollLock(!!reportToDelete);
   const actionMsgTimeout = useRef(null);
@@ -662,13 +664,21 @@ export default function MandorDashboard() {
                             </p>
                           )}
                           {report.foto_bukti && (
-                            <a href={report.foto_bukti} target="_blank" rel="noreferrer" className="mt-2 inline-block">
+                            <button
+                              type="button"
+                              onClick={() => setLightboxPhoto({
+                                src: report.foto_bukti,
+                                alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
+                                subtitle: `Submitted on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
+                              })}
+                              className="group relative mt-2 block overflow-hidden rounded-md border border-slate-200 transition hover:border-teal-500 focus:outline-none"
+                            >
                               <img
                                 src={report.foto_bukti}
                                 alt={`Progress evidence for week ${report.minggu_ke}`}
-                                className="h-14 w-20 rounded-md border border-slate-200 object-cover"
+                                className="h-14 w-20 rounded-md object-cover transition duration-200 group-hover:scale-105"
                               />
-                            </a>
+                            </button>
                           )}
                         </td>
                         <td className="px-4 py-3 text-xs text-slate-600">Week {report.minggu_ke}</td>
@@ -730,13 +740,21 @@ export default function MandorDashboard() {
                         </p>
                       )}
                       {report.foto_bukti && (
-                        <a href={report.foto_bukti} target="_blank" rel="noreferrer" className="inline-block">
+                        <button
+                          type="button"
+                          onClick={() => setLightboxPhoto({
+                            src: report.foto_bukti,
+                            alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
+                            subtitle: `Submitted on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
+                          })}
+                          className="group relative inline-block overflow-hidden rounded-lg border border-slate-200 transition hover:border-teal-500 focus:outline-none"
+                        >
                           <img
                             src={report.foto_bukti}
                             alt={`Progress evidence for week ${report.minggu_ke}`}
-                            className="h-20 w-28 rounded-lg border border-slate-200 object-cover"
+                            className="h-20 w-28 rounded-lg object-cover transition duration-200 group-hover:scale-105"
                           />
-                        </a>
+                        </button>
                       )}
                       {canManageReport(report) ? (
                         <div className="grid grid-cols-2 gap-2">
@@ -1155,13 +1173,21 @@ export default function MandorDashboard() {
                               </p>
                             )}
                             {report.foto_bukti && (
-                              <a href={report.foto_bukti} target="_blank" rel="noreferrer" className="mt-2 inline-block">
+                              <button
+                                type="button"
+                                onClick={() => setLightboxPhoto({
+                                  src: report.foto_bukti,
+                                  alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
+                                  subtitle: `Submitted on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
+                                })}
+                                className="group relative mt-2 block overflow-hidden rounded-md border border-slate-200 transition hover:border-teal-500 focus:outline-none"
+                              >
                                 <img
                                   src={report.foto_bukti}
                                   alt={`Progress evidence for week ${report.minggu_ke}`}
-                                  className="h-14 w-20 rounded-md border border-slate-200 object-cover"
+                                  className="h-14 w-20 rounded-md object-cover transition duration-200 group-hover:scale-105"
                                 />
-                              </a>
+                              </button>
                             )}
                           </td>
                           <td className="px-4 py-3 text-xs text-slate-600">Week {report.minggu_ke}</td>
@@ -1225,13 +1251,21 @@ export default function MandorDashboard() {
                           </p>
                         )}
                         {report.foto_bukti && (
-                          <a href={report.foto_bukti} target="_blank" rel="noreferrer" className="inline-block">
+                          <button
+                            type="button"
+                            onClick={() => setLightboxPhoto({
+                              src: report.foto_bukti,
+                              alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
+                              subtitle: `Submitted on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
+                            })}
+                            className="group relative inline-block overflow-hidden rounded-lg border border-slate-200 transition hover:border-teal-500 focus:outline-none"
+                          >
                             <img
                               src={report.foto_bukti}
                               alt={`Progress evidence for week ${report.minggu_ke}`}
-                              className="h-20 w-28 rounded-lg border border-slate-200 object-cover"
+                              className="h-20 w-28 rounded-lg object-cover transition duration-200 group-hover:scale-105"
                             />
-                          </a>
+                          </button>
                         )}
                         {canManageReport(report) ? (
                           <div className="grid grid-cols-2 gap-2">
@@ -1262,6 +1296,28 @@ export default function MandorDashboard() {
             </section>
           )}
         </>
+      )}
+      {/* Mobile Floating Action Button (FAB) for quick report submission */}
+      {selectedId && (
+        <button
+          type="button"
+          onClick={() => router.push('/dashboard/mandor/laporan-baru')}
+          aria-label="Submit progress report"
+          className="fixed bottom-5 right-5 z-30 inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-3 text-xs font-semibold text-white shadow-xl transition-transform duration-200 hover:bg-slate-800 active:scale-95 md:hidden"
+        >
+          <Send className="h-4 w-4" />
+          <span>+ Report</span>
+        </button>
+      )}
+
+      {/* Image Lightbox Portal */}
+      {lightboxPhoto && (
+        <ImageLightbox
+          src={lightboxPhoto.src}
+          alt={lightboxPhoto.alt}
+          subtitle={lightboxPhoto.subtitle}
+          onClose={() => setLightboxPhoto(null)}
+        />
       )}
     </div>
   );
