@@ -364,7 +364,7 @@ export default function ManajemenDashboard() {
                 value={projectQuery}
                 onChange={(e) => setProjectQuery(e.target.value)}
                 placeholder="Search projects or location..."
-                className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+                className="w-full bg-transparent text-base sm:text-sm outline-none placeholder:text-slate-400"
               />
             </label>
           </div>

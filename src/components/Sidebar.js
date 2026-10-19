@@ -269,11 +269,11 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           placeholder="Find project..."
-          className="w-full bg-transparent text-xs text-slate-700 outline-none placeholder:text-slate-400"
+          className="w-full bg-transparent text-base md:text-xs text-slate-700 outline-none placeholder:text-slate-400"
         />
       </label>
 
-      <div className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain pb-24 md:pb-3">
+      <div className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain pb-4 md:pb-3">
         {filtered.length === 0 ? (
           <p className="px-2 py-5 text-center text-xs text-slate-400">No projects found.</p>
         ) : (
