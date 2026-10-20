@@ -142,23 +142,36 @@ export default function SCurveChart({
         cornerRadius: 10,
         usePointStyle: true,
         callbacks: {
+          afterTitle(items) {
+            const point = items[0];
+            if (!point) return '';
+            const idx = point.dataIndex;
+            const pVal = Number(rencana[idx] || 0);
+            const aVal = realisasi[idx] != null ? Number(realisasi[idx]) : null;
+            if (aVal == null) return 'Status: Belum dimulai (Sesuai Rencana)';
+            const dev = Number((aVal - pVal).toFixed(2));
+            if (dev < -0.1) return `Deviasi: ${dev}% (Terlambat)`;
+            if (dev > 0.1) return `Deviasi: +${dev}% (Mendahului Rencana)`;
+            return 'Deviasi: 0.00% (Tepat Waktu)';
+          },
+          label(context) {
+            const name = context.dataset.label || '';
+            if (context.parsed.y === null) return ` ${name}: —`;
+            return ` ${name}: ${Number(context.parsed.y).toFixed(2)}%`;
+          },
           afterBody(items) {
             const point = items[0];
             if (!point) return [];
             const weekNumber = Number(String(chartLabels[point.dataIndex]).match(/\d+/)?.[0]);
             const weekReports = reports.filter((report) => Number(report.minggu_ke) === weekNumber);
-            if (!weekReports.length) return ['No work item reports'];
+            if (!weekReports.length) return [];
             return [
-              'Reported work:',
+              '',
+              'Laporan Pekerjaan:',
               ...weekReports.map((report) =>
                 `• ${report.kode_pekerjaan} · ${report.nama_pekerjaan}: ${Number(report.realisasi_bobot).toFixed(2)}% (${report.status_verifikasi})`
               ),
             ];
-          },
-          label(context) {
-            const name = context.dataset.label || '';
-            if (context.parsed.y === null) return ` ${name}: —`;
-            return ` ${name}: ${context.parsed.y}%`;
           },
         },
       },

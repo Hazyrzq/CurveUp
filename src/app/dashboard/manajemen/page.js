@@ -217,10 +217,27 @@ export default function ManajemenDashboard() {
       : 'No delay reported';
   const scheduleTone =
     delayStatus === 'delayed'
-      ? { chip: 'bg-rose-50 text-rose-700', value: 'text-rose-700', icon: <AlertTriangle className="h-3.5 w-3.5" /> }
+      ? {
+          chip: 'bg-rose-50 text-rose-700 border border-rose-200/80',
+          value: 'text-rose-700',
+          icon: (
+            <span className="relative flex h-2 w-2 mr-0.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+            </span>
+          ),
+        }
       : delayStatus === 'ahead'
-      ? { chip: 'bg-teal-50 text-teal-700', value: 'text-teal-700', icon: <CheckCircle2 className="h-3.5 w-3.5" /> }
-      : { chip: 'bg-emerald-50 text-emerald-700', value: 'text-emerald-700', icon: <CheckCircle2 className="h-3.5 w-3.5" /> };
+      ? {
+          chip: 'bg-teal-50 text-teal-700 border border-teal-200/80',
+          value: 'text-teal-700',
+          icon: <span className="inline-flex rounded-full h-2 w-2 bg-teal-500 mr-0.5"></span>,
+        }
+      : {
+          chip: 'bg-emerald-50 text-emerald-700 border border-emerald-200/80',
+          value: 'text-emerald-700',
+          icon: <span className="inline-flex rounded-full h-2 w-2 bg-emerald-500 mr-0.5"></span>,
+        };
 
   const totalBobot  = rabItems.reduce((s, i) => s + Number(i.bobot_persen || 0), 0);
   const pendingCount  = laporan.filter((l) => l.status_verifikasi === 'pending').length;
