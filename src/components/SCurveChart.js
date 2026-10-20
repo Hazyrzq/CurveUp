@@ -148,11 +148,11 @@ export default function SCurveChart({
             const idx = point.dataIndex;
             const pVal = Number(rencana[idx] || 0);
             const aVal = realisasi[idx] != null ? Number(realisasi[idx]) : null;
-            if (aVal == null) return 'Status: Belum dimulai (Sesuai Rencana)';
+            if (aVal == null) return 'Status: Scheduled / Pending';
             const dev = Number((aVal - pVal).toFixed(2));
-            if (dev < -0.1) return `Deviasi: ${dev}% (Terlambat)`;
-            if (dev > 0.1) return `Deviasi: +${dev}% (Mendahului Rencana)`;
-            return 'Deviasi: 0.00% (Tepat Waktu)';
+            if (dev < -0.1) return `Variance: ${dev}% (Behind Schedule)`;
+            if (dev > 0.1) return `Variance: +${dev}% (Ahead of Plan)`;
+            return 'Variance: 0.00% (On Schedule)';
           },
           label(context) {
             const name = context.dataset.label || '';
@@ -167,7 +167,7 @@ export default function SCurveChart({
             if (!weekReports.length) return [];
             return [
               '',
-              'Laporan Pekerjaan:',
+              'Work Items Reported:',
               ...weekReports.map((report) =>
                 `• ${report.kode_pekerjaan} · ${report.nama_pekerjaan}: ${Number(report.realisasi_bobot).toFixed(2)}% (${report.status_verifikasi})`
               ),
