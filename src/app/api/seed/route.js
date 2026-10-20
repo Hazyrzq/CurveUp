@@ -2,6 +2,46 @@ import { NextResponse } from 'next/server';
 import { withTransaction, query } from '@/lib/db';
 
 /**
+ * GET /api/seed — Returns a simple HTML page with a button to trigger the seed.
+ * Open this URL in your browser to seed the remote database.
+ */
+export async function GET() {
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Seed Data</title>
+<style>
+  body{font-family:system-ui;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#0f172a;color:#e2e8f0}
+  .card{background:#1e293b;border-radius:16px;padding:2rem 3rem;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+  h1{font-size:1.4rem;margin-bottom:.5rem}
+  p{color:#94a3b8;font-size:.9rem;margin-bottom:1.5rem}
+  button{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;padding:.75rem 2rem;border-radius:10px;font-size:1rem;cursor:pointer;font-weight:600;transition:transform .15s}
+  button:hover{transform:scale(1.05)}
+  button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+  #result{margin-top:1rem;padding:1rem;border-radius:8px;font-size:.85rem;white-space:pre-wrap;display:none}
+  .ok{background:#064e3b;color:#6ee7b7} .err{background:#7f1d1d;color:#fca5a5}
+</style></head><body>
+<div class="card">
+  <h1>🌱 Seed Demo Data</h1>
+  <p>Insert sample project with delayed &amp; on-track RAB items</p>
+  <button id="btn" onclick="doSeed()">Insert Seed Data</button>
+  <div id="result"></div>
+</div>
+<script>
+async function doSeed(){
+  const btn=document.getElementById('btn'), res=document.getElementById('result');
+  btn.disabled=true; btn.textContent='Seeding...'; res.style.display='none';
+  try{
+    const r=await fetch('/api/seed',{method:'POST'});
+    const j=await r.json();
+    res.textContent=j.message||JSON.stringify(j);
+    res.className=j.success?'ok':'err'; res.style.display='block';
+  }catch(e){res.textContent=e.message;res.className='err';res.style.display='block';}
+  btn.disabled=false; btn.textContent='Insert Seed Data';
+}
+</script></body></html>`;
+  return new NextResponse(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+}
+
+/**
  * POST /api/seed
  *
  * Seeds the database with a realistic construction project containing:
