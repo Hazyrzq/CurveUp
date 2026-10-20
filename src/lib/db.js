@@ -5,11 +5,11 @@ let pool;
 function getPool() {
   if (!pool) {
     const config = {
-      host: process.env.MYSQL_HOST || 'localhost',
-      port: Number(process.env.MYSQL_PORT) || 3306,
-      user: process.env.MYSQL_USER || 'root',
-      password: process.env.MYSQL_PASSWORD || '',
-      database: process.env.MYSQL_DATABASE || 'kurvas_curveup',
+      host: process.env.MYSQL_HOST || process.env.MYSQL__HOST || 'localhost',
+      port: Number(process.env.MYSQL_PORT || process.env.MYSQL__PORT) || 3306,
+      user: process.env.MYSQL_USER || process.env.MYSQL__USER || 'root',
+      password: process.env.MYSQL_PASSWORD || process.env.MYSQL__PASSWORD || '',
+      database: process.env.MYSQL_DATABASE || process.env.MYSQL__DATABASE || 'kurvas_curveup',
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,
