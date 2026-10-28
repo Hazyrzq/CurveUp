@@ -142,18 +142,51 @@ export default function ManajemenDashboard() {
 
   let timeDelayWeeks = 0;
   let timeDelayDays = 0;
-  let delayStatus = 'on_track'; // 'on_track' | 'ahead' | 'delayed'
-  let delayBadgeLabel = 'On Schedule';
-  let delaySummaryText = '';
+  let delayStatus = 'no_data'; // 'no_data' | 'on_track' | 'ahead' | 'delayed'
+  let delayBadgeLabel = 'No Progress Yet';
+  let delaySummaryText =
+    'No approved progress reports have been recorded yet. Submit and approve weekly reports to compare actual progress against the planned S-Curve.';
 
   if (lastRealisasi != null && currentWeekNumber != null) {
     if (currentWeekNumber > originalPlannedWeeks) {
       timeDelayWeeks = currentWeekNumber - originalPlannedWeeks;
       timeDelayDays = timeDelayWeeks * 7;
       delayStatus = 'delayed';
-      delayBadgeLabel = `Delayed +${timeDelayWeeks} Weeks`;
+      delayBadgeLabel = `Delayed +${timeDelayWeeks} Week${timeDelayWeeks === 1 ? '' : 's'}`;
       delaySummaryText = `The project is 100% completed, but exceeded the initial contract schedule (${originalPlannedWeeks} weeks) by ${timeDelayWeeks} weeks (${timeDelayDays} days).`;
+    } else if (deviasi != null && Math.abs(deviasi) <= 1) {
+      timeDelayWeeks = 0;
+      timeDelayDays = 0;
+      delayStatus = 'on_track';
+      delayBadgeLabel = 'On Schedule';
+      delaySummaryText = `Physical progress is ${lastRealisasi}%, running on schedule with the planned target of ${plannedAtCutoff}% at Week ${currentWeekNumber}.`;
+    } else if (deviasi != null && deviasi > 1) {
+      delayStatus = 'ahead';
+      let aheadEqWeek = currentWeekNumber;
+      for (let i = 0; i < sCurveData.rencana.length; i++) {
+        if (sCurveData.rencana[i] <= lastRealisasi) {
+          aheadEqWeek = i + 1;
+        }
+      }
+      const weekLead = Math.max(0, aheadEqWeek - currentWeekNumber);
+      if (weekLead > 0) {
+        timeDelayWeeks = weekLead;
+        timeDelayDays = weekLead * 7;
+        delayBadgeLabel = `Ahead of Schedule · +${timeDelayWeeks} Week${timeDelayWeeks === 1 ? '' : 's'}`;
+        delaySummaryText = `Current actual progress is ${lastRealisasi}%, exceeding the planned target of ${plannedAtCutoff}% at Week ${currentWeekNumber} (+${deviasi}%). Progress has already reached Week ${aheadEqWeek} targets — ahead of schedule by approximately ${timeDelayWeeks} week${timeDelayWeeks === 1 ? '' : 's'} (${timeDelayDays} days).`;
+      } else {
+        const nextPlanned = sCurveData.rencana[currentWeekNumber] ?? totalRencana ?? plannedAtCutoff;
+        const weeklyStep = Math.max(1, (nextPlanned || 0) - (plannedAtCutoff || 0));
+        timeDelayDays = Math.max(1, Math.round((deviasi / weeklyStep) * 7));
+        timeDelayWeeks = Math.floor(timeDelayDays / 7);
+        delayBadgeLabel =
+          timeDelayWeeks > 0
+            ? `Ahead of Schedule · +${timeDelayWeeks} Week${timeDelayWeeks === 1 ? '' : 's'}`
+            : `Ahead of Schedule · +${timeDelayDays} Day${timeDelayDays === 1 ? '' : 's'}`;
+        delaySummaryText = `Actual progress is ${lastRealisasi}%, exceeding the planned target of ${plannedAtCutoff}% at Week ${currentWeekNumber} (+${deviasi}%), with an estimated lead time of ${timeDelayDays} day${timeDelayDays === 1 ? '' : 's'}.`;
+      }
     } else {
+      delayStatus = 'delayed';
       let eqWeek = 0;
       for (let i = 0; i < sCurveData.rencana.length; i++) {
         if (sCurveData.rencana[i] >= lastRealisasi) {
@@ -165,39 +198,22 @@ export default function ManajemenDashboard() {
         eqWeek = originalPlannedWeeks;
       }
 
-      const weekDiff = currentWeekNumber - eqWeek;
+      const weekDiff = Math.max(0, currentWeekNumber - eqWeek);
       if (weekDiff > 0) {
         timeDelayWeeks = weekDiff;
         timeDelayDays = weekDiff * 7;
-        delayStatus = 'delayed';
-        delayBadgeLabel = `Behind by ~${timeDelayWeeks} Weeks`;
-        delaySummaryText = `Current actual progress is ${lastRealisasi}%, lagging behind the planned target of ${plannedAtCutoff}% at Week ${currentWeekNumber}. Progress is equivalent to Week ${eqWeek} targets, resulting in an estimated project delay of ${timeDelayWeeks} weeks (${timeDelayDays} days).`;
-      } else if (weekDiff < 0) {
-        timeDelayWeeks = Math.abs(weekDiff);
-        timeDelayDays = Math.abs(weekDiff) * 7;
-        delayStatus = 'ahead';
-        delayBadgeLabel = `Ahead by ~${timeDelayWeeks} Weeks`;
-        delaySummaryText = `Current actual progress is ${lastRealisasi}%, exceeding the planned target of ${plannedAtCutoff}% at Week ${currentWeekNumber}. The project is ahead of schedule by approximately ${timeDelayWeeks} weeks (${timeDelayDays} days).`;
+        delayBadgeLabel = `Behind by ~${timeDelayWeeks} Week${timeDelayWeeks === 1 ? '' : 's'}`;
+        delaySummaryText = `Current actual progress is ${lastRealisasi}%, lagging behind the planned target of ${plannedAtCutoff}% at Week ${currentWeekNumber} (${deviasi}%). Progress is equivalent to Week ${eqWeek} targets, resulting in an estimated delay of ${timeDelayWeeks} week${timeDelayWeeks === 1 ? '' : 's'} (${timeDelayDays} days).`;
       } else {
-        if (deviasi < -1) {
-          timeDelayDays = Math.max(1, Math.round((Math.abs(deviasi) / (plannedAtCutoff || 1)) * 7));
-          timeDelayWeeks = Math.floor(timeDelayDays / 7);
-          delayStatus = 'delayed';
-          delayBadgeLabel = timeDelayWeeks > 0 ? `Behind by ~${timeDelayWeeks} Weeks` : `Behind by ~${timeDelayDays} Days`;
-          delaySummaryText = `Actual progress is ${lastRealisasi}%, slightly below the planned target of ${plannedAtCutoff}%, with an estimated delay of ${timeDelayDays} days.`;
-        } else if (deviasi > 1) {
-          timeDelayDays = Math.max(1, Math.round((deviasi / (plannedAtCutoff || 1)) * 7));
-          timeDelayWeeks = Math.floor(timeDelayDays / 7);
-          delayStatus = 'ahead';
-          delayBadgeLabel = timeDelayWeeks > 0 ? `Ahead by ~${timeDelayWeeks} Weeks` : `Ahead by ~${timeDelayDays} Days`;
-          delaySummaryText = `Actual progress is ${lastRealisasi}%, exceeding the planned target of ${plannedAtCutoff}%, with an estimated lead time of ${timeDelayDays} days.`;
-        } else {
-          timeDelayWeeks = 0;
-          timeDelayDays = 0;
-          delayStatus = 'on_track';
-          delayBadgeLabel = 'On Schedule';
-          delaySummaryText = `Physical progress is ${lastRealisasi}%, running precisely on schedule with 0 days of delay.`;
-        }
+        const prevPlanned = currentWeekNumber > 1 ? sCurveData.rencana[currentWeekNumber - 2] : 0;
+        const weeklyStep = Math.max(1, (plannedAtCutoff || 0) - (prevPlanned || 0));
+        timeDelayDays = Math.max(1, Math.round((Math.abs(deviasi || 0) / weeklyStep) * 7));
+        timeDelayWeeks = Math.floor(timeDelayDays / 7);
+        delayBadgeLabel =
+          timeDelayWeeks > 0
+            ? `Behind by ~${timeDelayWeeks} Week${timeDelayWeeks === 1 ? '' : 's'}`
+            : `Behind by ~${timeDelayDays} Day${timeDelayDays === 1 ? '' : 's'}`;
+        delaySummaryText = `Actual progress is ${lastRealisasi}%, below the planned target of ${plannedAtCutoff}% at Week ${currentWeekNumber} (${deviasi}%), with an estimated delay of ${timeDelayDays} day${timeDelayDays === 1 ? '' : 's'}.`;
       }
     }
   }
@@ -208,13 +224,22 @@ export default function ManajemenDashboard() {
     timeDelayWeeks > 0
       ? `${timeDelayWeeks} week${timeDelayWeeks === 1 ? '' : 's'}`
       : `${timeDelayDays} day${timeDelayDays === 1 ? '' : 's'}`;
-  const delayBigValue = delayStatus === 'on_track' ? 'On schedule' : delayDurationLabel;
+  const delayBigValue =
+    delayStatus === 'no_data'
+      ? 'No data yet'
+      : delayStatus === 'on_track'
+      ? 'On schedule'
+      : delayStatus === 'ahead'
+      ? `+${delayDurationLabel}`
+      : delayDurationLabel;
   const delayBigCaption =
     delayStatus === 'delayed'
       ? `Behind by ≈ ${timeDelayDays} day${timeDelayDays === 1 ? '' : 's'}`
       : delayStatus === 'ahead'
       ? `Ahead by ≈ ${timeDelayDays} day${timeDelayDays === 1 ? '' : 's'}`
-      : 'No delay reported';
+      : delayStatus === 'on_track'
+      ? 'No delay reported'
+      : 'Awaiting progress data';
   const scheduleTone =
     delayStatus === 'delayed'
       ? {
@@ -231,12 +256,23 @@ export default function ManajemenDashboard() {
       ? {
           chip: 'bg-teal-50 text-teal-700 border border-teal-200/80',
           value: 'text-teal-700',
-          icon: <span className="inline-flex rounded-full h-2 w-2 bg-teal-500 mr-0.5"></span>,
+          icon: (
+            <span className="relative flex h-2 w-2 mr-0.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+            </span>
+          ),
         }
-      : {
+      : delayStatus === 'on_track'
+      ? {
           chip: 'bg-emerald-50 text-emerald-700 border border-emerald-200/80',
           value: 'text-emerald-700',
           icon: <span className="inline-flex rounded-full h-2 w-2 bg-emerald-500 mr-0.5"></span>,
+        }
+      : {
+          chip: 'bg-slate-100 text-slate-600 border border-slate-200',
+          value: 'text-slate-500',
+          icon: <span className="inline-flex rounded-full h-2 w-2 bg-slate-400 mr-0.5"></span>,
         };
 
   const totalBobot  = rabItems.reduce((s, i) => s + Number(i.bobot_persen || 0), 0);
@@ -534,29 +570,39 @@ export default function ManajemenDashboard() {
                 value={
                   loading
                     ? '—'
-                    : lastRealisasi == null
-                    ? '—'
+                    : delayStatus === 'no_data'
+                    ? 'No Data'
                     : delayStatus === 'delayed'
-                    ? timeDelayWeeks > 0 ? `-${timeDelayWeeks} Wks` : `-${timeDelayDays} Days`
+                    ? timeDelayWeeks > 0 ? `Behind -${timeDelayWeeks}W` : `Behind -${timeDelayDays}D`
                     : delayStatus === 'ahead'
-                    ? timeDelayWeeks > 0 ? `+${timeDelayWeeks} Wks` : `+${timeDelayDays} Days`
+                    ? timeDelayWeeks > 0 ? `Ahead +${timeDelayWeeks}W` : `Ahead +${timeDelayDays}D`
                     : 'On Schedule'
                 }
                 hint={
-                  deviasi != null
+                  loading
+                    ? undefined
+                    : deviasi != null
                     ? `${deviasi > 0 ? '+' : ''}${deviasi}%`
-                    : undefined
+                    : 'Awaiting reports'
                 }
-                tone={delayStatus === 'delayed' ? 'rose' : delayStatus === 'ahead' ? 'teal' : 'emerald'}
+                tone={
+                  delayStatus === 'delayed'
+                    ? 'rose'
+                    : delayStatus === 'ahead'
+                    ? 'teal'
+                    : delayStatus === 'on_track'
+                    ? 'emerald'
+                    : 'slate'
+                }
               />
             </div>
 
-            {/* ── Schedule Status: Actual vs Planned & Delay ── */}
+            {/* ── Schedule Status: Actual vs Planned ── */}
             <section className="anim-content-enter overflow-hidden rounded-xl border border-slate-200 bg-white">
               <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
                 <div className="min-w-0">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">Schedule Status</p>
-                  <h3 className="mt-1 text-sm font-semibold text-slate-900">Actual vs Planned &amp; Delay</h3>
+                  <h3 className="mt-1 text-sm font-semibold text-slate-900">Actual vs Planned Status</h3>
                   <p className="mt-0.5 text-xs text-slate-500">
                     {currentWeekNumber ? `As of Week ${currentWeekNumber}. ` : ''}
                     A quick read of how far the actual work is from the plan.
@@ -564,7 +610,7 @@ export default function ManajemenDashboard() {
                 </div>
                 <span className={`inline-flex shrink-0 items-center gap-1.5 self-start rounded-full px-3 py-1.5 text-xs font-semibold ${scheduleTone.chip}`}>
                   {scheduleTone.icon}
-                  {delayBadgeLabel}
+                  {loading ? 'Loading...' : delayBadgeLabel}
                 </span>
               </div>
 
@@ -601,28 +647,34 @@ export default function ManajemenDashboard() {
                   <p className="mt-2 text-[11px] text-slate-400">What should be done by now</p>
                 </div>
 
-                {/* Delay */}
+                {/* Status / Variance */}
                 <div className="p-4 sm:p-5">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-medium text-slate-500">Delay</p>
+                    <p className="text-xs font-medium text-slate-500">
+                      {delayStatus === 'ahead'
+                        ? 'Ahead of Schedule'
+                        : delayStatus === 'delayed'
+                        ? 'Delay'
+                        : 'Schedule Status'}
+                    </p>
                     <Clock className="h-4 w-4 text-slate-300" />
                   </div>
                   <p className={`mt-2 text-2xl font-semibold tracking-tight ${scheduleTone.value}`}>
-                    {loading || lastRealisasi == null ? '—' : delayBigValue}
+                    {loading ? '—' : delayBigValue}
                   </p>
                   <p className={`mt-3 inline-flex items-center gap-1.5 text-xs font-medium ${scheduleTone.value}`}>
                     {scheduleTone.icon}
-                    {loading || lastRealisasi == null ? 'Awaiting progress data' : delayBigCaption}
+                    {loading ? 'Loading...' : delayBigCaption}
                   </p>
                   <p className="mt-2 text-[11px] text-slate-400">
                     {deviasi != null
                       ? `${deviasi > 0 ? '+' : ''}${deviasi}% vs plan`
-                      : 'Difference from plan'}
+                      : 'No approved reports yet'}
                   </p>
                 </div>
               </div>
 
-              {lastRealisasi != null && delaySummaryText && (
+              {!loading && delaySummaryText && (
                 <p className="border-t border-slate-100 bg-slate-50/60 px-4 py-3 text-xs leading-5 text-slate-600 sm:px-5">
                   {delaySummaryText}
                 </p>
@@ -1030,23 +1082,29 @@ export default function ManajemenDashboard() {
               </div>
 
               {/* Deviasi indicator */}
-              {deviasi != null && (
+              {!loading && (
                 <div className="rounded-xl border border-slate-200 bg-white p-4">
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-xs font-medium text-slate-500">Schedule variance</p>
-                      <p className={`mt-1 text-sm font-semibold ${deviasi >= 0 ? 'text-slate-800' : 'text-rose-700'}`}>
-                        {deviasi >= 0 ? 'Ahead of schedule' : 'Behind schedule'}
+                      <p className={`mt-1 text-sm font-semibold ${scheduleTone.value}`}>
+                        {delayStatus === 'ahead'
+                          ? 'Ahead of schedule'
+                          : delayStatus === 'delayed'
+                          ? 'Behind schedule'
+                          : delayStatus === 'on_track'
+                          ? 'On schedule'
+                          : 'No progress yet'}
                       </p>
                     </div>
-                    <p className={`shrink-0 text-xl font-semibold tabular-nums tracking-tight ${
-                      deviasi >= 0 ? 'text-slate-800' : 'text-rose-700'
-                    }`}>
-                      {deviasi > 0 ? '+' : ''}{deviasi}%
+                    <p className={`shrink-0 text-xl font-semibold tabular-nums tracking-tight ${scheduleTone.value}`}>
+                      {deviasi != null ? `${deviasi > 0 ? '+' : ''}${deviasi}%` : '—'}
                     </p>
                   </div>
                   <p className="mt-2 border-t border-slate-100 pt-2 text-xs leading-5 text-slate-500">
-                    Difference between actual progress ({lastRealisasi}%) and planned progress ({plannedAtCutoff}%){currentWeekNumber ? ` at Week ${currentWeekNumber}` : ''}.
+                    {deviasi != null
+                      ? `Difference between actual progress (${lastRealisasi}%) and planned progress (${plannedAtCutoff}%)${currentWeekNumber ? ` at Week ${currentWeekNumber}` : ''}.`
+                      : 'No approved progress reports yet for this project.'}
                   </p>
                 </div>
               )}

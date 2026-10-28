@@ -44,11 +44,9 @@ async function doSeed(){
 /**
  * POST /api/seed
  *
- * Seeds the database with three construction projects:
- *
- * 1. Pembangunan Gedung Serbaguna — mixed on-track and delayed items
- * 2. Renovasi Jembatan Cikapundung — ahead of schedule
- * 3. Pembangunan Taman Kota — empty (no progress reports, for manual input)
+ * Cleans up duplicate seeded projects and inserts:
+ * 1. Cikapundung Bridge Renovation — Ahead of Schedule (+19% at Week 8, ~2 weeks ahead)
+ * 2. City Park Development — Empty (no progress reports yet, for manual input)
  *
  * ⚠️  This endpoint is for development / demo purposes only.
  */
@@ -77,56 +75,11 @@ export async function POST() {
     const pengawasId = pengawasRows[0].id;
 
     // ══════════════════════════════════════════════════════════════════
-    // PROJECT 1 — Delayed & On-Track (existing)
+    // PROJECT 1 — Ahead of Schedule 🚀 (English)
+    // Cumulative Planned W1..W8: 5, 12.5, 21, 29, 39.5, 51, 59, 69
+    // Cumulative Actual  W1..W8: 7.5, 17, 27.5, 40, 53, 66, 79, 88 (+19%, ~2 weeks ahead)
     // ══════════════════════════════════════════════════════════════════
-    const rabItems1 = [
-      { kode: '1.1', nama: 'Pekerjaan Persiapan',          satuan: 'ls',  volume: 1,    harga: 15000000,  total: 15000000,  bobot: 5.00  },
-      { kode: '1.2', nama: 'Galian Tanah',                 satuan: 'm3',  volume: 120,  harga: 85000,     total: 10200000,  bobot: 4.00  },
-      { kode: '2.1', nama: 'Pondasi Batu Kali',            satuan: 'm3',  volume: 45,   harga: 650000,    total: 29250000,  bobot: 12.00 },
-      { kode: '2.2', nama: 'Sloof Beton Bertulang',        satuan: 'm3',  volume: 18,   harga: 3500000,   total: 63000000,  bobot: 10.00 },
-      { kode: '3.1', nama: 'Kolom Beton Bertulang',        satuan: 'm3',  volume: 24,   harga: 4200000,   total: 100800000, bobot: 15.00 },
-      { kode: '3.2', nama: 'Balok Beton Bertulang',        satuan: 'm3',  volume: 30,   harga: 4000000,   total: 120000000, bobot: 14.00 },
-      { kode: '3.3', nama: 'Plat Lantai Beton',            satuan: 'm2',  volume: 200,  harga: 350000,    total: 70000000,  bobot: 12.00 },
-      { kode: '4.1', nama: 'Dinding Bata Ringan',          satuan: 'm2',  volume: 350,  harga: 120000,    total: 42000000,  bobot: 10.00 },
-      { kode: '4.2', nama: 'Plesteran & Acian',            satuan: 'm2',  volume: 700,  harga: 45000,     total: 31500000,  bobot: 8.00  },
-      { kode: '5.1', nama: 'Atap Rangka Baja Ringan',      satuan: 'm2',  volume: 220,  harga: 250000,    total: 55000000,  bobot: 10.00 },
-    ];
-
-    const weeklyPlans1 = {
-      '1.1': [[1, 3.00], [2, 2.00]],
-      '1.2': [[1, 1.50], [2, 1.50], [3, 1.00]],
-      '2.1': [[2, 3.00], [3, 4.50], [4, 4.50]],
-      '2.2': [[3, 2.50], [4, 3.50], [5, 4.00]],
-      '3.1': [[4, 3.00], [5, 4.00], [6, 4.00], [7, 4.00]],
-      '3.2': [[5, 3.00], [6, 3.50], [7, 3.50], [8, 4.00]],
-      '3.3': [[6, 3.00], [7, 3.00], [8, 3.00], [9, 3.00]],
-      '4.1': [[7, 2.50], [8, 2.50], [9, 2.50], [10, 2.50]],
-      '4.2': [[9, 2.00], [10, 2.00], [11, 2.00], [12, 2.00]],
-      '5.1': [[9, 2.00], [10, 2.50], [11, 2.50], [12, 3.00]],
-    };
-
-    const actualProgress1 = {
-      // ✅ ON-TRACK
-      '1.1': [[1, 3.00], [2, 2.00]],
-      '1.2': [[1, 1.50], [2, 1.50], [3, 1.00]],
-      '2.1': [[2, 3.00], [3, 4.50], [4, 4.50]],
-      // ⚠️ SLIGHTLY DELAYED
-      '2.2': [[3, 2.50], [4, 3.00], [5, 2.50]],
-      '3.1': [[4, 2.50], [5, 3.00], [6, 3.00], [7, 2.50]],
-      // 🔴 SIGNIFICANTLY DELAYED
-      '3.2': [[5, 2.00], [6, 2.50], [7, 2.00]],
-      '3.3': [[6, 2.00], [7, 1.50]],
-      // 🟡 PARTIAL
-      '4.1': [[7, 1.50], [8, 1.00]],
-      // ❌ NOT STARTED
-      // '4.2': [],
-      // '5.1': [],
-    };
-
-    // ══════════════════════════════════════════════════════════════════
-    // PROJECT 2 — Ahead of Schedule 🚀
-    // ══════════════════════════════════════════════════════════════════
-    const rabItems2 = [
+    const rabItemsAhead = [
       { kode: '1.1', nama: 'Site Clearing & Mobilization',      satuan: 'ls',  volume: 1,    harga: 25000000,  total: 25000000,  bobot: 6.00  },
       { kode: '1.2', nama: 'Temporary Cofferdam',                satuan: 'm3',  volume: 80,   harga: 200000,    total: 16000000,  bobot: 5.00  },
       { kode: '2.1', nama: 'Pile Foundation',                    satuan: 'm',   volume: 200,  harga: 450000,    total: 90000000,  bobot: 14.00 },
@@ -138,7 +91,7 @@ export async function POST() {
       { kode: '5.1', nama: 'Asphalt & Finishing',                satuan: 'm2',  volume: 400,  harga: 120000,    total: 48000000,  bobot: 10.00 },
     ];
 
-    const weeklyPlans2 = {
+    const weeklyPlansAhead = {
       '1.1': [[1, 3.50], [2, 2.50]],
       '1.2': [[1, 1.50], [2, 2.00], [3, 1.50]],
       '2.1': [[2, 3.00], [3, 4.00], [4, 4.00], [5, 3.00]],
@@ -150,23 +103,21 @@ export async function POST() {
       '5.1': [[10, 2.50], [11, 3.50], [12, 4.00]],
     };
 
-    // Actual progress EXCEEDS plan at most points → Ahead of Schedule
-    const actualProgress2 = {
-      // 🚀 COMPLETED FASTER THAN PLANNED
-      '1.1': [[1, 4.00], [2, 2.00]],                           // Done in week 2 (planned: end week 2) — 100% done
-      '1.2': [[1, 2.50], [2, 2.50]],                           // Done in week 2 (planned: end week 3) — 1 week early
-      '2.1': [[2, 4.00], [3, 5.00], [4, 5.00]],                // Done in week 4 (planned: end week 5) — 1 week early
-      '2.2': [[3, 4.00], [4, 5.00], [5, 5.00], [6, 2.00]],    // Done in week 6 (on plan) but each week ahead
-      // 🚀 AHEAD OF SCHEDULE
-      '3.1': [[5, 4.00], [6, 5.00], [7, 5.00]],                // Done in week 7 (planned: end week 8) — 1 week early
-      '3.2': [[6, 4.00], [7, 5.00], [8, 5.00]],                // 93% by week 8 (planned: end week 9) — tracking ahead
-      '4.1': [[8, 4.00], [9, 4.00]],                            // 67% by week 9 (planned: end week 11) — well ahead
+    const actualProgressAhead = {
+      '1.1': [[1, 4.50], [2, 1.50]],                           // 6.00 / 6.00 (completed W2)
+      '1.2': [[1, 3.00], [2, 2.00]],                           // 5.00 / 5.00 (completed W2, 1 week early)
+      '2.1': [[2, 6.00], [3, 5.00], [4, 3.00]],                // 14.00 / 14.00 (completed W4, 1 week early)
+      '2.2': [[3, 5.50], [4, 6.50], [5, 4.00]],                // 16.00 / 16.00 (completed W5, 1 week early)
+      '3.1': [[4, 3.00], [5, 6.00], [6, 5.00]],                // 14.00 / 14.00 (completed W6, 2 weeks early)
+      '3.2': [[5, 3.00], [6, 6.00], [7, 6.00]],                // 15.00 / 15.00 (completed W7, 2 weeks early)
+      '4.1': [[6, 2.00], [7, 5.00], [8, 5.00]],                // 12.00 / 12.00 (completed W8, 3 weeks early)
+      '4.2': [[7, 2.00], [8, 4.00]],                           // 6.00 / 8.00 (started early, 75% done by W8)
     };
 
     // ══════════════════════════════════════════════════════════════════
-    // PROJECT 3 — Empty (for user to fill in) 📝
+    // PROJECT 2 — Empty (for user to fill in) 📝 (English)
     // ══════════════════════════════════════════════════════════════════
-    const rabItems3 = [
+    const rabItemsEmpty = [
       { kode: '1.1', nama: 'Land Survey & Marking',            satuan: 'ls',  volume: 1,    harga: 8000000,   total: 8000000,   bobot: 5.00  },
       { kode: '1.2', nama: 'Site Clearing',                    satuan: 'm2',  volume: 5000, harga: 15000,     total: 75000000,  bobot: 8.00  },
       { kode: '2.1', nama: 'Drainage & Irrigation System',     satuan: 'm',   volume: 300,  harga: 250000,    total: 75000000,  bobot: 12.00 },
@@ -179,7 +130,7 @@ export async function POST() {
       { kode: '5.2', nama: 'Fencing & Signage',                satuan: 'm',   volume: 500,  harga: 120000,    total: 60000000,  bobot: 6.00  },
     ];
 
-    const weeklyPlans3 = {
+    const weeklyPlansEmpty = {
       '1.1': [[1, 3.00], [2, 2.00]],
       '1.2': [[1, 2.00], [2, 3.00], [3, 3.00]],
       '2.1': [[2, 2.00], [3, 4.00], [4, 4.00], [5, 2.00]],
@@ -191,8 +142,6 @@ export async function POST() {
       '5.1': [[10, 2.00], [11, 3.00], [12, 3.00]],
       '5.2': [[10, 1.50], [11, 2.00], [12, 2.50]],
     };
-
-    // No actual progress — empty project for manual input
 
     // ── Helper: Insert one project ────────────────────────────────────
     async function seedProject(exec, { nama, lokasi, tglMulai, tglSelesai, rabItems, weeklyPlans, actualProgress }) {
@@ -237,7 +186,7 @@ export async function POST() {
                (item_pekerjaan_id, mandor_id, pengawas_id, minggu_ke, tgl_laporan,
                 realisasi_volume, realisasi_bobot, status_verifikasi, catatan_pengawas)
                VALUES (?, ?, ?, ?, ?, ?, ?, 'approved', ?)`,
-              [itemId, mandorId, pengawasId, minggu, dateStr, bobot, bobot, 'Progress verified on-site']
+              [itemId, mandorId, pengawasId, minggu, dateStr, bobot, bobot, 'Progress verified on-site — ahead of weekly target']
             );
           }
         }
@@ -246,48 +195,51 @@ export async function POST() {
       return pid;
     }
 
-    // ── 5. Execute seed in a transaction ─────────────────────────────
+    // ── Execute cleanup + seed in a transaction ───────────────────────
     const projectIds = await withTransaction(async (exec) => {
-      const id1 = await seedProject(exec, {
-        nama: 'Pembangunan Gedung Serbaguna',
-        lokasi: 'Jl. Merdeka No. 10, Bandung',
-        tglMulai: '2026-08-01',
-        tglSelesai: '2026-10-24',
-        rabItems: rabItems1,
-        weeklyPlans: weeklyPlans1,
-        actualProgress: actualProgress1,
-      });
+      // Remove duplicate seeded projects (keep original projects id <= 2)
+      await exec(
+        `DELETE lp FROM laporan_progres lp
+         JOIN item_pekerjaan ip ON lp.item_pekerjaan_id = ip.id
+         WHERE ip.proyek_id > 2`
+      );
+      await exec(
+        `DELETE jrm FROM jadwal_rencana_mingguan jrm
+         JOIN item_pekerjaan ip ON jrm.item_pekerjaan_id = ip.id
+         WHERE ip.proyek_id > 2`
+      );
+      await exec(`DELETE FROM item_pekerjaan WHERE proyek_id > 2`);
+      await exec(`DELETE FROM proyek WHERE id > 2`);
 
-      const id2 = await seedProject(exec, {
-        nama: 'Renovasi Jembatan Cikapundung',
+      const idAhead = await seedProject(exec, {
+        nama: 'Cikapundung Bridge Renovation',
         lokasi: 'Jl. Braga No. 45, Bandung',
         tglMulai: '2026-07-15',
         tglSelesai: '2026-10-10',
-        rabItems: rabItems2,
-        weeklyPlans: weeklyPlans2,
-        actualProgress: actualProgress2,
+        rabItems: rabItemsAhead,
+        weeklyPlans: weeklyPlansAhead,
+        actualProgress: actualProgressAhead,
       });
 
-      const id3 = await seedProject(exec, {
-        nama: 'Pembangunan Taman Kota',
+      const idEmpty = await seedProject(exec, {
+        nama: 'City Park Development',
         lokasi: 'Jl. Asia Afrika No. 22, Bandung',
         tglMulai: '2026-09-01',
         tglSelesai: '2026-11-21',
-        rabItems: rabItems3,
-        weeklyPlans: weeklyPlans3,
+        rabItems: rabItemsEmpty,
+        weeklyPlans: weeklyPlansEmpty,
         actualProgress: null, // Empty — no progress reports
       });
 
-      return { id1, id2, id3 };
+      return { idAhead, idEmpty };
     });
 
     return NextResponse.json({
       success: true,
       message: [
-        `Seed complete! 3 projects created:`,
-        `• Project ${projectIds.id1} — Delayed & On-Track (10 items, 12 weeks)`,
-        `• Project ${projectIds.id2} — Ahead of Schedule (9 items, 12 weeks)`,
-        `• Project ${projectIds.id3} — Empty / No Progress (10 items, 12 weeks)`,
+        `Seed complete! Duplicate projects cleaned up and 2 English projects created:`,
+        `• Project ${projectIds.idAhead} — Cikapundung Bridge Renovation (Ahead of Schedule: 88% actual vs 69% planned at W8)`,
+        `• Project ${projectIds.idEmpty} — City Park Development (Empty / No Progress Yet)`,
       ].join('\n'),
       project_ids: projectIds,
     });
