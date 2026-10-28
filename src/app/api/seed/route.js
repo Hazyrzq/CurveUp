@@ -21,7 +21,7 @@ export async function GET() {
 </style></head><body>
 <div class="card">
   <h1>🌱 Seed Demo Data</h1>
-  <p>Insert sample project with delayed &amp; on-track RAB items</p>
+  <p>Insert sample projects: Delayed &amp; On-Track, Ahead of Schedule, and an empty project</p>
   <button id="btn" onclick="doSeed()">Insert Seed Data</button>
   <div id="result"></div>
 </div>
@@ -44,14 +44,11 @@ async function doSeed(){
 /**
  * POST /api/seed
  *
- * Seeds the database with a realistic construction project containing:
- * - 1 project (Proyek Pembangunan Gedung Serbaguna)
- * - 10 RAB items with varying weights
- * - 12-week planned schedule (jadwal_rencana_mingguan)
- * - Progress reports: some on-track, some delayed
+ * Seeds the database with three construction projects:
  *
- * The result is a clearly visible gap between the planned S-curve and
- * the actual S-curve, demonstrating both on-time and delayed items.
+ * 1. Pembangunan Gedung Serbaguna — mixed on-track and delayed items
+ * 2. Renovasi Jembatan Cikapundung — ahead of schedule
+ * 3. Pembangunan Taman Kota — empty (no progress reports, for manual input)
  *
  * ⚠️  This endpoint is for development / demo purposes only.
  */
@@ -79,9 +76,10 @@ export async function POST() {
     const mandorId = mandorRows[0].id;
     const pengawasId = pengawasRows[0].id;
 
-    // ── 2. RAB Items ─────────────────────────────────────────────────
-    // 10 items whose bobot_persen sums to exactly 100%
-    const rabItems = [
+    // ══════════════════════════════════════════════════════════════════
+    // PROJECT 1 — Delayed & On-Track (existing)
+    // ══════════════════════════════════════════════════════════════════
+    const rabItems1 = [
       { kode: '1.1', nama: 'Pekerjaan Persiapan',          satuan: 'ls',  volume: 1,    harga: 15000000,  total: 15000000,  bobot: 5.00  },
       { kode: '1.2', nama: 'Galian Tanah',                 satuan: 'm3',  volume: 120,  harga: 85000,     total: 10200000,  bobot: 4.00  },
       { kode: '2.1', nama: 'Pondasi Batu Kali',            satuan: 'm3',  volume: 45,   harga: 650000,    total: 29250000,  bobot: 12.00 },
@@ -94,10 +92,7 @@ export async function POST() {
       { kode: '5.1', nama: 'Atap Rangka Baja Ringan',      satuan: 'm2',  volume: 220,  harga: 250000,    total: 55000000,  bobot: 10.00 },
     ];
 
-    // ── 3. Planned weekly schedule ───────────────────────────────────
-    // Each item spreads its bobot across a subset of the 12 weeks.
-    // Format: [weekNumber, percentageOfBobot]
-    const weeklyPlans = {
+    const weeklyPlans1 = {
       '1.1': [[1, 3.00], [2, 2.00]],
       '1.2': [[1, 1.50], [2, 1.50], [3, 1.00]],
       '2.1': [[2, 3.00], [3, 4.50], [4, 4.50]],
@@ -110,51 +105,105 @@ export async function POST() {
       '5.1': [[9, 2.00], [10, 2.50], [11, 2.50], [12, 3.00]],
     };
 
-    // ── 4. Actual progress (realisasi) ───────────────────────────────
-    // Some items are on-track, some are delayed.
-    // Format: [weekNumber, realisasiBobot]
-    // Items 1.1, 1.2, 2.1 → mostly on-track
-    // Items 2.2, 3.1 → slightly delayed
-    // Items 3.2, 3.3 → significantly delayed
-    // Items 4.1 → partially done
-    // Items 4.2, 5.1 → not yet started
-    const actualProgress = {
+    const actualProgress1 = {
       // ✅ ON-TRACK
-      '1.1': [[1, 3.00], [2, 2.00]],                            // 100% of bobot done
-      '1.2': [[1, 1.50], [2, 1.50], [3, 1.00]],                 // 100% of bobot done
-      '2.1': [[2, 3.00], [3, 4.50], [4, 4.50]],                 // 100% of bobot done
-
+      '1.1': [[1, 3.00], [2, 2.00]],
+      '1.2': [[1, 1.50], [2, 1.50], [3, 1.00]],
+      '2.1': [[2, 3.00], [3, 4.50], [4, 4.50]],
       // ⚠️ SLIGHTLY DELAYED
-      '2.2': [[3, 2.50], [4, 3.00], [5, 2.50]],                 // 80% → missing 2%
-      '3.1': [[4, 2.50], [5, 3.00], [6, 3.00], [7, 2.50]],      // 73.3% → missing 4%
-
+      '2.2': [[3, 2.50], [4, 3.00], [5, 2.50]],
+      '3.1': [[4, 2.50], [5, 3.00], [6, 3.00], [7, 2.50]],
       // 🔴 SIGNIFICANTLY DELAYED
-      '3.2': [[5, 2.00], [6, 2.50], [7, 2.00]],                 // 46.4% → missing 7.5%
-      '3.3': [[6, 2.00], [7, 1.50]],                             // 29.2% → missing 8.5%
-
+      '3.2': [[5, 2.00], [6, 2.50], [7, 2.00]],
+      '3.3': [[6, 2.00], [7, 1.50]],
       // 🟡 PARTIAL
-      '4.1': [[7, 1.50], [8, 1.00]],                             // 25% → still progressing
-
+      '4.1': [[7, 1.50], [8, 1.00]],
       // ❌ NOT STARTED
       // '4.2': [],
       // '5.1': [],
     };
 
-    // ── 5. Execute seed in a transaction ─────────────────────────────
-    const proyekId = await withTransaction(async (exec) => {
-      // Create project
-      const tglMulai = '2026-08-01';
-      const tglSelesai = '2026-10-24';  // ~12 weeks
-      const totalAnggaran = rabItems.reduce((s, i) => s + i.total, 0);
+    // ══════════════════════════════════════════════════════════════════
+    // PROJECT 2 — Ahead of Schedule 🚀
+    // ══════════════════════════════════════════════════════════════════
+    const rabItems2 = [
+      { kode: '1.1', nama: 'Site Clearing & Mobilization',      satuan: 'ls',  volume: 1,    harga: 25000000,  total: 25000000,  bobot: 6.00  },
+      { kode: '1.2', nama: 'Temporary Cofferdam',                satuan: 'm3',  volume: 80,   harga: 200000,    total: 16000000,  bobot: 5.00  },
+      { kode: '2.1', nama: 'Pile Foundation',                    satuan: 'm',   volume: 200,  harga: 450000,    total: 90000000,  bobot: 14.00 },
+      { kode: '2.2', nama: 'Abutment Concrete',                 satuan: 'm3',  volume: 60,   harga: 3800000,   total: 228000000, bobot: 16.00 },
+      { kode: '3.1', nama: 'Pier Column Concrete',               satuan: 'm3',  volume: 40,   harga: 4500000,   total: 180000000, bobot: 14.00 },
+      { kode: '3.2', nama: 'Steel Girder Installation',          satuan: 'ton', volume: 25,   harga: 15000000,  total: 375000000, bobot: 15.00 },
+      { kode: '4.1', nama: 'Bridge Deck Concrete',               satuan: 'm3',  volume: 90,   harga: 3500000,   total: 315000000, bobot: 12.00 },
+      { kode: '4.2', nama: 'Railing & Safety Barrier',           satuan: 'm',   volume: 120,  harga: 350000,    total: 42000000,  bobot: 8.00  },
+      { kode: '5.1', nama: 'Asphalt & Finishing',                satuan: 'm2',  volume: 400,  harga: 120000,    total: 48000000,  bobot: 10.00 },
+    ];
 
+    const weeklyPlans2 = {
+      '1.1': [[1, 3.50], [2, 2.50]],
+      '1.2': [[1, 1.50], [2, 2.00], [3, 1.50]],
+      '2.1': [[2, 3.00], [3, 4.00], [4, 4.00], [5, 3.00]],
+      '2.2': [[3, 3.00], [4, 4.00], [5, 4.50], [6, 4.50]],
+      '3.1': [[5, 3.00], [6, 4.00], [7, 4.00], [8, 3.00]],
+      '3.2': [[6, 3.00], [7, 4.00], [8, 4.00], [9, 4.00]],
+      '4.1': [[8, 3.00], [9, 3.00], [10, 3.00], [11, 3.00]],
+      '4.2': [[9, 2.00], [10, 2.00], [11, 2.00], [12, 2.00]],
+      '5.1': [[10, 2.50], [11, 3.50], [12, 4.00]],
+    };
+
+    // Actual progress EXCEEDS plan at most points → Ahead of Schedule
+    const actualProgress2 = {
+      // 🚀 COMPLETED FASTER THAN PLANNED
+      '1.1': [[1, 4.00], [2, 2.00]],                           // Done in week 2 (planned: end week 2) — 100% done
+      '1.2': [[1, 2.50], [2, 2.50]],                           // Done in week 2 (planned: end week 3) — 1 week early
+      '2.1': [[2, 4.00], [3, 5.00], [4, 5.00]],                // Done in week 4 (planned: end week 5) — 1 week early
+      '2.2': [[3, 4.00], [4, 5.00], [5, 5.00], [6, 2.00]],    // Done in week 6 (on plan) but each week ahead
+      // 🚀 AHEAD OF SCHEDULE
+      '3.1': [[5, 4.00], [6, 5.00], [7, 5.00]],                // Done in week 7 (planned: end week 8) — 1 week early
+      '3.2': [[6, 4.00], [7, 5.00], [8, 5.00]],                // 93% by week 8 (planned: end week 9) — tracking ahead
+      '4.1': [[8, 4.00], [9, 4.00]],                            // 67% by week 9 (planned: end week 11) — well ahead
+    };
+
+    // ══════════════════════════════════════════════════════════════════
+    // PROJECT 3 — Empty (for user to fill in) 📝
+    // ══════════════════════════════════════════════════════════════════
+    const rabItems3 = [
+      { kode: '1.1', nama: 'Land Survey & Marking',            satuan: 'ls',  volume: 1,    harga: 8000000,   total: 8000000,   bobot: 5.00  },
+      { kode: '1.2', nama: 'Site Clearing',                    satuan: 'm2',  volume: 5000, harga: 15000,     total: 75000000,  bobot: 8.00  },
+      { kode: '2.1', nama: 'Drainage & Irrigation System',     satuan: 'm',   volume: 300,  harga: 250000,    total: 75000000,  bobot: 12.00 },
+      { kode: '2.2', nama: 'Pedestrian Walkway Foundation',    satuan: 'm3',  volume: 80,   harga: 500000,    total: 40000000,  bobot: 10.00 },
+      { kode: '3.1', nama: 'Walkway Paving',                   satuan: 'm2',  volume: 2000, harga: 85000,     total: 170000000, bobot: 15.00 },
+      { kode: '3.2', nama: 'Garden & Landscape Planting',      satuan: 'm2',  volume: 3000, harga: 45000,     total: 135000000, bobot: 14.00 },
+      { kode: '4.1', nama: 'Gazebo & Rest Area Structure',     satuan: 'unit',volume: 4,    harga: 35000000,  total: 140000000, bobot: 12.00 },
+      { kode: '4.2', nama: 'Playground Equipment',              satuan: 'set', volume: 3,    harga: 50000000,  total: 150000000, bobot: 10.00 },
+      { kode: '5.1', nama: 'Lighting & Electrical',            satuan: 'ls',  volume: 1,    harga: 60000000,  total: 60000000,  bobot: 8.00  },
+      { kode: '5.2', nama: 'Fencing & Signage',                satuan: 'm',   volume: 500,  harga: 120000,    total: 60000000,  bobot: 6.00  },
+    ];
+
+    const weeklyPlans3 = {
+      '1.1': [[1, 3.00], [2, 2.00]],
+      '1.2': [[1, 2.00], [2, 3.00], [3, 3.00]],
+      '2.1': [[2, 2.00], [3, 4.00], [4, 4.00], [5, 2.00]],
+      '2.2': [[3, 2.50], [4, 3.50], [5, 4.00]],
+      '3.1': [[4, 2.00], [5, 3.00], [6, 4.00], [7, 3.00], [8, 3.00]],
+      '3.2': [[5, 2.00], [6, 3.00], [7, 3.00], [8, 3.00], [9, 3.00]],
+      '4.1': [[7, 3.00], [8, 3.00], [9, 3.00], [10, 3.00]],
+      '4.2': [[8, 2.50], [9, 2.50], [10, 2.50], [11, 2.50]],
+      '5.1': [[10, 2.00], [11, 3.00], [12, 3.00]],
+      '5.2': [[10, 1.50], [11, 2.00], [12, 2.50]],
+    };
+
+    // No actual progress — empty project for manual input
+
+    // ── Helper: Insert one project ────────────────────────────────────
+    async function seedProject(exec, { nama, lokasi, tglMulai, tglSelesai, rabItems, weeklyPlans, actualProgress }) {
+      const totalAnggaran = rabItems.reduce((s, i) => s + i.total, 0);
       const prj = await exec(
         `INSERT INTO proyek (nama_proyek, lokasi, tgl_mulai, tgl_selesai, total_anggaran)
          VALUES (?, ?, ?, ?, ?)`,
-        ['Pembangunan Gedung Serbaguna', 'Jl. Merdeka No. 10, Bandung', tglMulai, tglSelesai, totalAnggaran]
+        [nama, lokasi, tglMulai, tglSelesai, totalAnggaran]
       );
       const pid = prj.insertId;
 
-      // Insert RAB items + weekly plans
       const itemIdMap = {};
       for (const item of rabItems) {
         const res = await exec(
@@ -165,7 +214,6 @@ export async function POST() {
         );
         itemIdMap[item.kode] = res.insertId;
 
-        // Insert planned schedule
         const weeks = weeklyPlans[item.kode] || [];
         for (const [minggu, bobot] of weeks) {
           await exec(
@@ -176,43 +224,72 @@ export async function POST() {
         }
       }
 
-      // Insert progress reports (approved)
-      for (const [kode, progList] of Object.entries(actualProgress)) {
-        const itemId = itemIdMap[kode];
-        if (!itemId) continue;
-
-        for (const [minggu, bobot] of progList) {
-          // Calculate a plausible date
-          const reportDate = new Date('2026-08-01');
-          reportDate.setDate(reportDate.getDate() + (minggu - 1) * 7 + 3); // mid-week
-          const dateStr = reportDate.toISOString().split('T')[0];
-
-          await exec(
-            `INSERT INTO laporan_progres
-             (item_pekerjaan_id, mandor_id, pengawas_id, minggu_ke, tgl_laporan,
-              realisasi_volume, realisasi_bobot, status_verifikasi, catatan_pengawas)
-             VALUES (?, ?, ?, ?, ?, ?, ?, 'approved', ?)`,
-            [
-              itemId,
-              mandorId,
-              pengawasId,
-              minggu,
-              dateStr,
-              bobot,
-              bobot,
-              'Progres sesuai lapangan',
-            ]
-          );
+      if (actualProgress) {
+        for (const [kode, progList] of Object.entries(actualProgress)) {
+          const itemId = itemIdMap[kode];
+          if (!itemId) continue;
+          for (const [minggu, bobot] of progList) {
+            const reportDate = new Date(tglMulai);
+            reportDate.setDate(reportDate.getDate() + (minggu - 1) * 7 + 3);
+            const dateStr = reportDate.toISOString().split('T')[0];
+            await exec(
+              `INSERT INTO laporan_progres
+               (item_pekerjaan_id, mandor_id, pengawas_id, minggu_ke, tgl_laporan,
+                realisasi_volume, realisasi_bobot, status_verifikasi, catatan_pengawas)
+               VALUES (?, ?, ?, ?, ?, ?, ?, 'approved', ?)`,
+              [itemId, mandorId, pengawasId, minggu, dateStr, bobot, bobot, 'Progress verified on-site']
+            );
+          }
         }
       }
 
       return pid;
+    }
+
+    // ── 5. Execute seed in a transaction ─────────────────────────────
+    const projectIds = await withTransaction(async (exec) => {
+      const id1 = await seedProject(exec, {
+        nama: 'Pembangunan Gedung Serbaguna',
+        lokasi: 'Jl. Merdeka No. 10, Bandung',
+        tglMulai: '2026-08-01',
+        tglSelesai: '2026-10-24',
+        rabItems: rabItems1,
+        weeklyPlans: weeklyPlans1,
+        actualProgress: actualProgress1,
+      });
+
+      const id2 = await seedProject(exec, {
+        nama: 'Renovasi Jembatan Cikapundung',
+        lokasi: 'Jl. Braga No. 45, Bandung',
+        tglMulai: '2026-07-15',
+        tglSelesai: '2026-10-10',
+        rabItems: rabItems2,
+        weeklyPlans: weeklyPlans2,
+        actualProgress: actualProgress2,
+      });
+
+      const id3 = await seedProject(exec, {
+        nama: 'Pembangunan Taman Kota',
+        lokasi: 'Jl. Asia Afrika No. 22, Bandung',
+        tglMulai: '2026-09-01',
+        tglSelesai: '2026-11-21',
+        rabItems: rabItems3,
+        weeklyPlans: weeklyPlans3,
+        actualProgress: null, // Empty — no progress reports
+      });
+
+      return { id1, id2, id3 };
     });
 
     return NextResponse.json({
       success: true,
-      message: `Seed data berhasil! Proyek ID: ${proyekId}. 10 item RAB, 12 minggu jadwal, dan laporan progres (delay & on-track) telah dimasukkan.`,
-      proyek_id: proyekId,
+      message: [
+        `Seed complete! 3 projects created:`,
+        `• Project ${projectIds.id1} — Delayed & On-Track (10 items, 12 weeks)`,
+        `• Project ${projectIds.id2} — Ahead of Schedule (9 items, 12 weeks)`,
+        `• Project ${projectIds.id3} — Empty / No Progress (10 items, 12 weeks)`,
+      ].join('\n'),
+      project_ids: projectIds,
     });
   } catch (error) {
     return NextResponse.json(
