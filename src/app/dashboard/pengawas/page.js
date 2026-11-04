@@ -49,14 +49,21 @@ export default function PengawasDashboard() {
 
   useEffect(() => () => clearTimeout(successToastTimeout.current), []);
 
-  const loadData = async () => {
+  const loadData = async (autoSelectFilter = false) => {
+    setLoading(true);
     if (!selectedId) {
-      setReports([]);
-      setRabItems([]);
-      setLoading(false);
+      try {
+        const progresRes = await fetch('/api/progres');
+        const progres = await progresRes.json();
+        setReports(progres.success ? progres.data || [] : []);
+      } catch {
+        setReports([]);
+      } finally {
+        setRabItems([]);
+        setLoading(false);
+      }
       return;
     }
-    setLoading(true);
     try {
       const q = `proyek_id=${selectedId}`;
       const [progresRes, pekerjaanRes] = await Promise.all([
@@ -65,7 +72,12 @@ export default function PengawasDashboard() {
       ]);
       const progres = await progresRes.json();
       const pekerjaan = await pekerjaanRes.json();
-      if (progres.success) setReports(progres.data || []);
+      const list = progres.success ? progres.data || [] : [];
+      setReports(list);
+      if (autoSelectFilter) {
+        const hasPending = list.some((r) => r.status_verifikasi === 'pending');
+        setReportFilter(hasPending ? 'pending' : 'all');
+      }
       if (pekerjaan.success) setRabItems(pekerjaan.data || []);
     } catch (e) {
       setReports([]);
@@ -76,7 +88,7 @@ export default function PengawasDashboard() {
   };
 
   useEffect(() => {
-    loadData();
+    loadData(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
 
@@ -150,7 +162,15 @@ export default function PengawasDashboard() {
       />
 
       {!selectedId ? (
-        <section className="anim-content-enter overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <div className="space-y-4 sm:space-y-5">
+          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3 stagger-grid">
+            <StatCard icon={<ClipboardList className="w-4 h-4" />} label="Total Reports" value={loading ? '—' : reports.length} />
+            <StatCard icon={<Clock className="w-4 h-4" />} label="Awaiting Review" value={loading ? '—' : pendingCount} tone="amber" />
+            <StatCard icon={<CheckCircle className="w-4 h-4" />} label="Approved" value={loading ? '—' : approvedCount} tone="emerald" />
+            <StatCard icon={<XCircle className="w-4 h-4" />} label="Rejected" value={loading ? '—' : rejectedCount} />
+          </div>
+
+          <section className="anim-content-enter overflow-hidden rounded-xl border border-slate-200 bg-white">
           <div className="flex flex-col gap-1 border-b border-slate-100 p-4 sm:p-5">
             <h3 className="text-sm font-semibold text-slate-900">Projects</h3>
             <p className="text-xs text-slate-500">Choose a project to open its report review workspace.</p>
@@ -205,6 +225,7 @@ export default function PengawasDashboard() {
             )}
           </div>
         </section>
+        </div>
       ) : (
       <>
       <button
