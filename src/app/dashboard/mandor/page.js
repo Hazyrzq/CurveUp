@@ -347,19 +347,21 @@ export default function MandorDashboard() {
   }, [selectedId]);
 
   const handleOpenReportForm = (itemId) => {
-    router.push(`/dashboard/mandor/laporan-baru?item_id=${itemId}`);
+    const pid = selectedId ? `&proyek_id=${selectedId}` : '';
+    router.push(`/dashboard/mandor/laporan-baru?item_id=${itemId}${pid}`);
   };
 
   const canManageReport = (report) =>
-    String(report.mandor_id) === String(mandorId) &&
+    (!mandorId || String(report.mandor_id) === String(mandorId)) &&
     ['pending', 'rejected'].includes(report.status_verifikasi);
 
   const handleEditReport = (report) => {
-    if (report.proyek_id && String(report.proyek_id) !== String(selectedId)) {
-      selectProject(report.proyek_id);
+    const pid = report.proyek_id || selectedId;
+    if (pid && String(pid) !== String(selectedId)) {
+      selectProject(pid);
     }
     router.push(
-      `/dashboard/mandor/laporan-baru?item_id=${report.item_pekerjaan_id}&report_id=${report.id}`
+      `/dashboard/mandor/laporan-baru?item_id=${report.item_pekerjaan_id}&report_id=${report.id}${pid ? `&proyek_id=${pid}` : ''}`
     );
   };
 
@@ -392,7 +394,7 @@ export default function MandorDashboard() {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-4 pb-16 sm:space-y-6 md:pb-0">
       <DashboardHeader
         role="mandor"
         compactTitle
@@ -477,7 +479,7 @@ export default function MandorDashboard() {
 
           {homeTab === 'projects' && (
             <>
-          <div className="hidden grid-cols-2 gap-3 sm:grid sm:grid-cols-2 sm:gap-4 xl:grid-cols-4 stagger-grid">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-4 xl:grid-cols-4 stagger-grid">
             <StatCard
               icon={<ClipboardList className="w-4 h-4" />}
               label="Total reports submitted"
@@ -525,7 +527,7 @@ export default function MandorDashboard() {
             </div>
 
             <div className="sm:max-h-[500px] sm:overflow-auto">
-              <div className="hidden sm:block">
+              <div className="hidden overflow-x-auto sm:block">
               <table className="w-full min-w-[640px] text-left text-sm">
                 <thead className="sticky top-0 bg-slate-50 text-xs text-slate-500">
                   <tr>
@@ -643,7 +645,7 @@ export default function MandorDashboard() {
                   )}
                 </div>
               ) : (
-                <div className="hidden sm:block">
+                <div className="hidden overflow-x-auto sm:block">
                 <table className="w-full min-w-[640px] text-left text-sm">
                   <thead className="sticky top-0 bg-slate-50 text-xs text-slate-500">
                     <tr>
@@ -834,7 +836,7 @@ export default function MandorDashboard() {
           </div>
 
           {/* Stat Cards Ringkasan Pelaporan Proyek Ini */}
-          <div className="hidden grid-cols-2 gap-3 sm:grid sm:grid-cols-2 sm:gap-4 xl:grid-cols-4 stagger-grid">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-4 xl:grid-cols-4 stagger-grid">
             <StatCard
               icon={<Layers className="w-4 h-4" />}
               label="RAB Work Items"
@@ -924,7 +926,7 @@ export default function MandorDashboard() {
                   </p>
                 ) : (
                   <>
-                  <div className="hidden sm:block">
+                  <div className="hidden overflow-x-auto sm:block">
                   <table className="w-full min-w-[680px] text-left text-sm">
                     <thead className="sticky top-0 bg-slate-50 text-xs text-slate-500">
                       <tr>
@@ -1026,55 +1028,6 @@ export default function MandorDashboard() {
                   </div>
                   </>
                 )}
-                {reportToDelete && portalReady && createPortal(
-                  <div
-                    className="fixed inset-0 z-[100] flex items-center justify-center min-h-screen overflow-y-auto bg-slate-950/45 p-4 modal-backdrop"
-                    onMouseDown={(event) => {
-                      if (event.target === event.currentTarget && !deletingReportId) {
-                        setReportToDelete(null);
-                      }
-                    }}
-                  >
-                    <section
-                      role="alertdialog"
-                      aria-modal="true"
-                      aria-labelledby="delete-report-title"
-                      aria-describedby="delete-report-description"
-                      className="modal-panel w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl"
-                    >
-                      <h2 id="delete-report-title" className="text-base font-semibold text-slate-900">
-                        Delete this report?
-                      </h2>
-                      <p id="delete-report-description" className="mt-2 text-sm leading-6 text-slate-600">
-                        The report for Week {reportToDelete.minggu_ke} will be permanently deleted. This action cannot be undone.
-                      </p>
-                      {actionMsg?.type === 'error' && (
-                        <p role="alert" className="mt-3 rounded-lg bg-rose-50 px-3 py-2 text-xs text-rose-700">
-                          {actionMsg.text}
-                        </p>
-                      )}
-                      <div className="mt-5 flex justify-end gap-2">
-                        <button
-                          type="button"
-                          disabled={Boolean(deletingReportId)}
-                          onClick={() => setReportToDelete(null)}
-                          className="min-h-10 rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="button"
-                          disabled={Boolean(deletingReportId)}
-                          onClick={() => handleDeleteReport(reportToDelete)}
-                          className="min-h-10 rounded-lg bg-rose-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-rose-700 disabled:cursor-wait disabled:opacity-60"
-                        >
-                          {deletingReportId ? 'Deleting...' : 'Delete report'}
-                        </button>
-                      </div>
-                    </section>
-                  </div>,
-                  document.body
-                )}
               </div>
             </section>
           )}
@@ -1154,7 +1107,7 @@ export default function MandorDashboard() {
                   </div>
                 ) : (
                   <>
-                  <div className="hidden sm:block">
+                  <div className="hidden overflow-x-auto sm:block">
                   <table key={`${historyFilter}-${historyItemFilter}`} className="w-full min-w-[680px] animate-[fade-in_180ms_ease-out] text-left text-sm">
                     <thead className="sticky top-0 bg-slate-50 text-xs text-slate-500">
                       <tr>
@@ -1313,6 +1266,57 @@ export default function MandorDashboard() {
           <Send className="h-4 w-4" />
           <span>+ Report</span>
         </button>
+      )}
+
+      {/* Delete Report Confirmation Modal */}
+      {reportToDelete && portalReady && createPortal(
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center min-h-screen overflow-y-auto bg-slate-950/45 p-4 modal-backdrop"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget && !deletingReportId) {
+              setReportToDelete(null);
+            }
+          }}
+        >
+          <section
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="delete-report-title"
+            aria-describedby="delete-report-description"
+            className="modal-panel w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl"
+          >
+            <h2 id="delete-report-title" className="text-base font-semibold text-slate-900">
+              Delete this report?
+            </h2>
+            <p id="delete-report-description" className="mt-2 text-sm leading-6 text-slate-600">
+              The report for Week {reportToDelete.minggu_ke} will be permanently deleted. This action cannot be undone.
+            </p>
+            {actionMsg?.type === 'error' && (
+              <p role="alert" className="mt-3 rounded-lg bg-rose-50 px-3 py-2 text-xs text-rose-700">
+                {actionMsg.text}
+              </p>
+            )}
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                type="button"
+                disabled={Boolean(deletingReportId)}
+                onClick={() => setReportToDelete(null)}
+                className="min-h-10 rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={Boolean(deletingReportId)}
+                onClick={() => handleDeleteReport(reportToDelete)}
+                className="min-h-10 rounded-lg bg-rose-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-rose-700 disabled:cursor-wait disabled:opacity-60"
+              >
+                {deletingReportId ? 'Deleting...' : 'Delete report'}
+              </button>
+            </div>
+          </section>
+        </div>,
+        document.body
       )}
 
       {/* Image Lightbox Portal */}

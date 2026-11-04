@@ -787,7 +787,6 @@ export default function ManajemenDashboard() {
                           {Number(report.realisasi_bobot)}% actual
                         </span>
                       </div>
-                      <p className="text-xs text-slate-400">{formatDate(report.tgl_laporan)}</p>
                       {report.pengawas_nama && (
                         <p className="text-xs text-slate-500">Reviewed by {report.pengawas_nama}</p>
                       )}

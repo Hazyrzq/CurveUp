@@ -69,8 +69,16 @@ export default function MandorReportForm({ initialItemId }) {
   const searchParams = useSearchParams();
   const queryItemId = initialItemId || searchParams.get('item_id');
   const reportId = searchParams.get('report_id');
+  const queryProyekId = searchParams.get('proyek_id');
 
-  const { selectedId, selected } = useProject();
+  const { selectedId, selected, selectProject } = useProject();
+  const activeProyekId = selectedId || (queryProyekId ? Number(queryProyekId) : null);
+
+  useEffect(() => {
+    if (!selectedId && queryProyekId) {
+      selectProject(queryProyekId);
+    }
+  }, [selectedId, queryProyekId, selectProject]);
   const [form, setForm] = useState({
     item_pekerjaan_id: '',
     minggu_ke: '',
@@ -97,7 +105,7 @@ export default function MandorReportForm({ initialItemId }) {
 
   const loadItems = async () => {
     setLoadingReport(true);
-    if (!selectedId) {
+    if (!activeProyekId) {
       setItemOptions([]);
       setForm((current) => ({ ...current, item_pekerjaan_id: '' }));
       setLoadingReport(false);
@@ -105,7 +113,7 @@ export default function MandorReportForm({ initialItemId }) {
     }
 
     try {
-      const response = await fetch(`/api/pekerjaan?proyek_id=${selectedId}`);
+      const response = await fetch(`/api/pekerjaan?proyek_id=${activeProyekId}`);
       const result = await response.json();
       const items = result.success ? result.data || [] : [];
       setItemOptions(items);
@@ -125,7 +133,7 @@ export default function MandorReportForm({ initialItemId }) {
       if (reportId) {
         const mandorId = Number(localStorage.getItem('user_id')) || '';
         const reportsResponse = await fetch(
-          `/api/progres?proyek_id=${selectedId}&mandor_id=${mandorId}`
+          `/api/progres?proyek_id=${activeProyekId}&mandor_id=${mandorId}`
         );
         const reportsResult = await reportsResponse.json();
         const report = reportsResult.success
@@ -162,7 +170,7 @@ export default function MandorReportForm({ initialItemId }) {
 
   useEffect(() => {
     loadItems();
-  }, [selectedId, queryItemId, reportId]);
+  }, [activeProyekId, queryItemId, reportId]);
 
   const selectedItem = useMemo(() => {
     return itemOptions.find((it) => String(it.id) === String(form.item_pekerjaan_id)) || null;
@@ -241,7 +249,7 @@ export default function MandorReportForm({ initialItemId }) {
       data.append('minggu_ke', String(week));
       data.append('tgl_laporan', form.tgl_laporan);
       data.append('realisasi_bobot', String(percentage));
-      data.append('proyek_id', String(selectedId));
+      data.append('proyek_id', String(activeProyekId));
       data.append('mandor_id', localStorage.getItem('user_id') || '');
       if (editingReport) data.append('laporan_id', String(editingReport.id));
       if (photoFile) {
@@ -301,7 +309,7 @@ export default function MandorReportForm({ initialItemId }) {
           <p role="alert" className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
             {msg?.text || 'This report is not available for editing.'}
           </p>
-        ) : !selectedId ? (
+        ) : !activeProyekId ? (
           <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-center text-xs text-amber-800">
             <p className="font-medium">No project selected.</p>
             <p className="mt-1 text-slate-500">Return to the dashboard to select a project.</p>

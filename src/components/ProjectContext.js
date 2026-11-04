@@ -9,15 +9,24 @@ function asId(value) {
   return Number.isFinite(n) && n > 0 ? n : null;
 }
 
+const STORAGE_KEY = 'curveup_selected_proyek_id';
+
 export function ProjectProvider({ children }) {
   const [projects, setProjects] = useState([]);
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectedId, setSelectedId] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    return asId(sessionStorage.getItem(STORAGE_KEY));
+  });
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
   const selectProject = useCallback((id) => {
     const next = asId(id);
     setSelectedId(next);
+    if (typeof window !== 'undefined') {
+      if (next) sessionStorage.setItem(STORAGE_KEY, String(next));
+      else sessionStorage.removeItem(STORAGE_KEY);
+    }
   }, []);
 
   const loadProjects = useCallback(async () => {
@@ -28,7 +37,10 @@ export function ProjectProvider({ children }) {
       setProjects(list);
 
       setSelectedId((current) => {
-        if (current && list.some((p) => p.id === current)) return current;
+        const stored = typeof window !== 'undefined' ? asId(sessionStorage.getItem(STORAGE_KEY)) : null;
+        const candidate = current || stored;
+        if (candidate && list.some((p) => p.id === candidate)) return candidate;
+        if (typeof window !== 'undefined') sessionStorage.removeItem(STORAGE_KEY);
         return null;
       });
     } catch (e) {

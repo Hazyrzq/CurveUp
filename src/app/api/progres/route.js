@@ -168,7 +168,7 @@ export async function PATCH(request) {
   try {
     const formData = await request.formData();
     const reportId = Number(formData.get('laporan_id'));
-    const mandorId = Number(formData.get('mandor_id'));
+    const mandorId = await resolveUserId('mandor', formData.get('mandor_id'));
     const itemPekerjaanId = Number(formData.get('item_pekerjaan_id'));
     const minggu = Number(formData.get('minggu_ke'));
     const persen = Number(String(formData.get('realisasi_bobot') || '').replace(',', '.'));
@@ -306,7 +306,7 @@ export async function DELETE(request) {
     }
 
     const reportId = Number(body.laporan_id);
-    const mandorId = Number(body.mandor_id);
+    const mandorId = await resolveUserId('mandor', body.mandor_id);
     if (!Number.isInteger(reportId) || reportId < 1 || !Number.isInteger(mandorId) || mandorId < 1) {
       return NextResponse.json({ success: false, message: 'Invalid report details.' }, { status: 400 });
     }

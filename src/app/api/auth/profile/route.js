@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { query } from '@/lib/db';
+import { query, resolveUserId } from '@/lib/db';
 
 export async function PUT(request) {
   try {
     const body = await request.json();
-    const id = Number(body.id);
+    const id = await resolveUserId(body.role || 'manajemen', body.id);
     const nama = String(body.nama || '').trim();
     const username = String(body.username || '').trim();
     const password = String(body.password || '');

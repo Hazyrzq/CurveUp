@@ -28,7 +28,15 @@ export function parseRABExcel(fileBuffer) {
     if (
       row.some((cell) => {
         const h = norm(cell);
-        return h.includes('pekerjaan') || h.includes('nama') || h.includes('bobot') || h === 'kode';
+        return (
+          h.includes('pekerjaan') ||
+          h.includes('nama') ||
+          h.includes('bobot') ||
+          h === 'kode' ||
+          h === 'code' ||
+          h.includes('work item') ||
+          h.includes('weight')
+        );
       })
     ) {
       headerIndex = i;
@@ -40,18 +48,20 @@ export function parseRABExcel(fileBuffer) {
   const headers = (rawData[headerIndex] || []).map((h) => String(h || '').trim());
   const rows = rawData.slice(headerIndex + 1);
 
-  const iKode = colIndex(headers, [(h) => h.includes('kode')]);
-  const iNama = colIndex(headers, [(h) => h.includes('pekerjaan') || h.includes('nama')]);
-  const iSatuan = colIndex(headers, [(h) => h === 'satuan' || h.includes('unit')]);
-  const iVolume = colIndex(headers, [(h) => h.includes('volume') || h.includes('kuantitas')]);
-  const iHargaSatuan = colIndex(headers, [(h) => h.includes('harga satuan') || h.includes('harga unit')]);
-  const iTotalHarga = colIndex(headers, [(h) => h.includes('jumlah harga') || h.includes('total harga')]);
-  const iBobot = colIndex(headers, [(h) => h.includes('bobot') || h === 'persen' || h.includes('bobot persen')]);
-  const iEstMulai = colIndex(headers, [(h) => h.includes('estimasi') && h.includes('mulai')]);
-  const iEstDurasi = colIndex(headers, [(h) => h.includes('estimasi') && h.includes('durasi')]);
+  const iKode = colIndex(headers, [(h) => h.includes('kode') || h === 'code' || h.includes('item code')]);
+  const iNama = colIndex(headers, [
+    (h) => h.includes('pekerjaan') || h.includes('nama') || h.includes('work item') || h.includes('description'),
+  ]);
+  const iSatuan = colIndex(headers, [(h) => h === 'satuan' || h.includes('unit') || h === 'uom']);
+  const iVolume = colIndex(headers, [(h) => h.includes('volume') || h.includes('kuantitas') || h.includes('qty') || h.includes('quantity')]);
+  const iHargaSatuan = colIndex(headers, [(h) => h.includes('harga satuan') || h.includes('harga unit') || h.includes('unit price')]);
+  const iTotalHarga = colIndex(headers, [(h) => h.includes('jumlah harga') || h.includes('total harga') || h.includes('total price') || h.includes('amount')]);
+  const iBobot = colIndex(headers, [(h) => h.includes('bobot') || h === 'persen' || h.includes('bobot persen') || h.includes('weight')]);
+  const iEstMulai = colIndex(headers, [(h) => (h.includes('estimasi') && h.includes('mulai')) || (h.includes('start') && h.includes('week'))]);
+  const iEstDurasi = colIndex(headers, [(h) => (h.includes('estimasi') && h.includes('durasi')) || h.includes('duration')]);
   const weekCols = headers
     .map((h, idx) => ({ idx, n: norm(h) }))
-    .filter(({ n }) => n.startsWith('minggu'))
+    .filter(({ n }) => n.startsWith('minggu') || n.startsWith('week') || /^w\s*\d+$/.test(n))
     .sort((a, b) => {
       const na = parseInt(a.n.replace(/\D/g, ''), 10) || 0;
       const nb = parseInt(b.n.replace(/\D/g, ''), 10) || 0;

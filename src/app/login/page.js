@@ -47,6 +47,7 @@ export default function LoginPage() {
       localStorage.setItem('user_nama', data.user.nama);
       localStorage.setItem('user_id', String(data.user.id || ''));
       localStorage.setItem('user_username', data.user.username || username);
+      sessionStorage.removeItem('curveup_selected_proyek_id');
 
       const target = ROLES.find((r) => r.id === data.user.role)?.route || '/dashboard/manajemen';
       router.push(target);

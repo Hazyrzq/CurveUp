@@ -542,18 +542,27 @@ export default function PengawasDashboard() {
                 <p className="text-xs text-slate-400">No progress photo attached.</p>
               )}
 
-              <label className="block">
-                <span className="mb-1.5 block text-xs font-medium text-slate-600">
-                  Review Notes <span className="font-normal text-slate-400">(optional)</span>
-                </span>
-                <textarea
-                  rows={3}
-                  value={catatan}
-                  onChange={(e) => setCatatan(e.target.value)}
-                  placeholder="Add a note for the foreman..."
-                  className="w-full resize-y rounded-lg border border-slate-200 p-3 text-sm focus:border-teal-600 focus:ring-4 focus:ring-teal-50 outline-none"
-                />
-              </label>
+              {selectedReport.status_verifikasi === 'pending' ? (
+                <label className="block">
+                  <span className="mb-1.5 block text-xs font-medium text-slate-600">
+                    Review Notes <span className="font-normal text-slate-400">(optional)</span>
+                  </span>
+                  <textarea
+                    rows={3}
+                    value={catatan}
+                    onChange={(e) => setCatatan(e.target.value)}
+                    placeholder="Add a note for the foreman..."
+                    className="w-full resize-y rounded-lg border border-slate-200 p-3 text-sm focus:border-teal-600 focus:ring-4 focus:ring-teal-50 outline-none"
+                  />
+                </label>
+              ) : (
+                <div className="rounded-xl border border-slate-100 bg-slate-50 p-3.5">
+                  <p className="text-xs font-medium text-slate-500">Supervisor Review Notes</p>
+                  <p className="mt-1 whitespace-pre-wrap break-words text-sm text-slate-800">
+                    {selectedReport.catatan_pengawas || 'No review notes recorded.'}
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/70 px-4 py-3 sm:flex-row sm:justify-between sm:px-6 sm:py-4">
@@ -563,7 +572,7 @@ export default function PengawasDashboard() {
                 disabled={saving}
                 className="rounded-lg px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-50"
               >
-                Cancel
+                {selectedReport.status_verifikasi === 'pending' ? 'Cancel' : 'Close'}
               </button>
               {selectedReport.status_verifikasi === 'pending' && (
                 <div className="flex gap-2">

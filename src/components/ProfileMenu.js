@@ -62,6 +62,7 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: Number(localStorage.getItem('user_id')),
+          role: localStorage.getItem('user_role') || '',
           nama: form.nama,
           username: form.username,
           password: form.password,
