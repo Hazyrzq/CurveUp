@@ -6,16 +6,20 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
-    const mandorId = searchParams.get('mandor_id');
-    const proyekId = searchParams.get('proyek_id') || (await getActiveProyekId());
+    const mandorIdParam = searchParams.get('mandor_id');
+    const proyekId = searchParams.get('proyek_id');
+    const mandorId =
+      mandorIdParam !== null ? await resolveUserId('mandor', mandorIdParam) : null;
 
     let sql = `
       SELECT lp.id, lp.mandor_id, lp.minggu_ke, lp.tgl_laporan, lp.realisasi_volume, lp.realisasi_bobot,
              lp.status_verifikasi, lp.catatan_pengawas, lp.foto_bukti, lp.item_pekerjaan_id,
+             ip.proyek_id, p.nama_proyek,
              ip.kode_pekerjaan, ip.nama_pekerjaan, ip.satuan, ip.volume as volume_target, ip.bobot_persen,
              u.nama as mandor_nama, supervisor.nama as pengawas_nama
       FROM laporan_progres lp
       JOIN item_pekerjaan ip ON lp.item_pekerjaan_id = ip.id
+      JOIN proyek p ON ip.proyek_id = p.id
       LEFT JOIN users u ON lp.mandor_id = u.id
       LEFT JOIN users supervisor ON lp.pengawas_id = supervisor.id
     `;

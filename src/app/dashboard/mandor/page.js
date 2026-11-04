@@ -355,6 +355,9 @@ export default function MandorDashboard() {
     ['pending', 'rejected'].includes(report.status_verifikasi);
 
   const handleEditReport = (report) => {
+    if (report.proyek_id && String(report.proyek_id) !== String(selectedId)) {
+      selectProject(report.proyek_id);
+    }
     router.push(
       `/dashboard/mandor/laporan-baru?item_id=${report.item_pekerjaan_id}&report_id=${report.id}`
     );
@@ -657,7 +660,9 @@ export default function MandorDashboard() {
                       <tr key={report.id} className="hover:bg-slate-50/70 transition">
                         <td className="px-4 py-3">
                           <p className="font-medium text-slate-900">{report.nama_pekerjaan}</p>
-                          <p className="text-xs text-slate-400">[{report.kode_pekerjaan}] · Weight: {report.bobot_persen}%</p>
+                          <p className="text-xs text-slate-400">
+                            {report.nama_proyek ? `${report.nama_proyek} · ` : ''}[{report.kode_pekerjaan}] · Weight: {report.bobot_persen}%
+                          </p>
                           {report.catatan_pengawas && (
                             <p className="mt-1 text-xs text-amber-700 bg-amber-50 rounded px-2 py-1">
                               Supervisor Note: {report.catatan_pengawas}
@@ -725,7 +730,7 @@ export default function MandorDashboard() {
                         <div className="min-w-0">
                           <h4 className="text-sm font-semibold leading-5 text-slate-900">{report.nama_pekerjaan}</h4>
                           <p className="mt-1 text-xs text-slate-500">
-                            [{report.kode_pekerjaan}] · Week {report.minggu_ke}
+                            {report.nama_proyek ? `${report.nama_proyek} · ` : ''}[{report.kode_pekerjaan}] · Week {report.minggu_ke}
                           </p>
                         </div>
                         <StatusBadge status={report.status_verifikasi} />
