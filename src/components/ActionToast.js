@@ -1,10 +1,17 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { CheckCircle, X } from 'lucide-react';
+import { CheckCircle, AlertTriangle, X } from 'lucide-react';
 
-export default function ActionToast({ title, message, onDismiss, duration = 4000 }) {
+export default function ActionToast({
+  title,
+  message,
+  onDismiss,
+  duration = 4000,
+  variant = 'success',
+}) {
   const [progress, setProgress] = useState(100);
+  const isError = variant === 'error';
 
   useEffect(() => {
     if (!duration || !onDismiss) return undefined;
@@ -32,8 +39,14 @@ export default function ActionToast({ title, message, onDismiss, duration = 4000
         aria-live="polite"
         className="pointer-events-auto relative flex w-full max-w-md items-start gap-3.5 overflow-hidden rounded-2xl border border-slate-200/90 bg-white/95 p-4 shadow-2xl backdrop-blur-md anim-content-enter transition duration-200"
       >
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700 ring-1 ring-teal-600/10">
-          <CheckCircle className="h-5 w-5" />
+        <span
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ring-1 ${
+            isError
+              ? 'bg-rose-50 text-rose-700 ring-rose-600/15'
+              : 'bg-teal-50 text-teal-700 ring-teal-600/10'
+          }`}
+        >
+          {isError ? <AlertTriangle className="h-5 w-5" /> : <CheckCircle className="h-5 w-5" />}
         </span>
         <div className="min-w-0 flex-1 pt-0.5">
           <p className="text-sm font-semibold text-slate-900">{title}</p>
@@ -51,7 +64,9 @@ export default function ActionToast({ title, message, onDismiss, duration = 4000
         {/* Animated Countdown Progress Bar */}
         <div className="absolute inset-x-0 bottom-0 h-1 bg-slate-100">
           <div
-            className="h-full bg-teal-600 transition-all duration-75 ease-linear"
+            className={`h-full transition-all duration-75 ease-linear ${
+              isError ? 'bg-rose-600' : 'bg-teal-600'
+            }`}
             style={{ width: `${progress}%` }}
           />
         </div>

@@ -20,3 +20,4 @@ public/uploads/progress-reports/*
 !public/uploads/progress-reports/.gitkeep
 
 *.sql
+docs-skripsi/

@@ -1,9 +1,11 @@
 import { randomUUID } from 'node:crypto';
 import { mkdir, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { query } from '@/lib/db';
 
 const PHOTO_DIRECTORY = path.join(process.cwd(), 'public', 'uploads', 'progress-reports');
 const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
+let ensuredLongTextColumn = false;
 
 const PHOTO_TYPES = {
   'image/jpeg': {
@@ -41,10 +43,23 @@ export async function saveProgressPhoto(file) {
     throw new Error('The uploaded file is not a valid image.');
   }
 
-  await mkdir(PHOTO_DIRECTORY, { recursive: true });
-  const filename = `${randomUUID()}.${photoType.extension}`;
-  await writeFile(path.join(PHOTO_DIRECTORY, filename), buffer, { flag: 'wx' });
-  return `/uploads/progress-reports/${filename}`;
+  try {
+    await mkdir(PHOTO_DIRECTORY, { recursive: true });
+    const filename = `${randomUUID()}.${photoType.extension}`;
+    await writeFile(path.join(PHOTO_DIRECTORY, filename), buffer, { flag: 'wx' });
+    return `/uploads/progress-reports/${filename}`;
+  } catch (fsError) {
+    // Fallback for serverless read-only filesystems (e.g., Vercel)
+    if (!ensuredLongTextColumn) {
+      try {
+        await query('ALTER TABLE laporan_progres MODIFY COLUMN foto_bukti LONGTEXT DEFAULT NULL');
+      } catch {
+        // Ignore if already LONGTEXT or insufficient DDL privilege
+      }
+      ensuredLongTextColumn = true;
+    }
+    return `data:${file.type};base64,${buffer.toString('base64')}`;
+  }
 }
 
 export async function deleteProgressPhoto(photoPath) {

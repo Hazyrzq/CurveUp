@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Building2, ShieldCheck, HardHat, Eye, EyeOff } from 'lucide-react';
+import ActionToast from '@/components/ActionToast';
 
 const ROLES = [
   { id: 'manajemen', label: 'Management', hint: 'Manage projects', icon: Building2, route: '/dashboard/manajemen' },
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [toast, setToast] = useState(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -35,7 +37,9 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!data.success) {
-        setErrorMsg(data.message || 'Unable to sign in.');
+        const text = data.message || 'Unable to sign in.';
+        setErrorMsg(text);
+        setToast({ title: 'Sign-in failed', message: text });
         return;
       }
 
@@ -47,7 +51,9 @@ export default function LoginPage() {
       const target = ROLES.find((r) => r.id === data.user.role)?.route || '/dashboard/manajemen';
       router.push(target);
     } catch (err) {
-      setErrorMsg('Could not connect to the server.');
+      const text = 'Could not connect to the server.';
+      setErrorMsg(text);
+      setToast({ title: 'Connection error', message: text });
     } finally {
       setLoading(false);
     }
@@ -55,6 +61,14 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-[100dvh] w-full max-w-full overflow-x-hidden bg-canvas flex items-center justify-center p-3 sm:p-8 anim-fade">
+      {toast && (
+        <ActionToast
+          title={toast.title}
+          message={toast.message}
+          variant="error"
+          onDismiss={() => setToast(null)}
+        />
+      )}
       <div className="w-full max-w-6xl bg-white rounded-2xl sm:rounded-[28px] shadow-shell overflow-hidden grid grid-cols-1 md:grid-cols-[0.95fr_1.05fr] border border-slate-200/80 anim-shell">
         <div className="px-5 sm:px-10 xl:px-14 py-7 sm:py-8 flex flex-col justify-center">
           <div className="flex items-center gap-2.5 mb-7 anim-up">

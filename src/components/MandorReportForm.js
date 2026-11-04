@@ -1,9 +1,68 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CalendarDays, Send, ArrowLeft } from 'lucide-react';
 import { useProject } from '@/components/ProjectContext';
+import ActionToast from '@/components/ActionToast';
+
+const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
+const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
+async function verifyImageHeader(file) {
+  const bytes = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+  if (file.type === 'image/jpeg') {
+    return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  }
+  if (file.type === 'image/png') {
+    const sig = [137, 80, 78, 71, 13, 10, 26, 10];
+    return bytes.length >= 8 && sig.every((b, idx) => bytes[idx] === b);
+  }
+  if (file.type === 'image/webp') {
+    const riff = String.fromCharCode(...bytes.slice(0, 4));
+    const webp = String.fromCharCode(...bytes.slice(8, 12));
+    return bytes.length >= 12 && riff === 'RIFF' && webp === 'WEBP';
+  }
+  return false;
+}
+
+async function optimizePhotoForUpload(file) {
+  if (!file || file.size <= 900 * 1024 || typeof window === 'undefined') return file;
+  return new Promise((resolve) => {
+    const img = new window.Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const maxDim = 1600;
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        const scale = Math.min(maxDim / width, maxDim / height);
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return resolve(file);
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob || blob.size >= file.size) return resolve(file);
+          resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
+        },
+        'image/jpeg',
+        0.82
+      );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(file);
+    };
+    img.src = url;
+  });
+}
 
 export default function MandorReportForm({ initialItemId }) {
   const router = useRouter();
@@ -23,8 +82,18 @@ export default function MandorReportForm({ initialItemId }) {
   const [loading, setLoading] = useState(false);
   const [loadingReport, setLoadingReport] = useState(true);
   const [msg, setMsg] = useState(null);
+  const [toast, setToast] = useState(null);
+  const [portalReady, setPortalReady] = useState(false);
   const [editingReport, setEditingReport] = useState(null);
   const [photoFile, setPhotoFile] = useState(null);
+  const fileInputRef = useRef(null);
+
+  useEffect(() => setPortalReady(true), []);
+
+  const showError = (title, text) => {
+    setMsg({ type: 'error', text });
+    setToast({ title, message: text, variant: 'error' });
+  };
 
   const loadItems = async () => {
     setLoadingReport(true);
@@ -99,6 +168,39 @@ export default function MandorReportForm({ initialItemId }) {
     return itemOptions.find((it) => String(it.id) === String(form.item_pekerjaan_id)) || null;
   }, [itemOptions, form.item_pekerjaan_id]);
 
+  const handlePhotoChange = async (event) => {
+    const file = event.target.files?.[0] || null;
+    if (!file) {
+      setPhotoFile(null);
+      return;
+    }
+
+    if (file.size > MAX_PHOTO_SIZE) {
+      setPhotoFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      showError('Invalid photo size', 'The photo must be 5 MB or smaller.');
+      return;
+    }
+
+    if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+      setPhotoFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      showError('Invalid file format', 'Upload a JPEG, PNG, or WebP image.');
+      return;
+    }
+
+    const validHeader = await verifyImageHeader(file);
+    if (!validHeader) {
+      setPhotoFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      showError('Invalid image file', 'The uploaded file is not a valid image.');
+      return;
+    }
+
+    setMsg(null);
+    setPhotoFile(file);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -107,22 +209,28 @@ export default function MandorReportForm({ initialItemId }) {
     const percentage = Number(String(form.realisasi_persen).replace(',', '.'));
     const week = Number(form.minggu_ke);
     if (!Number.isInteger(week) || week < 1) {
-      setMsg({ type: 'error', text: 'Enter a valid week number (1 or higher).' });
+      showError('Invalid week', 'Enter a valid week number (1 or higher).');
       setLoading(false);
       return;
     }
 
     if (!Number.isFinite(percentage) || percentage < 0.01 || percentage > 100) {
-      setMsg({ type: 'error', text: 'Enter a percentage between 0.01 and 100.' });
+      showError('Invalid percentage', 'Enter a percentage between 0.01 and 100.');
       setLoading(false);
       return;
     }
 
     if (selectedItem && percentage > Number(selectedItem.bobot_persen)) {
-      setMsg({
-        type: 'error',
-        text: `Progress cannot exceed the item weight (${selectedItem.bobot_persen}%).`,
-      });
+      showError(
+        'Weight limit exceeded',
+        `Progress cannot exceed the item weight (${selectedItem.bobot_persen}%).`
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (!photoFile && !editingReport?.foto_bukti) {
+      showError('Missing photo evidence', 'A progress photo is required.');
       setLoading(false);
       return;
     }
@@ -136,7 +244,10 @@ export default function MandorReportForm({ initialItemId }) {
       data.append('proyek_id', String(selectedId));
       data.append('mandor_id', localStorage.getItem('user_id') || '');
       if (editingReport) data.append('laporan_id', String(editingReport.id));
-      if (photoFile) data.append('foto_bukti', photoFile);
+      if (photoFile) {
+        const uploadReadyPhoto = await optimizePhotoForUpload(photoFile);
+        data.append('foto_bukti', uploadReadyPhoto);
+      }
 
       const response = await fetch('/api/progres', {
         method: editingReport ? 'PATCH' : 'POST',
@@ -151,10 +262,10 @@ export default function MandorReportForm({ initialItemId }) {
         );
         router.replace('/dashboard/mandor', { scroll: false });
       } else {
-        setMsg({ type: 'error', text: result.message || 'Could not submit the report.' });
+        showError('Submission rejected', result.message || 'Could not submit the report.');
       }
     } catch (error) {
-      setMsg({ type: 'error', text: error.message || 'A system error occurred.' });
+      showError('Submission error', error.message || 'A system error occurred.');
     } finally {
       setLoading(false);
     }
@@ -162,6 +273,15 @@ export default function MandorReportForm({ initialItemId }) {
 
   return (
     <section className="rounded-xl border border-slate-200 bg-white">
+      {toast && portalReady && createPortal(
+        <ActionToast
+          title={toast.title}
+          message={toast.message}
+          variant={toast.variant}
+          onDismiss={() => setToast(null)}
+        />,
+        document.body
+      )}
       <div className="border-b border-slate-100 p-4 sm:p-5">
         <h3 className="text-base font-semibold text-slate-900">
           {editingReport ? 'Edit Progress Report' : 'Submit Progress Report'}
@@ -226,7 +346,7 @@ export default function MandorReportForm({ initialItemId }) {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form noValidate onSubmit={handleSubmit} className="space-y-4">
               <label className="block">
                 <span className="mb-1.5 block text-xs font-medium text-slate-700">
                   RAB Work Item
@@ -318,10 +438,11 @@ export default function MandorReportForm({ initialItemId }) {
                   </a>
                 )}
                 <input
+                  ref={fileInputRef}
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
                   required={!editingReport?.foto_bukti}
-                  onChange={(event) => setPhotoFile(event.target.files?.[0] || null)}
+                  onChange={handlePhotoChange}
                   className="block w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-slate-100 file:px-3 file:py-1.5 file:text-xs file:font-medium"
                 />
                 <span className="mt-1 block text-xs text-slate-400">JPEG, PNG, or WebP, up to 5 MB.</span>
@@ -329,8 +450,8 @@ export default function MandorReportForm({ initialItemId }) {
 
               {msg && (
                 <div
-                  role="status"
-                  className={`rounded-lg border px-3 py-2 text-xs flex items-center justify-between gap-2 ${
+                  role="alert"
+                  className={`rounded-lg border px-3 py-2.5 text-xs flex items-center justify-between gap-2 ${
                     msg.type === 'success'
                       ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
                       : 'border-rose-200 bg-rose-50 text-rose-800'

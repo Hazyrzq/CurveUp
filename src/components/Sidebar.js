@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useProject } from '@/components/ProjectContext';
 import { useScrollLock } from '@/lib/useScrollLock';
+import ActionToast from '@/components/ActionToast';
 
 const ROLE_TITLE = {
   manajemen: 'Management',
@@ -42,6 +43,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
   const [rabFile, setRabFile] = useState(null);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState('');
+  const [toast, setToast] = useState(null);
   const [portalReady, setPortalReady] = useState(false);
 
   useScrollLock(adding);
@@ -87,8 +89,16 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
 
   const addProject = async (e) => {
     e.preventDefault();
-    if (!nama.trim() || !rabFile) {
-      setErr('Enter a project name and choose an RAB file.');
+    if (!nama.trim()) {
+      const msgText = 'Project name is required.';
+      setErr(msgText);
+      setToast({ title: 'Missing project name', message: msgText, variant: 'error' });
+      return;
+    }
+    if (!rabFile) {
+      const msgText = 'No file was uploaded.';
+      setErr(msgText);
+      setToast({ title: 'Missing RAB file', message: msgText, variant: 'error' });
       return;
     }
     setSaving(true);
@@ -102,7 +112,9 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
       });
       const preview = await previewRes.json();
       if (!previewRes.ok || !preview.success) {
-        setErr(preview.message || 'Could not read the RAB file.');
+        const msgText = preview.message || 'Could not read the RAB file.';
+        setErr(msgText);
+        setToast({ title: 'Invalid RAB file', message: msgText, variant: 'error' });
         return;
       }
 
@@ -119,7 +131,9 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
       });
       const json = await saveRes.json();
       if (!saveRes.ok || !json.success) {
-        setErr(json.message || 'Could not create the project and save its RAB.');
+        const msgText = json.message || 'Could not create the project and save its RAB.';
+        setErr(msgText);
+        setToast({ title: 'Could not save project', message: msgText, variant: 'error' });
         return;
       }
 
@@ -129,12 +143,18 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
       setTglSelesai('');
       setRabFile(null);
       setAdding(false);
+      setToast({
+        title: 'Project created',
+        message: json.message || 'RAB saved for this project. The planned S-curve has been updated.',
+        variant: 'success',
+      });
       await reload();
       selectProject(json.proyek_id);
       onMobileClose();
       if (pathname !== ROLE_HOME.manajemen) router.push(ROLE_HOME.manajemen);
     } catch (e2) {
       setErr(e2.message);
+      setToast({ title: 'Error', message: e2.message, variant: 'error' });
     } finally {
       setSaving(false);
     }
@@ -316,6 +336,15 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
         )}
       </div>
     </aside>
+    {portalReady && toast && createPortal(
+      <ActionToast
+        title={toast.title}
+        message={toast.message}
+        variant={toast.variant}
+        onDismiss={() => setToast(null)}
+      />,
+      document.body
+    )}
     {portalReady && adding && role === 'manajemen' && createPortal(
       <div
         className="fixed inset-0 z-50 flex flex-col min-h-screen bg-white sm:bg-slate-950/45 sm:items-center sm:justify-center sm:p-4 modal-backdrop"
@@ -323,7 +352,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
           if (event.target === event.currentTarget && !saving) setAdding(false);
         }}
       >
-        <form onSubmit={addProject} role="dialog" aria-modal="true" aria-labelledby="add-project-title" className="modal-panel flex flex-col w-full h-full sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:max-w-lg rounded-none sm:rounded-2xl border-0 sm:border border-slate-200 bg-white shadow-none sm:shadow-2xl overflow-hidden">
+        <form noValidate onSubmit={addProject} role="dialog" aria-modal="true" aria-labelledby="add-project-title" className="modal-panel flex flex-col w-full h-full sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:max-w-lg rounded-none sm:rounded-2xl border-0 sm:border border-slate-200 bg-white shadow-none sm:shadow-2xl overflow-hidden">
           <div className="shrink-0 flex items-center justify-between border-b border-slate-100 px-4 py-3.5 sm:px-6 sm:py-4 bg-white">
             <div>
               <h2 id="add-project-title" className="text-base sm:text-lg font-semibold text-slate-900">Add project</h2>

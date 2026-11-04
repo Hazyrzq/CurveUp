@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 import { LogOut, Pencil, User, X } from 'lucide-react';
 import { useScrollLock } from '@/lib/useScrollLock';
+import ActionToast from '@/components/ActionToast';
 
 export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
   const [saving, setSaving] = useState(false);
   const [portalReady, setPortalReady] = useState(false);
   const [msg, setMsg] = useState('');
+  const [toast, setToast] = useState(null);
   const [form, setForm] = useState({ nama: '', username: '', password: '' });
   const wrapRef = useRef(null);
 
@@ -68,14 +70,17 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
       const json = await res.json();
       if (!json.success) {
         setMsg(json.message);
+        setToast({ title: 'Could not update profile', message: json.message, variant: 'error' });
         return;
       }
       localStorage.setItem('user_nama', json.user.nama);
       localStorage.setItem('user_username', json.user.username);
       onNamaChange?.(json.user.nama);
       setEditOpen(false);
+      setToast({ title: 'Profile updated', message: json.message || 'Profile saved.', variant: 'success' });
     } catch (err) {
       setMsg(err.message);
+      setToast({ title: 'Error', message: err.message, variant: 'error' });
     } finally {
       setSaving(false);
     }
@@ -83,6 +88,15 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
 
   return (
     <>
+      {portalReady && toast && createPortal(
+        <ActionToast
+          title={toast.title}
+          message={toast.message}
+          variant={toast.variant}
+          onDismiss={() => setToast(null)}
+        />,
+        document.body
+      )}
       <div className="relative" ref={wrapRef}>
         <button
           type="button"
