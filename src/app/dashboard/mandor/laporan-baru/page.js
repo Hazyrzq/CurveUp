@@ -22,7 +22,7 @@ export default function NewReportPage() {
       <DashboardHeader
         role="mandor"
         title="Submit Progress Report"
-        subtitle="Report weekly actual progress for the selected RAB item."
+        subtitle="Report weekly actual progress for the selected Cost Estimate item."
       />
 
       <Suspense fallback={<div className="p-8 text-center text-xs text-slate-400">Loading form...</div>}>

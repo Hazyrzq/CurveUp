@@ -117,15 +117,15 @@ export default function ImportRABPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-medium text-gray-900">Upload RAB</h2>
+        <h2 className="text-sm font-medium text-gray-900">Upload Cost Estimate</h2>
         <button onClick={downloadTemplate} className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900">
           <Download className="w-4 h-4" />
-          Download detailed RAB example
+          Download Cost Estimate template
         </button>
       </div>
 
       <p className="text-sm text-gray-500">
-        This RAB will be saved to the project selected in the sidebar.
+        This Cost Estimate will be saved to the project selected in the sidebar.
         {!selectedId ? ' Select or add a project before saving.' : ` Active project: ${selected?.nama_proyek || '-'}.`}
       </p>
 
@@ -204,7 +204,7 @@ export default function ImportRABPage() {
               className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm rounded-xl disabled:opacity-60"
             >
               <Save className="w-4 h-4" />
-              {saving ? 'Saving...' : 'Save RAB'}
+              {saving ? 'Saving...' : 'Save Cost Estimate'}
             </button>
           </div>
           <div className="overflow-x-auto">

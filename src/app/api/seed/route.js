@@ -197,6 +197,80 @@ export async function POST() {
 
     // ── Execute cleanup + seed in a transaction ───────────────────────
     const projectIds = await withTransaction(async (exec) => {
+      // 0. Translate default user display names to English
+      await exec(`UPDATE users SET nama = 'CurveUp Management' WHERE role = 'manajemen'`);
+      await exec(`UPDATE users SET nama = 'Site Supervisor' WHERE role = 'pengawas'`);
+      await exec(`UPDATE users SET nama = 'Lead Foreman' WHERE role = 'mandor'`);
+
+      // 1. Translate Project 1 (On Schedule) to English
+      await exec(
+        `UPDATE proyek SET nama_proyek = 'Al-Ikhlas Mosque Renovation', lokasi = 'Jl. Pahlawan No. 5, South Jakarta' WHERE id = 1`
+      );
+      const p1Translations = [
+        ['1.1', 'Demolition & Site Preparation'],
+        ['1.2', 'Excavation & Backfilling'],
+        ['2.1', 'Concrete Foundation'],
+        ['2.2', 'Tie Beams & Columns'],
+        ['3.1', 'Brick Wall Masonry'],
+        ['3.2', 'Wall Plastering & Skim Coat'],
+        ['4.1', 'Roof Truss & Covering'],
+        ['4.2', 'Finishing & Painting'],
+      ];
+      for (const [kode, enName] of p1Translations) {
+        await exec(
+          `UPDATE item_pekerjaan SET nama_pekerjaan = ? WHERE proyek_id = 1 AND kode_pekerjaan = ?`,
+          [enName, kode]
+        );
+      }
+
+      // 2. Translate Project 2 (Delayed / Behind Schedule) to English
+      await exec(
+        `UPDATE proyek SET nama_proyek = 'Multipurpose Hall Construction', lokasi = 'Jl. Merdeka No. 10, Bandung' WHERE id = 2`
+      );
+      const p2Translations = [
+        ['1.1', 'Site Preparation Works'],
+        ['1.2', 'Earthwork Excavation'],
+        ['2.1', 'Stone Masonry Foundation'],
+        ['2.2', 'Reinforced Concrete Tie Beam'],
+        ['3.1', 'Reinforced Concrete Column'],
+        ['3.2', 'Reinforced Concrete Beam'],
+        ['3.3', 'Concrete Floor Slab'],
+        ['4.1', 'Lightweight Brick Wall'],
+        ['4.2', 'Wall Plastering & Skim Coat'],
+        ['5.1', 'Light Steel Roof Frame'],
+      ];
+      for (const [kode, enName] of p2Translations) {
+        await exec(
+          `UPDATE item_pekerjaan SET nama_pekerjaan = ? WHERE proyek_id = 2 AND kode_pekerjaan = ?`,
+          [enName, kode]
+        );
+      }
+
+      // 3. Translate supervisor review notes on existing reports to English
+      const noteTranslations = [
+        ['Sesuai jadwal', 'On schedule'],
+        ['Selesai tepat waktu', 'Completed on schedule'],
+        ['Progres sesuai lapangan', 'Progress matches site condition'],
+        ['Sedikit terlambat karena cuaca', 'Slightly delayed due to weather'],
+        ['Mengejar keterlambatan', 'Catching up on schedule delay'],
+        ['Mulai terlambat', 'Starting to fall behind schedule'],
+        ['Material terlambat datang', 'Material delivery delayed'],
+        ['Masih menunggu material', 'Still awaiting material delivery'],
+        ['Kurang tenaga kerja', 'Shortage of field workers'],
+        ['Progres lambat karena hujan', 'Slow progress due to heavy rain'],
+        ['Masih delay signifikan', 'Significant schedule delay persists'],
+        ['Baru mulai, sangat terlambat', 'Just started, significantly behind schedule'],
+        ['Progres sangat lambat', 'Very slow field progress'],
+        ['Baru dimulai', 'Work just started'],
+        ['Material belum lengkap', 'Materials not yet complete'],
+      ];
+      for (const [idNote, enNote] of noteTranslations) {
+        await exec(
+          `UPDATE laporan_progres SET catatan_pengawas = ? WHERE catatan_pengawas = ?`,
+          [enNote, idNote]
+        );
+      }
+
       // Remove duplicate seeded projects (keep original projects id <= 2)
       await exec(
         `DELETE lp FROM laporan_progres lp

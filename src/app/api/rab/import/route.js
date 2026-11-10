@@ -38,7 +38,7 @@ export async function PUT(request) {
     const tglSelesai = body.tgl_selesai || null;
 
     if (!Array.isArray(items) || !items.length) {
-      return NextResponse.json({ success: false, message: 'No RAB items were provided.' }, { status: 400 });
+      return NextResponse.json({ success: false, message: 'No Cost Estimate items were provided.' }, { status: 400 });
     }
 
     const requestedProyekId = Number(body.proyek_id) || null;
@@ -108,7 +108,7 @@ export async function PUT(request) {
 
     return NextResponse.json({
       success: true,
-      message: 'RAB saved for this project. The planned S-curve has been updated.',
+      message: 'Cost Estimate saved for this project. The planned S-curve has been updated.',
       proyek_id: proyekId,
     });
   } catch (error) {

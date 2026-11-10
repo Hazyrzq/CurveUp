@@ -325,7 +325,7 @@ export default function MandorReportForm({ initialItemId }) {
         ) : itemOptions.length === 0 ? (
           <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-center text-xs text-amber-800">
             <p className="font-medium">No work items are available for this project.</p>
-            <p className="mt-1 text-slate-500">Management must upload an RAB file first.</p>
+            <p className="mt-1 text-slate-500">Management must upload a Cost Estimate file first.</p>
           </div>
         ) : (
           <div className="space-y-5">
@@ -357,7 +357,7 @@ export default function MandorReportForm({ initialItemId }) {
             <form noValidate onSubmit={handleSubmit} className="space-y-4">
               <label className="block">
                 <span className="mb-1.5 block text-xs font-medium text-slate-700">
-                  RAB Work Item
+                  Cost Estimate Work Item
                 </span>
                 <select
                   value={form.item_pekerjaan_id}

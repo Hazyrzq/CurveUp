@@ -533,7 +533,7 @@ export default function MandorDashboard() {
                   <tr>
                     <th className="px-4 py-3 font-medium">Project Name</th>
                     <th className="px-4 py-3 font-medium">Location</th>
-                    <th className="px-4 py-3 text-right font-medium">RAB Items</th>
+                    <th className="px-4 py-3 text-right font-medium">Cost Estimate Items</th>
                     <th className="px-4 py-3 font-medium">Start Date</th>
                     <th className="px-4 py-3 text-right font-medium">Action</th>
                   </tr>
@@ -839,7 +839,7 @@ export default function MandorDashboard() {
           <div className="grid grid-cols-2 gap-2.5 sm:gap-4 xl:grid-cols-4 stagger-grid">
             <StatCard
               icon={<Layers className="w-4 h-4" />}
-              label="RAB Work Items"
+              label="Cost Estimate Items"
               value={rabItems.length}
             />
             <StatCard
@@ -921,8 +921,8 @@ export default function MandorDashboard() {
                 {filteredRabItems.length === 0 ? (
                   <p className="px-4 py-12 text-center text-xs text-slate-400">
                     {rabItems.length
-                      ? 'No RAB items match the selected filters.'
-                      : 'No RAB items for this project yet.'}
+                      ? 'No Cost Estimate items match the selected filters.'
+                      : 'No Cost Estimate items for this project yet.'}
                   </p>
                 ) : (
                   <>

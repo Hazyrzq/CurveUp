@@ -15,7 +15,7 @@ const ROLE_HOME = {
 
 const PAGE_TITLE = {
   '/dashboard/manajemen': 'Dashboard',
-  '/dashboard/manajemen/import-rab': 'RAB Import',
+  '/dashboard/manajemen/import-rab': 'Cost Estimate Import',
   '/dashboard/pengawas': 'Dashboard',
   '/dashboard/mandor': 'Dashboard',
   '/dashboard/mandor/laporan-baru': 'Submit Progress Report',
@@ -67,8 +67,18 @@ function DashboardShell({ children }) {
       return;
     }
 
+    const LEGACY_NAMA_MAP = {
+      'Manajemen CurveUp': 'CurveUp Management',
+      'Pengawas Lapangan': 'Site Supervisor',
+      'Mandor Utama': 'Lead Foreman',
+    };
+    const normalizedNama = LEGACY_NAMA_MAP[storedNama] || storedNama || '';
+    if (normalizedNama !== storedNama) {
+      localStorage.setItem('user_nama', normalizedNama);
+    }
+
     setRole(storedRole);
-    setUserNama(storedNama || '');
+    setUserNama(normalizedNama);
     setReady(true);
   }, [pathname, router]);
 

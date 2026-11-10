@@ -70,7 +70,7 @@ export async function POST(request) {
     const proyekId = Number(formData.get('proyek_id')) || (await getActiveProyekId());
     if (!proyekId) {
       return NextResponse.json(
-        { success: false, message: 'No RAB has been uploaded. Management must upload an RAB first.' },
+        { success: false, message: 'No Cost Estimate has been uploaded. Management must upload a Cost Estimate first.' },
         { status: 400 }
       );
     }
@@ -107,7 +107,7 @@ export async function POST(request) {
       );
       if (persen > availableWeight) {
         return {
-          error: `Only ${Math.max(0, availableWeight).toFixed(2)}% weight remains for this work item. Pending and approved reports count toward its RAB weight (${item.bobot_persen}%).`,
+          error: `Only ${Math.max(0, availableWeight).toFixed(2)}% weight remains for this work item. Pending and approved reports count toward its Cost Estimate weight (${item.bobot_persen}%).`,
           status: 400,
         };
       }
@@ -186,7 +186,7 @@ export async function PATCH(request) {
     const proyekId = Number(formData.get('proyek_id')) || (await getActiveProyekId());
     if (!proyekId) {
       return NextResponse.json(
-        { success: false, message: 'No RAB has been uploaded. Management must upload an RAB first.' },
+        { success: false, message: 'No Cost Estimate has been uploaded. Management must upload a Cost Estimate first.' },
         { status: 400 }
       );
     }
@@ -234,7 +234,7 @@ export async function PATCH(request) {
       );
       if (persen > availableWeight) {
         return {
-          error: `Only ${Math.max(0, availableWeight).toFixed(2)}% weight remains for this work item. Pending and approved reports count toward its RAB weight (${items[0].bobot_persen}%).`,
+          error: `Only ${Math.max(0, availableWeight).toFixed(2)}% weight remains for this work item. Pending and approved reports count toward its Cost Estimate weight (${items[0].bobot_persen}%).`,
           status: 400,
         };
       }

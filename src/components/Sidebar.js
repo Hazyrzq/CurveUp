@@ -98,7 +98,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
     if (!rabFile) {
       const msgText = 'No file was uploaded.';
       setErr(msgText);
-      setToast({ title: 'Missing RAB file', message: msgText, variant: 'error' });
+      setToast({ title: 'Missing Cost Estimate file', message: msgText, variant: 'error' });
       return;
     }
     setSaving(true);
@@ -112,9 +112,9 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
       });
       const preview = await previewRes.json();
       if (!previewRes.ok || !preview.success) {
-        const msgText = preview.message || 'Could not read the RAB file.';
+        const msgText = preview.message || 'Could not read the Cost Estimate file.';
         setErr(msgText);
-        setToast({ title: 'Invalid RAB file', message: msgText, variant: 'error' });
+        setToast({ title: 'Invalid Cost Estimate file', message: msgText, variant: 'error' });
         return;
       }
 
@@ -131,7 +131,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
       });
       const json = await saveRes.json();
       if (!saveRes.ok || !json.success) {
-        const msgText = json.message || 'Could not create the project and save its RAB.';
+        const msgText = json.message || 'Could not create the project and save its Cost Estimate.';
         setErr(msgText);
         setToast({ title: 'Could not save project', message: msgText, variant: 'error' });
         return;
@@ -145,7 +145,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
       setAdding(false);
       setToast({
         title: 'Project created',
-        message: json.message || 'RAB saved for this project. The planned S-curve has been updated.',
+        message: json.message || 'Cost Estimate saved for this project. The planned S-curve has been updated.',
         variant: 'success',
       });
       await reload();
@@ -356,7 +356,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
           <div className="shrink-0 flex items-center justify-between border-b border-slate-100 px-4 py-3.5 sm:px-6 sm:py-4 bg-white">
             <div>
               <h2 id="add-project-title" className="text-base sm:text-lg font-semibold text-slate-900">Add project</h2>
-              <p className="mt-0.5 text-xs text-slate-500">Enter project details and attach RAB file.</p>
+              <p className="mt-0.5 text-xs text-slate-500">Enter project details and attach Cost Estimate file.</p>
             </div>
             <button type="button" onClick={() => setAdding(false)} disabled={saving} aria-label="Close add project dialog" className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 disabled:opacity-50">
               <X className="h-5 w-5 sm:h-4 sm:w-4" />
@@ -383,7 +383,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
             </div>
             <div className="block">
               <div className="mb-1.5 flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-600">RAB file</span>
+                <span className="text-xs font-medium text-slate-600">Cost Estimate file</span>
                 <button
                   type="button"
                   onClick={downloadTemplate}
@@ -404,7 +404,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
                   className="sr-only"
                 />
               </label>
-              <span className="mt-1 block text-[11px] text-slate-400">The project and its RAB will be saved together.</span>
+              <span className="mt-1 block text-[11px] text-slate-400">The project and its Cost Estimate will be saved together.</span>
             </div>
             {err && <p role="alert" className="text-sm text-rose-600">{err}</p>}
           </div>
@@ -412,7 +412,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
             <button type="button" onClick={() => setAdding(false)} disabled={saving} className="rounded-lg px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-50">Cancel</button>
             <button type="submit" disabled={saving} className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700 disabled:opacity-60">
               {saving && <span className="spinner" />}
-              {saving ? 'Creating project and saving RAB...' : 'Create project & upload RAB'}
+              {saving ? 'Creating project and saving Cost Estimate...' : 'Create project & upload Cost Estimate'}
             </button>
           </div>
         </form>

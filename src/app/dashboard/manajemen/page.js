@@ -319,8 +319,8 @@ export default function ManajemenDashboard() {
           activeView === 'detail' && selectedWorkItem
             ? `${selectedWorkItem.kode_pekerjaan} · Review records and evidence`
             : activeView === 'detail' && activeProject
-            ? `${activeProject.lokasi || 'Active project'} · ${rabItems.length} RAB items · ${laporan.length} reports`
-            : `${projects.length} projects · ${totalRabItems} RAB items`
+            ? `${activeProject.lokasi || 'Active project'} · ${rabItems.length} Cost Estimate items · ${laporan.length} reports`
+            : `${projects.length} projects · ${totalRabItems} Cost Estimate items`
         }
       />
 
@@ -389,7 +389,7 @@ export default function ManajemenDashboard() {
             />
             <StatCard
               icon={<Layers className="h-4 w-4" />}
-              label="Total RAB Items"
+              label="Cost Estimate Items"
               value={projectsLoading ? '—' : totalRabItems}
             />
             <div className="col-span-2 flex min-w-0 items-center gap-3 rounded-2xl border border-gray-100 p-4 sm:col-span-1">
@@ -458,7 +458,7 @@ export default function ManajemenDashboard() {
                       </div>
                       <div className="mt-4 grid grid-cols-2 gap-2 rounded-lg bg-slate-50 px-3 py-2.5">
                         <div>
-                          <p className="text-[10px] uppercase tracking-wide text-slate-400">RAB Items</p>
+                          <p className="text-[10px] uppercase tracking-wide text-slate-400">Cost Estimate Items</p>
                           <p className="mt-0.5 text-sm font-semibold text-slate-800">{Number(project.rab_count || 0)}</p>
                         </div>
                         <div>
@@ -497,7 +497,7 @@ export default function ManajemenDashboard() {
                 <p className="mt-1 max-w-sm text-xs leading-5 text-slate-500">
                   {projects.length
                     ? 'Try another project name or location.'
-                    : 'Create a project with the plus button in the sidebar and upload its RAB at the same time.'}
+                    : 'Create a project with the plus button in the sidebar and upload its Cost Estimate at the same time.'}
                 </p>
               </div>
             )}
@@ -551,7 +551,7 @@ export default function ManajemenDashboard() {
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 stagger-grid">
               <StatCard
                 icon={<Wallet className="w-4 h-4" />}
-                label="Total RAB Weight"
+                label="Cost Estimate Weight"
                 value={loading ? '—' : `${totalBobot.toFixed(1)}%`}
               />
               <StatCard
@@ -692,7 +692,7 @@ export default function ManajemenDashboard() {
               <h3 className="mt-1 text-base font-semibold text-slate-900">{selectedWorkItem.nama_pekerjaan}</h3>
               <p className="mt-0.5 text-xs text-slate-500">
                 {selectedWorkItem.volume ? `${selectedWorkItem.volume} ${selectedWorkItem.satuan || ''} · ` : ''}
-                RAB weight {Number(selectedWorkItem.bobot_persen).toFixed(2)}% ·{' '}
+                Cost Estimate weight {Number(selectedWorkItem.bobot_persen).toFixed(2)}% ·{' '}
                 {selectedWorkItemApprovedProgress}% approved · {selectedWorkItemReports.length} reports
               </p>
             </div>
@@ -927,11 +927,11 @@ export default function ManajemenDashboard() {
                 )}
               </section>
 
-              {/* RAB items table */}
+              {/* Cost Estimate items table */}
               <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
                 <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">RAB</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">Cost Estimate</p>
                     <h3 className="mt-1 text-sm font-semibold text-slate-900">Work Items</h3>
                     <p className="mt-0.5 text-xs text-slate-500">Select an item to view its review records and evidence.</p>
                   </div>
@@ -1052,7 +1052,7 @@ export default function ManajemenDashboard() {
                   )}
                   <InfoRow
                     icon={<Layers className="h-4 w-4" />}
-                    label="Total RAB Items"
+                    label="Cost Estimate Items"
                     value={loading ? '—' : `${rabItems.length} items`}
                   />
                 </dl>

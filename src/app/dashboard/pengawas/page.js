@@ -156,7 +156,7 @@ export default function PengawasDashboard() {
         title={selected ? selected.nama_proyek : 'Supervisor Dashboard'}
         subtitle={
           selected
-            ? `${selected.lokasi || 'Active project'} · ${reports.length} reports · ${rabItems.length} RAB items`
+            ? `${selected.lokasi || 'Active project'} · ${reports.length} reports · ${rabItems.length} Cost Estimate items`
             : `${projects.length} projects · Select a project to review its reports.`
         }
       />
@@ -202,7 +202,7 @@ export default function PengawasDashboard() {
                     </div>
                     <div className="mt-4 flex items-center justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2.5">
                       <span className="text-xs text-slate-500">
-                        {Number(project.rab_count || 0)} RAB items · Started {formatDate(project.tgl_mulai)}
+                        {Number(project.rab_count || 0)} Cost Estimate items · Started {formatDate(project.tgl_mulai)}
                       </span>
                       <button
                         type="button"
@@ -220,7 +220,7 @@ export default function PengawasDashboard() {
               <div className="px-4 py-12 text-center">
                 <FolderOpen className="mx-auto h-8 w-8 text-slate-300" />
                 <p className="mt-3 text-sm font-medium text-slate-700">No projects available</p>
-                <p className="mt-1 text-xs text-slate-500">Ask Management to create a project and upload its RAB.</p>
+                <p className="mt-1 text-xs text-slate-500">Ask Management to create a project and upload its Cost Estimate.</p>
               </div>
             )}
           </div>
@@ -430,7 +430,7 @@ export default function PengawasDashboard() {
                 <div className="flex items-start gap-3 px-4 py-3">
                   <FileText className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
                   <div>
-                    <dt className="text-xs text-slate-500">RAB Items</dt>
+                    <dt className="text-xs text-slate-500">Cost Estimate Items</dt>
                     <dd className="mt-0.5 font-medium text-slate-900">{loading ? '—' : rabItems.length} item</dd>
                   </div>
                 </div>
@@ -443,11 +443,11 @@ export default function PengawasDashboard() {
             )}
           </div>
 
-          {/* RAB items mini-list */}
+          {/* Cost Estimate items mini-list */}
           {rabItems.length > 0 && (
             <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
               <div className="border-b border-slate-100 px-4 py-3">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">RAB Work Items</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">Cost Estimate Work Items</p>
               </div>
               <ul className="max-h-[300px] divide-y divide-slate-100 overflow-auto overscroll-contain text-sm">
                 {rabItems.map((item) => (
