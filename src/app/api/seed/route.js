@@ -142,14 +142,14 @@ export async function POST() {
     // PROJECT 1 — On Schedule (Al-Ikhlas Mosque Renovation)
     // ══════════════════════════════════════════════════════════════════
     const rabItemsP1 = [
-      { kode: '1.1', nama: 'Demolition & Site Preparation', satuan: 'ls', volume: 1,   harga: 8000000, total: 8000000,  bobot: 6.00  },
-      { kode: '1.2', nama: 'Excavation & Backfilling',      satuan: 'm3', volume: 60,  harga: 90000,   total: 5400000,  bobot: 4.00  },
-      { kode: '2.1', nama: 'Concrete Foundation',           satuan: 'm3', volume: 25,  harga: 700000,  total: 17500000, bobot: 14.00 },
-      { kode: '2.2', nama: 'Tie Beams & Columns',           satuan: 'm3', volume: 15,  harga: 3800000, total: 57000000, bobot: 16.00 },
-      { kode: '3.1', nama: 'Brick Wall Masonry',            satuan: 'm2', volume: 180, harga: 130000,  total: 23400000, bobot: 15.00 },
-      { kode: '3.2', nama: 'Wall Plastering & Skim Coat',   satuan: 'm2', volume: 360, harga: 50000,   total: 18000000, bobot: 12.00 },
-      { kode: '4.1', nama: 'Roof Truss & Covering',         satuan: 'm2', volume: 120, harga: 280000,  total: 33600000, bobot: 18.00 },
-      { kode: '4.2', nama: 'Finishing & Painting',          satuan: 'm2', volume: 400, harga: 35000,   total: 14000000, bobot: 15.00 },
+      { kode: '1.1', nama: 'Demolition & Site Preparation', satuan: 'ls', volume: 1,   harga: 17098000, total: 17098000,  bobot: 6.00  },
+      { kode: '1.2', nama: 'Excavation & Backfilling',      satuan: 'm3', volume: 60,  harga: 190000,   total: 11400000,  bobot: 4.00  },
+      { kode: '2.1', nama: 'Concrete Foundation',           satuan: 'm3', volume: 25,  harga: 1596000,  total: 39900000, bobot: 14.00 },
+      { kode: '2.2', nama: 'Tie Beams & Columns',           satuan: 'm3', volume: 15,  harga: 3040000, total: 45600000, bobot: 16.00 },
+      { kode: '3.1', nama: 'Brick Wall Masonry',            satuan: 'm2', volume: 180, harga: 237500,  total: 42750000, bobot: 15.00 },
+      { kode: '3.2', nama: 'Wall Plastering & Skim Coat',   satuan: 'm2', volume: 360, harga: 95000,   total: 34200000, bobot: 12.00 },
+      { kode: '4.1', nama: 'Roof Truss & Covering',         satuan: 'm2', volume: 120, harga: 427500,  total: 51300000, bobot: 18.00 },
+      { kode: '4.2', nama: 'Finishing & Painting',          satuan: 'm2', volume: 400, harga: 106880,   total: 42752000, bobot: 15.00 },
     ];
 
     const weeklyPlansP1 = {
@@ -196,16 +196,16 @@ export async function POST() {
     // PROJECT 2 — Delayed / Behind Schedule (Multipurpose Hall Construction)
     // ══════════════════════════════════════════════════════════════════
     const rabItemsP2 = [
-      { kode: '1.1', nama: 'Site Preparation Works',       satuan: 'ls', volume: 1,   harga: 15000000, total: 15000000,  bobot: 5.00  },
-      { kode: '1.2', nama: 'Earthwork Excavation',         satuan: 'm3', volume: 120, harga: 85000,    total: 10200000,  bobot: 4.00  },
-      { kode: '2.1', nama: 'Stone Masonry Foundation',     satuan: 'm3', volume: 45,  harga: 650000,   total: 29250000,  bobot: 12.00 },
-      { kode: '2.2', nama: 'Reinforced Concrete Tie Beam', satuan: 'm3', volume: 18,  harga: 3500000,  total: 63000000,  bobot: 10.00 },
-      { kode: '3.1', nama: 'Reinforced Concrete Column',   satuan: 'm3', volume: 24,  harga: 4200000,  total: 100800000, bobot: 15.00 },
-      { kode: '3.2', nama: 'Reinforced Concrete Beam',     satuan: 'm3', volume: 30,  harga: 4000000,  total: 120000000, bobot: 14.00 },
-      { kode: '3.3', nama: 'Concrete Floor Slab',          satuan: 'm2', volume: 200, harga: 350000,   total: 70000000,  bobot: 12.00 },
-      { kode: '4.1', nama: 'Lightweight Brick Wall',       satuan: 'm2', volume: 350, harga: 120000,   total: 42000000,  bobot: 10.00 },
-      { kode: '4.2', nama: 'Wall Plastering & Skim Coat',  satuan: 'm2', volume: 700, harga: 45000,    total: 31500000,  bobot: 8.00  },
-      { kode: '5.1', nama: 'Light Steel Roof Frame',       satuan: 'm2', volume: 220, harga: 250000,   total: 55000000,  bobot: 10.00 },
+      { kode: '1.1', nama: 'Site Preparation Works',       satuan: 'ls', volume: 1,   harga: 26837770, total: 26837770,  bobot: 5.00  },
+      { kode: '1.2', nama: 'Earthwork Excavation',         satuan: 'm3', volume: 120, harga: 178920,    total: 21470400,  bobot: 4.00  },
+      { kode: '2.1', nama: 'Stone Masonry Foundation',     satuan: 'm3', volume: 45,  harga: 1431330,   total: 64409850,  bobot: 12.00 },
+      { kode: '2.2', nama: 'Reinforced Concrete Tie Beam', satuan: 'm3', volume: 18,  harga: 2981940,  total: 53674920,  bobot: 10.00 },
+      { kode: '3.1', nama: 'Reinforced Concrete Column',   satuan: 'm3', volume: 24,  harga: 3354690,  total: 80512560, bobot: 15.00 },
+      { kode: '3.2', nama: 'Reinforced Concrete Beam',     satuan: 'm3', volume: 30,  harga: 2504830,  total: 75144900, bobot: 14.00 },
+      { kode: '3.3', nama: 'Concrete Floor Slab',          satuan: 'm2', volume: 200, harga: 322050,   total: 64410000,  bobot: 12.00 },
+      { kode: '4.1', nama: 'Lightweight Brick Wall',       satuan: 'm2', volume: 350, harga: 153360,   total: 53676000,  bobot: 10.00 },
+      { kode: '4.2', nama: 'Wall Plastering & Skim Coat',  satuan: 'm2', volume: 700, harga: 61340,    total: 42938000,  bobot: 8.00  },
+      { kode: '5.1', nama: 'Light Steel Roof Frame',       satuan: 'm2', volume: 220, harga: 243980,   total: 53675600,  bobot: 10.00 },
     ];
 
     const weeklyPlansP2 = {
@@ -250,15 +250,15 @@ export async function POST() {
     // PROJECT 3 — Ahead of Schedule (Cikapundung Bridge Renovation)
     // ══════════════════════════════════════════════════════════════════
     const rabItemsP3 = [
-      { kode: '1.1', nama: 'Site Clearing & Mobilization', satuan: 'ls',  volume: 1,   harga: 25000000, total: 25000000,  bobot: 6.00  },
-      { kode: '1.2', nama: 'Temporary Cofferdam',           satuan: 'm3',  volume: 80,  harga: 200000,   total: 16000000,  bobot: 5.00  },
-      { kode: '2.1', nama: 'Pile Foundation',               satuan: 'm',   volume: 200, harga: 450000,   total: 90000000,  bobot: 14.00 },
-      { kode: '2.2', nama: 'Abutment Concrete',            satuan: 'm3',  volume: 60,  harga: 3800000,  total: 228000000, bobot: 16.00 },
-      { kode: '3.1', nama: 'Pier Column Concrete',          satuan: 'm3',  volume: 40,  harga: 4500000,  total: 180000000, bobot: 14.00 },
-      { kode: '3.2', nama: 'Steel Girder Installation',     satuan: 'ton', volume: 25,  harga: 15000000, total: 375000000, bobot: 15.00 },
-      { kode: '4.1', nama: 'Bridge Deck Concrete',          satuan: 'm3',  volume: 90,  harga: 3500000,  total: 315000000, bobot: 12.00 },
-      { kode: '4.2', nama: 'Railing & Safety Barrier',      satuan: 'm',   volume: 120, harga: 350000,   total: 42000000,  bobot: 8.00  },
-      { kode: '5.1', nama: 'Asphalt & Finishing',           satuan: 'm2',  volume: 400, harga: 120000,   total: 48000000,  bobot: 10.00 },
+      { kode: '1.1', nama: 'Site Clearing & Mobilization', satuan: 'ls',  volume: 1,   harga: 79139900, total: 79139900,  bobot: 6.00  },
+      { kode: '1.2', nama: 'Temporary Cofferdam',           satuan: 'm3',  volume: 80,  harga: 824380,   total: 65950400,  bobot: 5.00  },
+      { kode: '2.1', nama: 'Pile Foundation',               satuan: 'm',   volume: 200, harga: 923300,   total: 184660000,  bobot: 14.00 },
+      { kode: '2.2', nama: 'Abutment Concrete',            satuan: 'm3',  volume: 60,  harga: 3517330,  total: 211039800, bobot: 16.00 },
+      { kode: '3.1', nama: 'Pier Column Concrete',          satuan: 'm3',  volume: 40,  harga: 4616500,  total: 184660000, bobot: 14.00 },
+      { kode: '3.2', nama: 'Steel Girder Installation',     satuan: 'ton', volume: 25,  harga: 7914000, total: 197850000, bobot: 15.00 },
+      { kode: '4.1', nama: 'Bridge Deck Concrete',          satuan: 'm3',  volume: 90,  harga: 1758670,  total: 158280300, bobot: 12.00 },
+      { kode: '4.2', nama: 'Railing & Safety Barrier',      satuan: 'm',   volume: 120, harga: 879330,   total: 105519600,  bobot: 8.00  },
+      { kode: '5.1', nama: 'Asphalt & Finishing',           satuan: 'm2',  volume: 400, harga: 329750,   total: 131900000,  bobot: 10.00 },
     ];
 
     const weeklyPlansP3 = {
@@ -288,16 +288,16 @@ export async function POST() {
     // PROJECT 4 — Empty / No Progress Yet (City Park Development)
     // ══════════════════════════════════════════════════════════════════
     const rabItemsP4 = [
-      { kode: '1.1', nama: 'Land Survey & Marking',         satuan: 'ls',   volume: 1,    harga: 8000000,  total: 8000000,   bobot: 5.00  },
-      { kode: '1.2', nama: 'Site Clearing',                 satuan: 'm2',   volume: 5000, harga: 15000,    total: 75000000,  bobot: 8.00  },
-      { kode: '2.1', nama: 'Drainage & Irrigation System',  satuan: 'm',    volume: 300,  harga: 250000,   total: 75000000,  bobot: 12.00 },
-      { kode: '2.2', nama: 'Pedestrian Walkway Foundation', satuan: 'm3',   volume: 80,   harga: 500000,   total: 40000000,  bobot: 10.00 },
-      { kode: '3.1', nama: 'Walkway Paving',                satuan: 'm2',   volume: 2000, harga: 85000,    total: 170000000, bobot: 15.00 },
-      { kode: '3.2', nama: 'Garden & Landscape Planting',   satuan: 'm2',   volume: 3000, harga: 45000,    total: 135000000, bobot: 14.00 },
-      { kode: '4.1', nama: 'Gazebo & Rest Area Structure',  satuan: 'unit', volume: 4,    harga: 35000000, total: 140000000, bobot: 12.00 },
-      { kode: '4.2', nama: 'Playground Equipment',           satuan: 'set',  volume: 3,    harga: 50000000, total: 150000000, bobot: 10.00 },
-      { kode: '5.1', nama: 'Lighting & Electrical',         satuan: 'ls',   volume: 1,    harga: 60000000, total: 60000000,  bobot: 8.00  },
-      { kode: '5.2', nama: 'Fencing & Signage',             satuan: 'm',    volume: 500,  harga: 120000,   total: 60000000,  bobot: 6.00  },
+      { kode: '1.1', nama: 'Land Survey & Marking',         satuan: 'ls',   volume: 1,    harga: 45620010,  total: 45620010,   bobot: 5.00  },
+      { kode: '1.2', nama: 'Site Clearing',                 satuan: 'm2',   volume: 5000, harga: 14610,    total: 73050000,  bobot: 8.00  },
+      { kode: '2.1', nama: 'Drainage & Irrigation System',  satuan: 'm',    volume: 300,  harga: 365200,   total: 109560000,  bobot: 12.00 },
+      { kode: '2.2', nama: 'Pedestrian Walkway Foundation', satuan: 'm3',   volume: 80,   harga: 1141250,   total: 91300000,  bobot: 10.00 },
+      { kode: '3.1', nama: 'Walkway Paving',                satuan: 'm2',   volume: 2000, harga: 68480,    total: 136960000, bobot: 15.00 },
+      { kode: '3.2', nama: 'Garden & Landscape Planting',   satuan: 'm2',   volume: 3000, harga: 42610,    total: 127830000, bobot: 14.00 },
+      { kode: '4.1', nama: 'Gazebo & Rest Area Structure',  satuan: 'unit', volume: 4,    harga: 27390000, total: 109560000, bobot: 12.00 },
+      { kode: '4.2', nama: 'Playground Equipment',           satuan: 'set',  volume: 3,    harga: 30433330, total: 91299990, bobot: 10.00 },
+      { kode: '5.1', nama: 'Lighting & Electrical',         satuan: 'ls',   volume: 1,    harga: 73040000, total: 73040000,  bobot: 8.00  },
+      { kode: '5.2', nama: 'Fencing & Signage',             satuan: 'm',    volume: 500,  harga: 109560,   total: 54780000,  bobot: 6.00  },
     ];
 
     const weeklyPlansP4 = {
