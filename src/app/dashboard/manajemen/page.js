@@ -8,7 +8,7 @@ import StatusBadge from '@/components/StatusBadge';
 import AnimatedCounter from '@/components/AnimatedCounter';
 import ImageLightbox from '@/components/ImageLightbox';
 import ActionToast from '@/components/ActionToast';
-import useScrollLock from '@/lib/useScrollLock';
+import { useScrollLock } from '@/lib/useScrollLock';
 import {
   Wallet,
   TrendingUp,
