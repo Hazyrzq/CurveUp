@@ -2,6 +2,24 @@ import mysql from 'mysql2/promise';
 
 let pool;
 
+export const ROLE_TO_DB = {
+  manajemen: 'management',
+  management: 'management',
+  pengawas: 'supervisor',
+  supervisor: 'supervisor',
+  mandor: 'foreman',
+  foreman: 'foreman',
+};
+
+export const DB_TO_APP_ROLE = {
+  management: 'manajemen',
+  manajemen: 'manajemen',
+  supervisor: 'pengawas',
+  pengawas: 'pengawas',
+  foreman: 'mandor',
+  mandor: 'mandor',
+};
+
 function getPool() {
   if (!pool) {
     const config = {
@@ -54,12 +72,13 @@ export async function resolveUserId(role, maybeId) {
     const byId = await query('SELECT id FROM users WHERE id = ? LIMIT 1', [maybeId]);
     if (byId.length) return byId[0].id;
   }
-  const byRole = await query('SELECT id FROM users WHERE role = ? LIMIT 1', [role]);
+  const dbRole = ROLE_TO_DB[role] || role;
+  const byRole = await query('SELECT id FROM users WHERE role IN (?, ?) LIMIT 1', [dbRole, role]);
   if (byRole.length) return byRole[0].id;
   throw new Error('No account is available for this role.');
 }
 
 export async function getActiveProyekId() {
-  const rows = await query('SELECT id FROM proyek ORDER BY id DESC LIMIT 1');
+  const rows = await query('SELECT id FROM projects ORDER BY id DESC LIMIT 1');
   return rows[0]?.id || null;
 }

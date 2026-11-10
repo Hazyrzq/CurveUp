@@ -6,40 +6,70 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
-    const mandorIdParam = searchParams.get('mandor_id');
-    const proyekId = searchParams.get('proyek_id');
+    const mandorIdParam = searchParams.get('mandor_id') || searchParams.get('foreman_id');
+    const proyekId = searchParams.get('proyek_id') || searchParams.get('project_id');
     const mandorId =
-      mandorIdParam !== null ? await resolveUserId('mandor', mandorIdParam) : null;
+      mandorIdParam !== null ? await resolveUserId('foreman', mandorIdParam) : null;
 
     let sql = `
-      SELECT lp.id, lp.mandor_id, lp.minggu_ke, lp.tgl_laporan, lp.realisasi_volume, lp.realisasi_bobot,
-             lp.status_verifikasi, lp.catatan_pengawas, lp.foto_bukti, lp.item_pekerjaan_id,
-             ip.proyek_id, p.nama_proyek,
-             ip.kode_pekerjaan, ip.nama_pekerjaan, ip.satuan, ip.volume as volume_target, ip.bobot_persen,
-             u.nama as mandor_nama, supervisor.nama as pengawas_nama
-      FROM laporan_progres lp
-      JOIN item_pekerjaan ip ON lp.item_pekerjaan_id = ip.id
-      JOIN proyek p ON ip.proyek_id = p.id
-      LEFT JOIN users u ON lp.mandor_id = u.id
-      LEFT JOIN users supervisor ON lp.pengawas_id = supervisor.id
+      SELECT
+        pr.id,
+        pr.foreman_id AS mandor_id,
+        pr.foreman_id,
+        pr.week_number AS minggu_ke,
+        pr.week_number,
+        pr.report_date AS tgl_laporan,
+        pr.report_date,
+        pr.actual_volume AS realisasi_volume,
+        pr.actual_volume,
+        pr.actual_weight AS realisasi_bobot,
+        pr.actual_weight,
+        pr.verification_status AS status_verifikasi,
+        pr.verification_status,
+        pr.supervisor_notes AS catatan_pengawas,
+        pr.supervisor_notes,
+        pr.evidence_photo AS foto_bukti,
+        pr.evidence_photo,
+        pr.work_item_id AS item_pekerjaan_id,
+        pr.work_item_id,
+        wi.project_id AS proyek_id,
+        wi.project_id,
+        p.project_name AS nama_proyek,
+        p.project_name,
+        wi.work_code AS kode_pekerjaan,
+        wi.work_code,
+        wi.work_name AS nama_pekerjaan,
+        wi.work_name,
+        wi.unit AS satuan,
+        wi.unit,
+        wi.volume AS volume_target,
+        wi.weight_percentage AS bobot_persen,
+        wi.weight_percentage,
+        u.name AS mandor_nama,
+        supervisor.name AS pengawas_nama
+      FROM progress_reports pr
+      JOIN work_items wi ON pr.work_item_id = wi.id
+      JOIN projects p ON wi.project_id = p.id
+      LEFT JOIN users u ON pr.foreman_id = u.id
+      LEFT JOIN users supervisor ON pr.supervisor_id = supervisor.id
     `;
 
     const params = [];
     const where = [];
     if (proyekId) {
-      where.push('ip.proyek_id = ?');
+      where.push('wi.project_id = ?');
       params.push(proyekId);
     }
     if (status) {
-      where.push('lp.status_verifikasi = ?');
+      where.push('pr.verification_status = ?');
       params.push(status);
     }
     if (mandorId) {
-      where.push('lp.mandor_id = ?');
+      where.push('pr.foreman_id = ?');
       params.push(mandorId);
     }
     if (where.length) sql += ` WHERE ${where.join(' AND ')}`;
-    sql += ` ORDER BY FIELD(lp.status_verifikasi, 'pending', 'approved', 'rejected'), lp.created_at DESC`;
+    sql += ` ORDER BY FIELD(pr.verification_status, 'pending', 'approved', 'rejected'), pr.created_at DESC`;
 
     const reports = await query(sql, params);
     return NextResponse.json({ success: true, data: reports });
@@ -52,9 +82,9 @@ export async function POST(request) {
   let savedPhoto = null;
   try {
     const formData = await request.formData();
-    const itemPekerjaanId = Number(formData.get('item_pekerjaan_id'));
-    const minggu = Number(formData.get('minggu_ke'));
-    const persen = Number(String(formData.get('realisasi_bobot') || '').replace(',', '.'));
+    const itemPekerjaanId = Number(formData.get('item_pekerjaan_id') || formData.get('work_item_id'));
+    const minggu = Number(formData.get('minggu_ke') || formData.get('week_number'));
+    const persen = Number(String(formData.get('realisasi_bobot') || formData.get('actual_weight') || '').replace(',', '.'));
 
     if (!Number.isInteger(itemPekerjaanId) || itemPekerjaanId < 1 || !Number.isInteger(minggu) || minggu < 1 || !Number.isFinite(persen)) {
       return NextResponse.json(
@@ -67,7 +97,7 @@ export async function POST(request) {
       return NextResponse.json({ success: false, message: 'Enter a percentage from 0.01 to 100.' }, { status: 400 });
     }
 
-    const proyekId = Number(formData.get('proyek_id')) || (await getActiveProyekId());
+    const proyekId = Number(formData.get('proyek_id') || formData.get('project_id')) || (await getActiveProyekId());
     if (!proyekId) {
       return NextResponse.json(
         { success: false, message: 'No Cost Estimate has been uploaded. Management must upload a Cost Estimate first.' },
@@ -75,15 +105,15 @@ export async function POST(request) {
       );
     }
 
-    const mandorId = await resolveUserId('mandor', formData.get('mandor_id'));
-    const photoFile = formData.get('foto_bukti');
+    const mandorId = await resolveUserId('foreman', formData.get('mandor_id') || formData.get('foreman_id'));
+    const photoFile = formData.get('foto_bukti') || formData.get('evidence_photo');
     if (!photoFile || typeof photoFile.arrayBuffer !== 'function') {
       return NextResponse.json({ success: false, message: 'A progress photo is required.' }, { status: 400 });
     }
 
     const submission = await withTransaction(async (exec) => {
       const items = await exec(
-        'SELECT id, volume, bobot_persen FROM item_pekerjaan WHERE id = ? AND proyek_id = ? LIMIT 1 FOR UPDATE',
+        'SELECT id, volume, weight_percentage AS bobot_persen FROM work_items WHERE id = ? AND project_id = ? LIMIT 1 FOR UPDATE',
         [itemPekerjaanId, proyekId]
       );
       if (!items.length) return { error: 'Work item not found.', status: 404 };
@@ -97,9 +127,9 @@ export async function POST(request) {
       }
 
       const totals = await exec(
-        `SELECT COALESCE(SUM(realisasi_bobot), 0) AS total_progress
-         FROM laporan_progres
-         WHERE item_pekerjaan_id = ? AND status_verifikasi IN ('pending', 'approved')`,
+        `SELECT COALESCE(SUM(actual_weight), 0) AS total_progress
+         FROM progress_reports
+         WHERE work_item_id = ? AND verification_status IN ('pending', 'approved')`,
         [itemPekerjaanId]
       );
       const availableWeight = Number(
@@ -113,9 +143,9 @@ export async function POST(request) {
       }
 
       const existing = await exec(
-        `SELECT id FROM laporan_progres
-         WHERE item_pekerjaan_id = ? AND minggu_ke = ?
-           AND status_verifikasi IN ('pending', 'approved')
+        `SELECT id FROM progress_reports
+         WHERE work_item_id = ? AND week_number = ?
+           AND verification_status IN ('pending', 'approved')
          LIMIT 1`,
         [itemPekerjaanId, minggu]
       );
@@ -128,14 +158,14 @@ export async function POST(request) {
 
       savedPhoto = await saveProgressPhoto(photoFile);
       const result = await exec(
-        `INSERT INTO laporan_progres
-         (item_pekerjaan_id, mandor_id, minggu_ke, tgl_laporan, realisasi_volume, realisasi_bobot, foto_bukti, status_verifikasi)
+        `INSERT INTO progress_reports
+         (work_item_id, foreman_id, week_number, report_date, actual_volume, actual_weight, evidence_photo, verification_status)
          VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')`,
         [
           itemPekerjaanId,
           mandorId,
           minggu,
-          String(formData.get('tgl_laporan') || new Date().toISOString().split('T')[0]),
+          String(formData.get('tgl_laporan') || formData.get('report_date') || new Date().toISOString().split('T')[0]),
           persen,
           persen,
           savedPhoto,
@@ -167,11 +197,11 @@ export async function PATCH(request) {
   let savedPhoto = null;
   try {
     const formData = await request.formData();
-    const reportId = Number(formData.get('laporan_id'));
-    const mandorId = await resolveUserId('mandor', formData.get('mandor_id'));
-    const itemPekerjaanId = Number(formData.get('item_pekerjaan_id'));
-    const minggu = Number(formData.get('minggu_ke'));
-    const persen = Number(String(formData.get('realisasi_bobot') || '').replace(',', '.'));
+    const reportId = Number(formData.get('laporan_id') || formData.get('report_id'));
+    const mandorId = await resolveUserId('foreman', formData.get('mandor_id') || formData.get('foreman_id'));
+    const itemPekerjaanId = Number(formData.get('item_pekerjaan_id') || formData.get('work_item_id'));
+    const minggu = Number(formData.get('minggu_ke') || formData.get('week_number'));
+    const persen = Number(String(formData.get('realisasi_bobot') || formData.get('actual_weight') || '').replace(',', '.'));
 
     if (
       !Number.isInteger(reportId) || reportId < 1 ||
@@ -183,7 +213,7 @@ export async function PATCH(request) {
       return NextResponse.json({ success: false, message: 'Enter valid report details.' }, { status: 400 });
     }
 
-    const proyekId = Number(formData.get('proyek_id')) || (await getActiveProyekId());
+    const proyekId = Number(formData.get('proyek_id') || formData.get('project_id')) || (await getActiveProyekId());
     if (!proyekId) {
       return NextResponse.json(
         { success: false, message: 'No Cost Estimate has been uploaded. Management must upload a Cost Estimate first.' },
@@ -191,14 +221,14 @@ export async function PATCH(request) {
       );
     }
 
-    const photoFile = formData.get('foto_bukti');
+    const photoFile = formData.get('foto_bukti') || formData.get('evidence_photo');
     const hasNewPhoto = photoFile && typeof photoFile.arrayBuffer === 'function' && photoFile.size > 0;
     const result = await withTransaction(async (exec) => {
       const reports = await exec(
-        `SELECT lp.id, lp.foto_bukti, lp.item_pekerjaan_id, lp.status_verifikasi
-         FROM laporan_progres lp
-         JOIN item_pekerjaan ip ON ip.id = lp.item_pekerjaan_id
-         WHERE lp.id = ? AND lp.mandor_id = ? AND ip.proyek_id = ?
+        `SELECT pr.id, pr.evidence_photo AS foto_bukti, pr.work_item_id AS item_pekerjaan_id, pr.verification_status AS status_verifikasi
+         FROM progress_reports pr
+         JOIN work_items wi ON wi.id = pr.work_item_id
+         WHERE pr.id = ? AND pr.foreman_id = ? AND wi.project_id = ?
          LIMIT 1 FOR UPDATE`,
         [reportId, mandorId, proyekId]
       );
@@ -210,7 +240,7 @@ export async function PATCH(request) {
       }
 
       const items = await exec(
-        'SELECT id, bobot_persen FROM item_pekerjaan WHERE id = ? AND proyek_id = ? LIMIT 1 FOR UPDATE',
+        'SELECT id, weight_percentage AS bobot_persen FROM work_items WHERE id = ? AND project_id = ? LIMIT 1 FOR UPDATE',
         [itemPekerjaanId, proyekId]
       );
       if (!items.length) return { error: 'Work item not found.', status: 404 };
@@ -222,11 +252,11 @@ export async function PATCH(request) {
       }
 
       const totals = await exec(
-        `SELECT COALESCE(SUM(realisasi_bobot), 0) AS total_progress
-         FROM laporan_progres
-         WHERE item_pekerjaan_id = ?
+        `SELECT COALESCE(SUM(actual_weight), 0) AS total_progress
+         FROM progress_reports
+         WHERE work_item_id = ?
            AND id <> ?
-           AND status_verifikasi IN ('pending', 'approved')`,
+           AND verification_status IN ('pending', 'approved')`,
         [itemPekerjaanId, reportId]
       );
       const availableWeight = Number(
@@ -240,9 +270,9 @@ export async function PATCH(request) {
       }
 
       const existing = await exec(
-        `SELECT id FROM laporan_progres
-         WHERE item_pekerjaan_id = ? AND minggu_ke = ? AND id <> ?
-           AND status_verifikasi IN ('pending', 'approved')
+        `SELECT id FROM progress_reports
+         WHERE work_item_id = ? AND week_number = ? AND id <> ?
+           AND verification_status IN ('pending', 'approved')
          LIMIT 1`,
         [itemPekerjaanId, minggu, reportId]
       );
@@ -260,15 +290,15 @@ export async function PATCH(request) {
       const photoPath = hasNewPhoto ? await saveProgressPhoto(photoFile) : report.foto_bukti;
       if (hasNewPhoto) savedPhoto = photoPath;
       await exec(
-        `UPDATE laporan_progres
-         SET item_pekerjaan_id = ?, minggu_ke = ?, tgl_laporan = ?, realisasi_volume = ?,
-             realisasi_bobot = ?, foto_bukti = ?, status_verifikasi = 'pending',
-             catatan_pengawas = NULL, pengawas_id = NULL
+        `UPDATE progress_reports
+         SET work_item_id = ?, week_number = ?, report_date = ?, actual_volume = ?,
+             actual_weight = ?, evidence_photo = ?, verification_status = 'pending',
+             supervisor_notes = NULL, supervisor_id = NULL
          WHERE id = ?`,
         [
           itemPekerjaanId,
           minggu,
-          String(formData.get('tgl_laporan') || new Date().toISOString().split('T')[0]),
+          String(formData.get('tgl_laporan') || formData.get('report_date') || new Date().toISOString().split('T')[0]),
           persen,
           persen,
           photoPath,
@@ -305,23 +335,23 @@ export async function DELETE(request) {
       return NextResponse.json({ success: false, message: 'Invalid report details.' }, { status: 400 });
     }
 
-    const reportId = Number(body.laporan_id);
-    const mandorId = await resolveUserId('mandor', body.mandor_id);
+    const reportId = Number(body.laporan_id || body.report_id);
+    const mandorId = await resolveUserId('foreman', body.mandor_id || body.foreman_id);
     if (!Number.isInteger(reportId) || reportId < 1 || !Number.isInteger(mandorId) || mandorId < 1) {
       return NextResponse.json({ success: false, message: 'Invalid report details.' }, { status: 400 });
     }
 
     const result = await withTransaction(async (exec) => {
       const reports = await exec(
-        `SELECT id, foto_bukti, status_verifikasi
-         FROM laporan_progres WHERE id = ? AND mandor_id = ? LIMIT 1 FOR UPDATE`,
+        `SELECT id, evidence_photo AS foto_bukti, verification_status AS status_verifikasi
+         FROM progress_reports WHERE id = ? AND foreman_id = ? LIMIT 1 FOR UPDATE`,
         [reportId, mandorId]
       );
       if (!reports.length) return { error: 'Report not found.', status: 404 };
       if (!['pending', 'rejected'].includes(reports[0].status_verifikasi)) {
         return { error: 'Approved reports cannot be deleted.', status: 409 };
       }
-      await exec('DELETE FROM laporan_progres WHERE id = ?', [reportId]);
+      await exec('DELETE FROM progress_reports WHERE id = ?', [reportId]);
       return { photo: reports[0].foto_bukti };
     });
 
@@ -338,26 +368,28 @@ export async function DELETE(request) {
 export async function PUT(request) {
   try {
     const body = await request.json();
-    const { laporan_id, status_verifikasi, catatan_pengawas } = body;
+    const laporanId = body.laporan_id || body.report_id;
+    const statusVerifikasi = body.status_verifikasi || body.verification_status;
+    const catatanPengawas = body.catatan_pengawas ?? body.supervisor_notes ?? null;
 
-    if (!laporan_id || !['approved', 'rejected', 'pending'].includes(status_verifikasi)) {
+    if (!laporanId || !['approved', 'rejected', 'pending'].includes(statusVerifikasi)) {
       return NextResponse.json({ success: false, message: 'Invalid review data.' }, { status: 400 });
     }
 
-    const pengawasId = await resolveUserId('pengawas', body.pengawas_id);
+    const pengawasId = await resolveUserId('supervisor', body.pengawas_id || body.supervisor_id);
 
     await query(
-      `UPDATE laporan_progres
-       SET status_verifikasi = ?, catatan_pengawas = ?, pengawas_id = ?
+      `UPDATE progress_reports
+       SET verification_status = ?, supervisor_notes = ?, supervisor_id = ?
        WHERE id = ?`,
-      [status_verifikasi, catatan_pengawas || null, pengawasId, laporan_id]
+      [statusVerifikasi, catatanPengawas || null, pengawasId, laporanId]
     );
 
-    const label = status_verifikasi === 'approved' ? 'approved' : status_verifikasi === 'rejected' ? 'rejected' : 'updated';
+    const label = statusVerifikasi === 'approved' ? 'approved' : statusVerifikasi === 'rejected' ? 'rejected' : 'updated';
 
     return NextResponse.json({
       success: true,
-      message: `Report ${label}.${status_verifikasi === 'approved' ? ' The actual S-curve has been updated.' : ''}`,
+      message: `Report ${label}.${statusVerifikasi === 'approved' ? ' The actual S-curve has been updated.' : ''}`,
     });
   } catch (error) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });

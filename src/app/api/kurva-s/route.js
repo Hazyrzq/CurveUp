@@ -4,29 +4,29 @@ import { query, getActiveProyekId } from '@/lib/db';
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const proyekId = searchParams.get('proyek_id') || (await getActiveProyekId());
+    const proyekId = searchParams.get('proyek_id') || searchParams.get('project_id') || (await getActiveProyekId());
 
     if (!proyekId) {
       return NextResponse.json({ success: true, labels: [], rencana: [], realisasi: [] });
     }
 
     const rJadwal = await query(
-      `SELECT minggu_ke, SUM(target_bobot_mingguan) as total_rencana
-       FROM jadwal_rencana_mingguan jrm
-       JOIN item_pekerjaan ip ON jrm.item_pekerjaan_id = ip.id
-       WHERE ip.proyek_id = ?
-       GROUP BY minggu_ke
-       ORDER BY minggu_ke ASC`,
+      `SELECT wps.week_number AS minggu_ke, SUM(wps.planned_weekly_weight) AS total_rencana
+       FROM weekly_planned_schedules wps
+       JOIN work_items wi ON wps.work_item_id = wi.id
+       WHERE wi.project_id = ?
+       GROUP BY wps.week_number
+       ORDER BY wps.week_number ASC`,
       [proyekId]
     );
 
     const rRealisasi = await query(
-      `SELECT minggu_ke, SUM(realisasi_bobot) as total_realisasi
-       FROM laporan_progres lp
-       JOIN item_pekerjaan ip ON lp.item_pekerjaan_id = ip.id
-       WHERE ip.proyek_id = ? AND lp.status_verifikasi = 'approved'
-       GROUP BY minggu_ke
-       ORDER BY minggu_ke ASC`,
+      `SELECT pr.week_number AS minggu_ke, SUM(pr.actual_weight) AS total_realisasi
+       FROM progress_reports pr
+       JOIN work_items wi ON pr.work_item_id = wi.id
+       WHERE wi.project_id = ? AND pr.verification_status = 'approved'
+       GROUP BY pr.week_number
+       ORDER BY pr.week_number ASC`,
       [proyekId]
     );
 

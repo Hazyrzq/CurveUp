@@ -52,7 +52,7 @@ export async function saveProgressPhoto(file) {
     // Fallback for serverless read-only filesystems (e.g., Vercel)
     if (!ensuredLongTextColumn) {
       try {
-        await query('ALTER TABLE laporan_progres MODIFY COLUMN foto_bukti LONGTEXT DEFAULT NULL');
+        await query('ALTER TABLE progress_reports MODIFY COLUMN evidence_photo LONGTEXT DEFAULT NULL');
       } catch {
         // Ignore if already LONGTEXT or insufficient DDL privilege
       }

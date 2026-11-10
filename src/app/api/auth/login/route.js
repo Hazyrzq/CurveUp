@@ -1,23 +1,32 @@
 import { NextResponse } from 'next/server';
-import { query } from '@/lib/db';
+import { query, ROLE_TO_DB, DB_TO_APP_ROLE } from '@/lib/db';
 
-const ALLOWED_ROLES = ['manajemen', 'pengawas', 'mandor'];
+const ALLOWED_ROLES = ['manajemen', 'pengawas', 'mandor', 'management', 'supervisor', 'foreman'];
+
+const USERNAME_ALIASES = {
+  manajemen: ['manajemen', 'management'],
+  management: ['management', 'manajemen'],
+  pengawas: ['pengawas', 'supervisor'],
+  supervisor: ['supervisor', 'pengawas'],
+  mandor: ['mandor', 'foreman'],
+  foreman: ['foreman', 'mandor'],
+};
 
 const LOCAL_ACCOUNTS = [
-  { id: 1, nama: 'Management', username: 'manajemen', password: '123456', role: 'manajemen' },
-  { id: 2, nama: 'Supervisor', username: 'pengawas', password: '123456', role: 'pengawas' },
-  { id: 3, nama: 'Foreman', username: 'mandor', password: '123456', role: 'mandor' },
+  { id: 1, nama: 'CurveUp Management', usernames: ['management', 'manajemen'], password: '123456', role: 'manajemen' },
+  { id: 2, nama: 'Site Supervisor', usernames: ['supervisor', 'pengawas'], password: '123456', role: 'pengawas' },
+  { id: 3, nama: 'Lead Foreman', usernames: ['foreman', 'mandor'], password: '123456', role: 'mandor' },
 ];
 
-function findLocalAccount(username, password, role) {
+function findLocalAccount(username, password, appRole) {
   return LOCAL_ACCOUNTS.find(
-    (u) => u.username === username && u.password === password && u.role === role
+    (u) => u.usernames.includes(String(username).toLowerCase()) && u.password === password && u.role === appRole
   );
 }
 
 export async function POST(request) {
   const body = await request.json();
-  const username = body.username;
+  const username = String(body.username || '').trim();
   const password = body.password;
   const role = body.role;
 
@@ -35,10 +44,14 @@ export async function POST(request) {
     );
   }
 
+  const dbRole = ROLE_TO_DB[role] || role;
+  const appRole = DB_TO_APP_ROLE[role] || role;
+  const candidateUsernames = USERNAME_ALIASES[username.toLowerCase()] || [username, username];
+
   try {
     const users = await query(
-      'SELECT id, nama, username, password, role FROM users WHERE username = ? AND role = ? LIMIT 1',
-      [username, role]
+      'SELECT id, name, username, password, role FROM users WHERE username IN (?, ?) AND role IN (?, ?) LIMIT 1',
+      [candidateUsernames[0], candidateUsernames[1], dbRole, appRole]
     );
 
     if (users && users.length > 0) {
@@ -54,9 +67,10 @@ export async function POST(request) {
         success: true,
         user: {
           id: user.id,
-          nama: user.nama,
+          nama: user.name,
+          name: user.name,
           username: user.username,
-          role: user.role,
+          role: DB_TO_APP_ROLE[user.role] || appRole,
         },
       });
     }
@@ -64,14 +78,15 @@ export async function POST(request) {
     console.warn('Login DB:', error.message);
   }
 
-  const localUser = findLocalAccount(username, password, role);
+  const localUser = findLocalAccount(username, password, appRole);
   if (localUser) {
     return NextResponse.json({
       success: true,
       user: {
         id: localUser.id,
         nama: localUser.nama,
-        username: localUser.username,
+        name: localUser.nama,
+        username,
         role: localUser.role,
       },
     });
