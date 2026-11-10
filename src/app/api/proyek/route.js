@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { query } from '@/lib/db';
+import { query, withTransaction } from '@/lib/db';
+import { deleteProgressPhoto } from '@/lib/progressPhoto';
 
 export async function GET(request) {
   try {
@@ -59,6 +60,78 @@ export async function POST(request) {
       success: true,
       message: 'Project created.',
       id: result.insertId,
+    });
+  } catch (error) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(request) {
+  try {
+    let body = {};
+    try {
+      body = await request.json();
+    } catch {
+      body = {};
+    }
+    const { searchParams } = new URL(request.url);
+    const projectId = Number(
+      body?.id || body?.proyek_id || body?.project_id || searchParams.get('id') || searchParams.get('proyek_id')
+    );
+
+    if (!Number.isInteger(projectId) || projectId < 1) {
+      return NextResponse.json({ success: false, message: 'A valid project ID is required.' }, { status: 400 });
+    }
+
+    const result = await withTransaction(async (exec) => {
+      const existing = await exec(
+        'SELECT id, project_name FROM projects WHERE id = ? LIMIT 1 FOR UPDATE',
+        [projectId]
+      );
+      if (!existing.length) {
+        return { error: 'Project not found.', status: 404 };
+      }
+
+      const photoRows = await exec(
+        `SELECT pr.evidence_photo
+         FROM progress_reports pr
+         JOIN work_items wi ON pr.work_item_id = wi.id
+         WHERE wi.project_id = ? AND pr.evidence_photo IS NOT NULL`,
+        [projectId]
+      );
+
+      await exec(
+        `DELETE pr FROM progress_reports pr
+         JOIN work_items wi ON pr.work_item_id = wi.id
+         WHERE wi.project_id = ?`,
+        [projectId]
+      );
+      await exec(
+        `DELETE wps FROM weekly_planned_schedules wps
+         JOIN work_items wi ON wps.work_item_id = wi.id
+         WHERE wi.project_id = ?`,
+        [projectId]
+      );
+      await exec('DELETE FROM work_items WHERE project_id = ?', [projectId]);
+      await exec('DELETE FROM projects WHERE id = ?', [projectId]);
+
+      return {
+        projectName: existing[0].project_name,
+        photos: photoRows.map((r) => r.evidence_photo).filter(Boolean),
+      };
+    });
+
+    if (result.error) {
+      return NextResponse.json({ success: false, message: result.error }, { status: result.status });
+    }
+
+    for (const photo of result.photos || []) {
+      await deleteProgressPhoto(photo);
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: `Project "${result.projectName}" has been deleted.`,
     });
   } catch (error) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
