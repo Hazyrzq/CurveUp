@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useRouter } from 'next/navigation';
 import SCurveChart from '@/components/SCurveChart';
 import StatCard from '@/components/StatCard';
 import StatusBadge from '@/components/StatusBadge';
@@ -27,6 +28,8 @@ import {
   AlertTriangle,
   CheckCircle2,
   Trash2,
+  Pencil,
+  Upload,
   X,
 } from 'lucide-react';
 import { useProject } from '@/components/ProjectContext';
@@ -52,6 +55,7 @@ function InfoRow({ icon, label, value }) {
 }
 
 export default function ManajemenDashboard() {
+  const router = useRouter();
   const { selectedId, selected, projects, loading: projectsLoading, selectProject, reload } = useProject();
   const [loading, setLoading] = useState(true);
   const [sCurveData, setSCurveData] = useState({ labels: [], rencana: [], realisasi: [] });
@@ -65,14 +69,110 @@ export default function ManajemenDashboard() {
   const [lightboxPhoto, setLightboxPhoto] = useState(null);
   const [projectToDelete, setProjectToDelete] = useState(null);
   const [deletingProject, setDeletingProject] = useState(false);
+  const [projectToEdit, setProjectToEdit] = useState(null);
+  const [editForm, setEditForm] = useState({
+    nama_proyek: '',
+    lokasi: '',
+    tgl_mulai: '',
+    tgl_selesai: '',
+  });
+  const [savingEdit, setSavingEdit] = useState(false);
   const [toast, setToast] = useState(null);
   const [portalReady, setPortalReady] = useState(false);
 
-  useScrollLock(Boolean(projectToDelete));
+  useScrollLock(Boolean(projectToDelete || projectToEdit));
 
   useEffect(() => {
     setPortalReady(true);
   }, []);
+
+  const toDateInputValue = (value) => {
+    if (!value) return '';
+    return String(value).slice(0, 10);
+  };
+
+  const openEditProjectModal = (proj) => {
+    if (!proj) return;
+    setProjectToEdit(proj);
+    setEditForm({
+      nama_proyek: proj.nama_proyek || proj.project_name || '',
+      lokasi: proj.lokasi || proj.location || '',
+      tgl_mulai: toDateInputValue(proj.tgl_mulai || proj.start_date),
+      tgl_selesai: toDateInputValue(proj.tgl_selesai || proj.end_date),
+    });
+  };
+
+  const handleSaveEditProject = async (e) => {
+    e.preventDefault();
+    if (!projectToEdit || savingEdit) return;
+    const trimmedName = String(editForm.nama_proyek || '').trim();
+    if (!trimmedName) {
+      setToast({
+        variant: 'error',
+        title: 'Validation error',
+        message: 'Project name is required.',
+      });
+      return;
+    }
+
+    setSavingEdit(true);
+    try {
+      const res = await fetch('/api/proyek', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: projectToEdit.id,
+          nama_proyek: trimmedName,
+          lokasi: String(editForm.lokasi || '-').trim() || '-',
+          tgl_mulai: editForm.tgl_mulai || null,
+          tgl_selesai: editForm.tgl_selesai || null,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        setToast({
+          variant: 'error',
+          title: 'Update failed',
+          message: json.message || 'Could not update the project.',
+        });
+        return;
+      }
+
+      if (proyek && Number(proyek.id) === Number(projectToEdit.id)) {
+        setProyek((prev) =>
+          prev
+            ? {
+                ...prev,
+                nama_proyek: trimmedName,
+                project_name: trimmedName,
+                lokasi: String(editForm.lokasi || '-').trim() || '-',
+                location: String(editForm.lokasi || '-').trim() || '-',
+                tgl_mulai: editForm.tgl_mulai || null,
+                start_date: editForm.tgl_mulai || null,
+                tgl_selesai: editForm.tgl_selesai || null,
+                end_date: editForm.tgl_selesai || null,
+              }
+            : prev
+        );
+      }
+
+      setProjectToEdit(null);
+      await reload();
+      setToast({
+        variant: 'success',
+        title: 'Project updated',
+        message: `Details for "${trimmedName}" have been saved.`,
+      });
+    } catch {
+      setToast({
+        variant: 'error',
+        title: 'Connection error',
+        message: 'Could not connect to the server to update the project.',
+      });
+    } finally {
+      setSavingEdit(false);
+    }
+  };
 
   const handleConfirmDeleteProject = async () => {
     if (!projectToDelete || deletingProject) return;
@@ -524,17 +624,27 @@ export default function ManajemenDashboard() {
                           <p className="mt-0.5 text-xs font-medium text-slate-700">{formatDate(project.tgl_mulai)}</p>
                         </div>
                       </div>
-                      <div className="mt-4 flex items-center justify-between gap-2">
+                      <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
                         {active ? (
                           <span className="text-[11px] font-medium text-slate-500">Selected project</span>
                         ) : <span />}
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => openEditProjectModal(project)}
+                            aria-label={`Edit ${project.nama_proyek}`}
+                            title="Edit project details"
+                            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                            Edit
+                          </button>
                           <button
                             type="button"
                             onClick={() => setProjectToDelete(project)}
                             aria-label={`Delete ${project.nama_proyek}`}
                             title="Delete project"
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-white px-2.5 py-2 text-xs font-medium text-rose-600 transition hover:border-rose-300 hover:bg-rose-50"
+                            className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-white px-2.5 py-2 text-xs font-medium text-rose-600 transition hover:border-rose-300 hover:bg-rose-50"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                             Delete
@@ -616,14 +726,24 @@ export default function ManajemenDashboard() {
               {selectedWorkItem ? 'Back to Work Items' : 'Back to Projects'}
             </button>
             {!selectedWorkItem && activeProject && (
-              <button
-                type="button"
-                onClick={() => setProjectToDelete(activeProject)}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-white px-3 py-1.5 text-xs font-medium text-rose-600 shadow-sm hover:border-rose-300 hover:bg-rose-50 transition"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-                Delete Project
-              </button>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => openEditProjectModal(activeProject)}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50 transition"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                  Edit Project
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setProjectToDelete(activeProject)}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-white px-3 py-1.5 text-xs font-medium text-rose-600 shadow-sm hover:border-rose-300 hover:bg-rose-50 transition"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Delete Project
+                </button>
+              </div>
             )}
           </div>
 
@@ -1203,6 +1323,163 @@ export default function ManajemenDashboard() {
           onDismiss={() => setToast(null)}
         />
       )}
+
+      {/* Edit Project Modal */}
+      {portalReady &&
+        projectToEdit &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/45 p-4 backdrop-blur-[2px] anim-fade"
+            onClick={() => {
+              if (!savingEdit) setProjectToEdit(null);
+            }}
+          >
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="edit-project-title"
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl anim-scale"
+            >
+              <div className="flex items-start justify-between gap-3 border-b border-slate-100 px-5 py-4">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+                    <Pencil className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <h3 id="edit-project-title" className="text-base font-semibold text-slate-900">
+                      Edit Project Details
+                    </h3>
+                    <p className="text-xs text-slate-500">
+                      Update the project name, location, or contract schedule dates.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  disabled={savingEdit}
+                  onClick={() => setProjectToEdit(null)}
+                  aria-label="Close"
+                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:opacity-50"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveEditProject}>
+                <div className="space-y-4 px-5 py-4">
+                  <div>
+                    <label className="mb-1.5 block text-xs font-medium text-slate-700">
+                      Project Name <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={editForm.nama_proyek}
+                      onChange={(e) =>
+                        setEditForm((prev) => ({ ...prev, nama_proyek: e.target.value }))
+                      }
+                      placeholder="Enter project name"
+                      className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-base sm:text-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-50"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-1.5 block text-xs font-medium text-slate-700">
+                      Location
+                    </label>
+                    <input
+                      type="text"
+                      value={editForm.lokasi}
+                      onChange={(e) =>
+                        setEditForm((prev) => ({ ...prev, lokasi: e.target.value }))
+                      }
+                      placeholder="Enter project site location"
+                      className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-base sm:text-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-50"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-slate-700">
+                        Start Date
+                      </label>
+                      <input
+                        type="date"
+                        value={editForm.tgl_mulai}
+                        onChange={(e) =>
+                          setEditForm((prev) => ({ ...prev, tgl_mulai: e.target.value }))
+                        }
+                        className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-base sm:text-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-50"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-slate-700">
+                        Target End Date
+                      </label>
+                      <input
+                        type="date"
+                        value={editForm.tgl_selesai}
+                        onChange={(e) =>
+                          setEditForm((prev) => ({ ...prev, tgl_selesai: e.target.value }))
+                        }
+                        className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-base sm:text-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-50"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-200/80 bg-slate-50 px-3.5 py-3">
+                    <div className="min-w-0">
+                      <p className="text-xs font-medium text-slate-800">Update Cost Estimate Items (.xlsx)</p>
+                      <p className="mt-0.5 text-[11px] text-slate-500">
+                        Re-upload an Excel file to replace work items and weekly planned weights.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const targetId = projectToEdit.id;
+                        setProjectToEdit(null);
+                        selectProject(targetId);
+                        router.push('/dashboard/manajemen/import-rab');
+                      }}
+                      className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-sm hover:bg-slate-50 transition"
+                    >
+                      <Upload className="h-3.5 w-3.5" />
+                      Upload Excel
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-2.5 border-t border-slate-100 bg-slate-50/70 px-5 py-3.5">
+                  <button
+                    type="button"
+                    disabled={savingEdit}
+                    onClick={() => setProjectToEdit(null)}
+                    className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={savingEdit}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-800 disabled:opacity-60 transition"
+                  >
+                    {savingEdit ? (
+                      <>
+                        <span className="spinner" />
+                        Saving...
+                      </>
+                    ) : (
+                      'Save Changes'
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>,
+          document.body
+        )}
 
       {/* Delete Project Confirmation Modal */}
       {portalReady &&

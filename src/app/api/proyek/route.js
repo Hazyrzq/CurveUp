@@ -66,6 +66,44 @@ export async function POST(request) {
   }
 }
 
+export async function PUT(request) {
+  try {
+    const body = await request.json();
+    const projectId = Number(body.id || body.proyek_id || body.project_id);
+    const projectName = String(body.nama_proyek || body.project_name || '').trim();
+    const location = String(body.lokasi || body.location || '-').trim() || '-';
+    const startDate = body.tgl_mulai || body.start_date || null;
+    const endDate = body.tgl_selesai || body.end_date || null;
+
+    if (!Number.isInteger(projectId) || projectId < 1) {
+      return NextResponse.json({ success: false, message: 'A valid project ID is required.' }, { status: 400 });
+    }
+    if (!projectName) {
+      return NextResponse.json({ success: false, message: 'Project name is required.' }, { status: 400 });
+    }
+
+    const existing = await query('SELECT id FROM projects WHERE id = ? LIMIT 1', [projectId]);
+    if (!existing.length) {
+      return NextResponse.json({ success: false, message: 'Project not found.' }, { status: 404 });
+    }
+
+    await query(
+      `UPDATE projects
+       SET project_name = ?, location = ?, start_date = ?, end_date = ?
+       WHERE id = ?`,
+      [projectName, location, startDate, endDate, projectId]
+    );
+
+    return NextResponse.json({
+      success: true,
+      message: 'Project details updated.',
+      id: projectId,
+    });
+  } catch (error) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
+}
+
 export async function DELETE(request) {
   try {
     let body = {};
