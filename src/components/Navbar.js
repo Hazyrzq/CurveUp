@@ -6,7 +6,7 @@ import { Menu } from 'lucide-react';
 
 export default function Navbar({ title, userNama, onNamaChange, onLogout, onMenuClick }) {
   return (
-    <header className="glass relative z-20 flex h-14 shrink-0 items-center justify-between gap-2 border-b border-navy-100/80 px-3 sm:h-16 sm:px-6">
+    <header className="glass relative z-20 flex h-14 shrink-0 items-center justify-between gap-2 border-b border-navy-200/50 px-3 sm:h-16 sm:px-6">
       <div className="flex min-w-0 items-center gap-2">
         <button
           type="button"
@@ -18,7 +18,7 @@ export default function Navbar({ title, userNama, onNamaChange, onLogout, onMenu
         >
           <Menu className="h-5 w-5" />
         </button>
-        <h1 className="truncate text-base font-semibold tracking-tight text-navy-950 sm:text-lg">{title}</h1>
+        <h1 className="truncate text-base font-semibold tracking-tight text-navy-800 sm:text-lg">{title}</h1>
       </div>
 
       <div className="flex items-center gap-3">

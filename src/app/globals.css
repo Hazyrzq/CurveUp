@@ -1,5 +1,54 @@
 @tailwind base;
 @tailwind components;
+
+@layer components {
+  /* Primary action — SDG 9 orange */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-brand-500 to-brand-600 font-semibold text-white;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 8px 18px -8px rgba(253, 105, 37, 0.7);
+  }
+  .btn-primary:hover:not(:disabled) {
+    @apply from-brand-400 to-brand-500 -translate-y-px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 12px 24px -8px rgba(253, 105, 37, 0.75);
+  }
+  .btn-primary:disabled { @apply opacity-60; }
+
+  /* Secondary action — white with soft border, orange tint on hover */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-xl border border-navy-200 bg-white font-medium text-navy-700 shadow-sm;
+  }
+  .btn-secondary:hover:not(:disabled) { @apply border-brand-200 bg-brand-50/60 text-navy-800; }
+  .btn-secondary:disabled { @apply opacity-50; }
+
+  /* Segmented / pill tabs */
+  .seg {
+    @apply inline-flex gap-1 rounded-full border border-navy-200/80 bg-white/90 p-1 shadow-soft;
+  }
+  .seg-item {
+    @apply inline-flex min-w-0 items-center justify-center gap-2 rounded-full px-3 py-2 text-xs font-medium text-navy-500 sm:text-sm;
+  }
+  .seg-item:hover:not(:disabled):not(.seg-active) { @apply bg-brand-50 text-navy-800; }
+  .seg-active {
+    @apply bg-gradient-to-b from-brand-500 to-brand-600 text-white;
+    box-shadow: 0 6px 14px -6px rgba(253, 105, 37, 0.7);
+  }
+
+  /* Base surface for cards / panels */
+  .surface {
+    @apply rounded-2xl border border-navy-200/70 bg-white shadow-soft;
+  }
+
+  /* Soft tinted icon chips */
+  .chip-orange { @apply bg-brand-50 text-brand-600 ring-1 ring-brand-200/70; }
+  .chip-sky    { @apply bg-sky-50 text-sky-600 ring-1 ring-sky-200/70; }
+  .chip-teal   { @apply bg-teal-50 text-teal-600 ring-1 ring-teal-200/70; }
+  .chip-violet { @apply bg-violet-50 text-violet-600 ring-1 ring-violet-200/70; }
+
+  /* Tables: zebra rows + soft hover */
+  .table-soft tbody tr:nth-child(even) { @apply bg-navy-50/60; }
+  .table-soft tbody tr { @apply transition-colors; }
+  .table-soft tbody tr:hover { @apply bg-brand-50/70; }
+}
 @tailwind utilities;
 
 @layer utilities {
@@ -33,12 +82,12 @@
   --motion-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --motion-settle: cubic-bezier(0.2, 0.8, 0.2, 1);
   --brand: #fd6925;
-  --navy: #0b1324;
+  --navy: #1e293b;
 }
 
 ::selection {
-  background: rgba(253, 105, 37, 0.22);
-  color: #0b1324;
+  background: rgba(253, 105, 37, 0.2);
+  color: #1e293b;
 }
 
 html,
@@ -51,13 +100,13 @@ body {
 }
 
 body {
-  color: #0b1324;
-  background-color: #f3f5f9;
+  color: #1e293b;
+  background-color: #faf7f3;
   background-image:
-    radial-gradient(1200px 600px at 100% -10%, rgba(253, 105, 37, 0.07), transparent 60%),
-    radial-gradient(900px 500px at -10% 110%, rgba(31, 42, 64, 0.06), transparent 60%),
-    linear-gradient(rgba(11, 19, 36, 0.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(11, 19, 36, 0.028) 1px, transparent 1px);
+    radial-gradient(1100px 560px at 100% -10%, rgba(253, 105, 37, 0.09), transparent 60%),
+    radial-gradient(900px 520px at -10% 110%, rgba(20, 184, 166, 0.06), transparent 60%),
+    linear-gradient(rgba(148, 120, 90, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 120, 90, 0.035) 1px, transparent 1px);
   background-size: auto, auto, 40px 40px, 40px 40px;
   background-attachment: fixed;
   min-height: 100vh;
@@ -170,6 +219,7 @@ button {
 .stagger-grid > :nth-child(4) { animation-delay: 0.12s; }
 .stagger-grid > :nth-child(5) { animation-delay: 0.16s; }
 .stagger-grid > :nth-child(6) { animation-delay: 0.2s; }
+.stagger-grid > :nth-child(n+7) { animation-delay: 0.24s; }
 
 .login-bar {
   transform-origin: bottom;
@@ -186,8 +236,12 @@ button {
 
 .card-hover:hover {
   transform: translateY(-3px);
-  border-color: rgba(253, 105, 37, 0.28);
-  box-shadow: 0 2px 4px rgba(11, 19, 36, 0.04), 0 18px 40px -10px rgba(11, 19, 36, 0.16);
+  border-color: rgba(253, 105, 37, 0.35);
+  box-shadow: 0 4px 8px -2px rgba(30, 41, 59, 0.05), 0 22px 44px -14px rgba(120, 72, 40, 0.2);
+}
+
+.anim-scale {
+  animation: fade-in-scale 0.28s var(--motion-enter) both;
 }
 
 .modal-backdrop {

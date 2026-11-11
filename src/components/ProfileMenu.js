@@ -102,10 +102,10 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="group flex items-center gap-2 rounded-full pl-1 pr-2 py-1 hover:bg-navy-50 duration-200"
+          className="group flex items-center gap-2 rounded-full pl-1 pr-2 py-1 hover:bg-brand-50/70 duration-200"
           title="Profile"
         >
-          <span className="w-9 h-9 rounded-full bg-gradient-to-br from-navy-800 to-navy-950 text-white text-sm font-semibold flex items-center justify-center ring-2 ring-white shadow-soft group-hover:scale-105 group-hover:ring-brand-200 duration-200">
+          <span className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 text-white text-sm font-semibold flex items-center justify-center ring-2 ring-white shadow-soft group-hover:scale-105 group-hover:ring-brand-200 duration-200">
             {initial}
           </span>
           <span className="hidden sm:block text-sm text-navy-600 max-w-[120px] truncate">{userNama || 'Profile'}</span>
@@ -143,7 +143,7 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
 
       {editOpen && portalReady && createPortal(
         <div
-          className="fixed inset-0 z-[100] flex flex-col min-h-screen bg-white sm:bg-navy-950/50 sm:items-center sm:justify-center sm:p-4 modal-backdrop"
+          className="fixed inset-0 z-[100] flex flex-col min-h-screen bg-white sm:bg-navy-900/30 sm:items-center sm:justify-center sm:p-4 modal-backdrop"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget && !saving) setEditOpen(false);
           }}
@@ -188,7 +188,7 @@ export default function ProfileMenu({ userNama, onNamaChange, onLogout }) {
               <button type="button" onClick={() => setEditOpen(false)} disabled={saving} className="rounded-lg px-4 py-2.5 text-sm font-medium text-navy-600 hover:bg-navy-100 disabled:opacity-50">
                 Cancel
               </button>
-              <button type="submit" disabled={saving} className="rounded-lg bg-navy-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-navy-800 hover:shadow-glow disabled:opacity-60">
+              <button type="submit" disabled={saving} className="btn-primary px-4 py-2.5 text-sm">
                 {saving ? 'Saving...' : 'Save changes'}
               </button>
             </div>

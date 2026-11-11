@@ -8,8 +8,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        canvas: '#f3f5f9',
-        ink: '#0b1324',
+        canvas: '#faf7f3',
+        ink: '#1e293b',
         // SDG 9 — Industry, Innovation and Infrastructure. 500 is the official #FD6925.
         // Use 700+ for small text on white (AA contrast); 400–600 for fills, icons, rings.
         brand: {
@@ -25,19 +25,21 @@ module.exports = {
           900: '#792e16',
           950: '#411409',
         },
+        // Light, airy neutrals (slate). Capped at slate-800 so nothing renders as near-black.
         navy: {
-          50: '#f4f6fa',
-          100: '#e6eaf2',
-          200: '#cfd6e3',
-          300: '#aab5ca',
-          400: '#7c8baa',
-          500: '#5a6a8c',
-          600: '#455372',
-          700: '#36425c',
-          800: '#1f2a40',
-          900: '#131c2e',
-          950: '#0b1324',
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#2b3a50',
+          900: '#1e293b',
+          950: '#1e293b',
         },
+        cream: '#fff8f1',
       },
       fontFamily: {
         sans: ['var(--font-jakarta)', 'Arial', 'sans-serif'],
@@ -46,10 +48,10 @@ module.exports = {
         card: '1.25rem',
       },
       boxShadow: {
-        shell: '0 30px 80px -12px rgba(11, 19, 36, 0.14), 0 4px 14px rgba(11, 19, 36, 0.04)',
-        soft: '0 1px 2px rgba(11, 19, 36, 0.04), 0 8px 24px -6px rgba(11, 19, 36, 0.08)',
-        lift: '0 2px 4px rgba(11, 19, 36, 0.04), 0 18px 40px -10px rgba(11, 19, 36, 0.16)',
-        glow: '0 8px 24px -6px rgba(253, 105, 37, 0.45)',
+        shell: '0 30px 80px -20px rgba(120, 72, 40, 0.16), 0 4px 14px rgba(30, 41, 59, 0.04)',
+        soft: '0 1px 2px rgba(30, 41, 59, 0.04), 0 6px 20px -8px rgba(30, 41, 59, 0.08)',
+        lift: '0 4px 8px -2px rgba(30, 41, 59, 0.05), 0 22px 44px -14px rgba(120, 72, 40, 0.20)',
+        glow: '0 8px 22px -8px rgba(253, 105, 37, 0.60)',
       },
     },
   },

@@ -61,7 +61,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
 
   const itemClass = (active) =>
     `flex items-center gap-3 px-3 py-2.5 text-sm rounded-xl duration-200 ${
-      active ? 'bg-navy-950 text-white shadow-lift [&>svg]:text-brand-400' : 'text-navy-500 hover:bg-white hover:text-navy-900 hover:shadow-soft [&>svg]:transition-colors hover:[&>svg]:text-brand-600'
+      active ? 'bg-brand-50 font-semibold text-navy-800 ring-1 ring-brand-200/80 [&>svg]:text-brand-600' : 'text-navy-500 hover:bg-brand-50/50 hover:text-navy-800 [&>svg]:transition-colors hover:[&>svg]:text-brand-500'
     }`;
 
   const handleProjectClick = (id) => {
@@ -176,20 +176,20 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
       aria-label="Close navigation menu"
       tabIndex={mobileOpen ? 0 : -1}
       onClick={onMobileClose}
-      className={`fixed inset-0 z-40 min-h-screen bg-navy-950/50 transition-opacity duration-300 ease-out md:hidden ${
+      className={`fixed inset-0 z-40 min-h-screen bg-navy-900/30 transition-opacity duration-300 ease-out md:hidden ${
         mobileOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
       }`}
     />
     <aside
       id="dashboard-sidebar"
       aria-label="Main navigation"
-      className={`fixed inset-y-0 left-0 z-50 flex w-[min(84vw,300px)] shrink-0 flex-col border-r border-navy-200 bg-white p-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-xl transition-[transform,box-shadow] duration-300 ease-out md:relative md:inset-auto md:z-auto md:h-full md:w-[220px] md:translate-x-0 md:border-r md:border-navy-100 md:bg-navy-50/60 md:backdrop-blur-xl md:p-4 md:shadow-none lg:w-[250px] lg:p-5 ${
+      className={`fixed inset-y-0 left-0 z-50 flex w-[min(84vw,300px)] shrink-0 flex-col border-r border-navy-200 bg-white p-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-xl transition-[transform,box-shadow] duration-300 ease-out md:relative md:inset-auto md:z-auto md:h-full md:w-[220px] md:translate-x-0 md:border-r md:border-navy-200/60 md:bg-cream/70 md:p-4 md:shadow-none lg:w-[250px] lg:p-5 ${
       mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
     }`}
     >
       <div className="mb-5 flex items-start justify-between px-1 md:mb-6 md:px-2">
         <div>
-          <p className="flex items-center gap-2 text-base font-semibold tracking-tight text-navy-950"><span aria-hidden="true" className="h-2.5 w-2.5 rounded-sm bg-brand-500 shadow-glow" />CurveUp</p>
+          <p className="flex items-center gap-2 text-base font-semibold tracking-tight text-navy-800"><span aria-hidden="true" className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 shadow-glow"><svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="white" strokeWidth="2.4" strokeLinecap="round"><path d="M4 19c5 0 6-14 16-14" /></svg></span>CurveUp</p>
           <p className="text-xs text-navy-400">{ROLE_TITLE[role] || ''} workspace</p>
         </div>
         <button
@@ -272,7 +272,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
               setErr('');
               setAdding(true);
             }}
-            className="flex h-7 w-7 items-center justify-center rounded-lg text-navy-500 hover:bg-white hover:text-navy-900"
+            className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-50 text-brand-600 ring-1 ring-brand-200/70 hover:bg-brand-500 hover:text-white hover:ring-brand-500"
             title="Add project"
             aria-label="Add project"
           >
@@ -308,23 +308,23 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
                 aria-label={`${p.nama_proyek}${p.lokasi ? ` at ${p.lokasi}` : ''}`}
                 className={`group flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left transition ${
                   active
-                    ? 'bg-navy-950 text-white shadow-lift ring-1 ring-inset ring-brand-500/40'
-                    : 'text-navy-600 hover:translate-x-0.5 hover:bg-white hover:text-navy-900 hover:shadow-soft'
+                    ? 'bg-brand-50 ring-1 ring-inset ring-brand-200/80'
+                    : 'text-navy-600 hover:bg-navy-50 hover:text-navy-800'
                 }`}
               >
                 <div className="min-w-0 flex-1 pr-2">
-                  <span className={`block truncate text-xs font-semibold ${active ? 'text-white' : 'text-navy-700'}`}>
+                  <span className={`block truncate text-xs font-semibold ${active ? 'text-navy-800' : 'text-navy-700'}`}>
                     {p.nama_proyek}
                   </span>
                   {p.lokasi && (
-                    <span className={`mt-0.5 block truncate text-[10px] ${active ? 'text-navy-300' : 'text-navy-400'}`}>
+                    <span className={`mt-0.5 block truncate text-[10px] ${active ? 'text-brand-700' : 'text-navy-400'}`}>
                       {p.lokasi}
                     </span>
                   )}
                 </div>
                 {active && (
                   <span
-                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-white/20 text-white hover:bg-white/30"
+                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-white text-brand-600 ring-1 ring-brand-200 hover:bg-brand-100"
                     title="Click again to clear selection"
                   >
                     <X className="h-3 w-3" />
@@ -347,7 +347,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
     )}
     {portalReady && adding && role === 'manajemen' && createPortal(
       <div
-        className="fixed inset-0 z-50 flex flex-col min-h-screen bg-white sm:bg-navy-950/50 sm:items-center sm:justify-center sm:p-4 modal-backdrop"
+        className="fixed inset-0 z-50 flex flex-col min-h-screen bg-white sm:bg-navy-900/30 sm:items-center sm:justify-center sm:p-4 modal-backdrop"
         onMouseDown={(event) => {
           if (event.target === event.currentTarget && !saving) setAdding(false);
         }}
@@ -410,7 +410,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
           </div>
           <div className="shrink-0 flex flex-col-reverse gap-2 border-t border-navy-100 bg-navy-50/90 px-4 py-3 sm:flex-row sm:justify-end sm:px-6 sm:py-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <button type="button" onClick={() => setAdding(false)} disabled={saving} className="rounded-lg px-4 py-2.5 text-sm font-medium text-navy-600 hover:bg-navy-100 disabled:opacity-50">Cancel</button>
-            <button type="submit" disabled={saving} className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-navy-800 hover:shadow-glow disabled:opacity-60">
+            <button type="submit" disabled={saving} className="btn-primary px-4 py-2.5 text-sm">
               {saving && <span className="spinner" />}
               {saving ? 'Creating project and saving Cost Estimate...' : 'Create project & upload Cost Estimate'}
             </button>

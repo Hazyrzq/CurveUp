@@ -45,7 +45,7 @@ export default function SCurveChart({
           <div className="w-6 bg-navy-200 rounded-t h-[30%]" />
           <div className="w-6 bg-navy-300 rounded-t h-[55%]" />
           <div className="w-6 bg-brand-400 rounded-t h-[80%]" />
-          <div className="w-6 bg-navy-800 rounded-t h-[45%]" />
+          <div className="w-6 bg-teal-400 rounded-t h-[45%]" />
         </div>
         No S-curve data available yet
       </div>
@@ -58,15 +58,15 @@ export default function SCurveChart({
       {
         label: 'Planned',
         data: rencana,
-        // Planned: dashed navy baseline with a faint wash
-        borderColor: '#1f2a40',
+        // Planned: dashed teal baseline with a faint wash
+        borderColor: '#0d9488',
         backgroundColor: (context) => {
           const chart = context.chart;
           const { ctx, chartArea } = chart;
-          if (!chartArea) return 'rgba(31, 42, 64, 0.04)';
+          if (!chartArea) return 'rgba(13, 148, 136, 0.03)';
           const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-          gradient.addColorStop(0, 'rgba(31, 42, 64, 0.08)');
-          gradient.addColorStop(1, 'rgba(31, 42, 64, 0.0)');
+          gradient.addColorStop(0, 'rgba(13, 148, 136, 0.07)');
+          gradient.addColorStop(1, 'rgba(13, 148, 136, 0.0)');
           return gradient;
         },
         borderWidth: 2.25,
@@ -76,9 +76,9 @@ export default function SCurveChart({
         pointRadius: (context) => (context.dataIndex + 1 === selectedWeek ? 7 : 3),
         pointHoverRadius: 7,
         pointBackgroundColor: '#ffffff',
-        pointBorderColor: '#1f2a40',
+        pointBorderColor: '#0d9488',
         pointBorderWidth: 2,
-        pointHoverBackgroundColor: '#1f2a40',
+        pointHoverBackgroundColor: '#0d9488',
         pointHoverBorderColor: '#ffffff',
         pointHoverBorderWidth: 2.5,
       },
@@ -92,8 +92,8 @@ export default function SCurveChart({
           const { ctx, chartArea } = chart;
           if (!chartArea) return 'rgba(253, 105, 37, 0.08)';
           const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-          gradient.addColorStop(0, 'rgba(253, 105, 37, 0.28)');
-          gradient.addColorStop(0.65, 'rgba(253, 105, 37, 0.06)');
+          gradient.addColorStop(0, 'rgba(253, 105, 37, 0.22)');
+          gradient.addColorStop(0.65, 'rgba(253, 105, 37, 0.05)');
           gradient.addColorStop(1, 'rgba(253, 105, 37, 0.0)');
           return gradient;
         },
@@ -125,7 +125,7 @@ export default function SCurveChart({
         align: 'end',
         labels: {
           font: { size: 12, weight: '600', family: 'var(--font-jakarta), Arial, sans-serif' },
-          color: '#36425c',
+          color: '#475569',
           usePointStyle: true,
           pointStyle: 'circle',
           boxWidth: 8,
@@ -135,11 +135,11 @@ export default function SCurveChart({
       tooltip: {
         mode: 'index',
         intersect: false,
-        backgroundColor: 'rgba(11, 19, 36, 0.92)',
-        titleColor: '#ffffff',
-        bodyColor: '#e6eaf2',
-        footerColor: '#aab5ca',
-        borderColor: 'rgba(253, 105, 37, 0.35)',
+        backgroundColor: 'rgba(255, 255, 255, 0.97)',
+        titleColor: '#1e293b',
+        bodyColor: '#475569',
+        footerColor: '#64748b',
+        borderColor: 'rgba(253, 105, 37, 0.3)',
         borderWidth: 1,
         padding: 12,
         boxPadding: 6,
@@ -202,19 +202,19 @@ export default function SCurveChart({
     scales: {
       x: {
         grid: { display: false },
-        ticks: { font: { size: 11 }, color: '#7c8baa' },
-        border: { color: 'rgba(31, 42, 64, 0.12)' },
+        ticks: { font: { size: 11 }, color: '#94a3b8' },
+        border: { color: 'rgba(148, 163, 184, 0.35)' },
       },
       y: {
         min: 0,
         max: 100,
         ticks: {
-          color: '#7c8baa',
+          color: '#94a3b8',
           callback(value) {
             return `${value}%`;
           },
         },
-        grid: { color: 'rgba(31, 42, 64, 0.06)', drawTicks: false },
+        grid: { color: 'rgba(148, 163, 184, 0.16)', drawTicks: false },
         border: { display: false, dash: [4, 4] },
       },
     },
