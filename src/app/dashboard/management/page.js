@@ -321,13 +321,13 @@ export default function ManajemenDashboard() {
       delayStatus = 'delayed';
       delayBadgeLabel = `Delayed +${timeDelayWeeks} Week${timeDelayWeeks === 1 ? '' : 's'}`;
       delaySummaryText = `The project is 100% completed, but exceeded the initial contract schedule (${originalPlannedWeeks} weeks) by ${timeDelayWeeks} weeks (${timeDelayDays} days).`;
-    } else if (deviasi != null && Math.abs(deviasi) <= 1) {
+    } else if (deviasi != null && Math.abs(deviasi) <= 0.5) {
       timeDelayWeeks = 0;
       timeDelayDays = 0;
       delayStatus = 'on_track';
       delayBadgeLabel = 'On Schedule';
       delaySummaryText = `Physical progress is ${lastRealisasi}%, running on schedule with the planned target of ${plannedAtCutoff}% at Week ${currentWeekNumber}.`;
-    } else if (deviasi != null && deviasi > 1) {
+    } else if (deviasi != null && deviasi > 0.5) {
       delayStatus = 'ahead';
       let aheadEqWeek = currentWeekNumber;
       for (let i = 0; i < sCurveData.rencana.length; i++) {
