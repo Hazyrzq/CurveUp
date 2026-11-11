@@ -186,7 +186,7 @@ export default function ImportRABPage() {
       </div>
 
       {msg && (
-        <p className={`text-sm flex items-center gap-2 ${msg.type === 'success' ? 'text-emerald-600' : 'text-red-600'}`}>
+        <p className={`text-sm flex items-center gap-2 ${msg.type === 'success' ? 'text-brand-700' : 'text-red-600'}`}>
           {msg.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
           {msg.text}
         </p>

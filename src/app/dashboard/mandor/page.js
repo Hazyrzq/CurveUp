@@ -416,7 +416,7 @@ export default function MandorDashboard() {
           role="status"
           className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm shadow-sm ${
             actionMsg.type === 'success'
-              ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+              ? 'border-brand-200 bg-brand-50 text-navy-800'
               : 'border-rose-200 bg-rose-50 text-rose-700'
           }`}
         >

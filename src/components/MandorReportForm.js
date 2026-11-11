@@ -461,7 +461,7 @@ export default function MandorReportForm({ initialItemId }) {
                   role="alert"
                   className={`rounded-xl border px-3 py-2.5 text-xs flex items-center justify-between gap-2 ${
                     msg.type === 'success'
-                      ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+                      ? 'border-brand-200 bg-brand-50 text-navy-800'
                       : 'border-rose-200 bg-rose-50 text-rose-800'
                   }`}
                 >
@@ -470,7 +470,7 @@ export default function MandorReportForm({ initialItemId }) {
                     <button
                       type="button"
                       onClick={() => router.push('/dashboard/mandor')}
-                      className="shrink-0 rounded-lg border border-emerald-300 bg-white px-2.5 py-1 text-xs font-medium text-emerald-800 hover:bg-emerald-100"
+                      className="shrink-0 rounded-lg border border-brand-300 bg-white px-2.5 py-1 text-xs font-medium text-brand-700 hover:bg-brand-100"
                     >
                       Back to Reports
                     </button>
