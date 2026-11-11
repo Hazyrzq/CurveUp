@@ -162,8 +162,8 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
 
   const downloadTemplate = () => {
     const link = document.createElement('a');
-    link.href = '/templates/template_rab_curveup.xlsx';
-    link.download = 'template_rab_curveup.xlsx';
+    link.href = '/templates/cost_estimate_template.xlsx';
+    link.download = 'cost_estimate_template.xlsx';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

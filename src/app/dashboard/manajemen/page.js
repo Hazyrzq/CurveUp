@@ -54,6 +54,12 @@ function InfoRow({ icon, label, value }) {
   );
 }
 
+const formatIDR = (value) => {
+  const n = Number(value);
+  if (!Number.isFinite(n) || n <= 0) return '—';
+  return `IDR ${n.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+};
+
 export default function ManajemenDashboard() {
   const router = useRouter();
   const { selectedId, selected, projects, loading: projectsLoading, selectProject, reload } = useProject();
@@ -1154,12 +1160,14 @@ export default function ManajemenDashboard() {
                 ) : (
                   <>
                   <div className="hidden max-h-[380px] overflow-auto md:block">
-                    <table className="table-soft w-full min-w-[480px] text-left text-sm">
+                    <table className="table-soft w-full min-w-[760px] text-left text-sm">
                       <thead className="sticky top-0 z-[1] bg-navy-50 text-xs text-navy-500 shadow-[inset_0_-1px_0_rgba(226,232,240,1)]">
                         <tr>
                           <th className="px-5 py-3 font-medium">Code</th>
                           <th className="px-5 py-3 font-medium">Work Item</th>
                           <th className="px-5 py-3 text-right font-medium">Volume</th>
+                          <th className="px-5 py-3 text-right font-medium">Unit Price</th>
+                          <th className="px-5 py-3 text-right font-medium">Total Price</th>
                           <th className="px-5 py-3 text-right font-medium">Weight</th>
                         </tr>
                       </thead>
@@ -1189,12 +1197,30 @@ export default function ManajemenDashboard() {
                             <td className="px-5 py-3 text-right text-xs tabular-nums text-navy-500">
                               {item.volume ? `${item.volume} ${item.satuan || ''}` : '—'}
                             </td>
+                            <td className="px-5 py-3 text-right text-xs tabular-nums text-navy-500 whitespace-nowrap">
+                              {formatIDR(item.harga_satuan ?? item.unit_price)}
+                            </td>
+                            <td className="px-5 py-3 text-right text-xs tabular-nums text-navy-700 whitespace-nowrap">
+                              {formatIDR(item.total_harga ?? item.total_price)}
+                            </td>
                             <td className="px-5 py-3 text-right tabular-nums">
                               <span className="font-semibold text-brand-700">{item.bobot_persen}%</span>
                             </td>
                           </tr>
                         ))}
                       </tbody>
+                      <tfoot className="sticky bottom-0 bg-brand-50/80 text-xs backdrop-blur">
+                        <tr>
+                          <td className="px-5 py-3" />
+                          <td className="px-5 py-3 font-semibold text-navy-800" colSpan={3}>Total</td>
+                          <td className="px-5 py-3 text-right font-semibold tabular-nums text-navy-800 whitespace-nowrap">
+                            {formatIDR(rabItems.reduce((sum, it) => sum + Number(it.total_harga ?? it.total_price ?? 0), 0))}
+                          </td>
+                          <td className="px-5 py-3 text-right font-semibold tabular-nums text-brand-700">
+                            {rabItems.reduce((sum, it) => sum + Number(it.bobot_persen || 0), 0).toFixed(2)}%
+                          </td>
+                        </tr>
+                      </tfoot>
                     </table>
                   </div>
                   <div className="divide-y divide-navy-100 md:hidden">
@@ -1214,6 +1240,9 @@ export default function ManajemenDashboard() {
                           <span className="mt-1 block text-xs text-navy-500">
                             {item.volume ? `${item.volume} ${item.satuan || ''} · ` : ''}
                             Weight {Number(item.bobot_persen).toFixed(2)}%
+                          </span>
+                          <span className="mt-0.5 block text-xs text-navy-400">
+                            {formatIDR(item.harga_satuan ?? item.unit_price)} / unit · Total {formatIDR(item.total_harga ?? item.total_price)}
                           </span>
                         </span>
                         <ChevronRight className="h-4 w-4 shrink-0 text-navy-400" />

@@ -107,8 +107,8 @@ export default function ImportRABPage() {
 
   const downloadTemplate = () => {
     const link = document.createElement('a');
-    link.href = '/templates/template_rab_curveup.xlsx';
-    link.download = 'template_rab_curveup.xlsx';
+    link.href = '/templates/cost_estimate_template.xlsx';
+    link.download = 'cost_estimate_template.xlsx';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -213,6 +213,9 @@ export default function ImportRABPage() {
                 <tr>
                   <th className="pb-3 font-medium">Code</th>
                   <th className="pb-3 font-medium">Work item</th>
+                  <th className="pb-3 font-medium text-right">Volume</th>
+                  <th className="pb-3 font-medium text-right">Unit Price</th>
+                  <th className="pb-3 font-medium text-right">Total Price</th>
                   <th className="pb-3 font-medium text-right">Weight</th>
                 </tr>
               </thead>
@@ -221,6 +224,9 @@ export default function ImportRABPage() {
                   <tr key={idx}>
                     <td className="py-3 text-navy-500">{item.kode_pekerjaan}</td>
                     <td className="py-3">{item.nama_pekerjaan}</td>
+                    <td className="py-3 text-right tabular-nums text-navy-500 whitespace-nowrap">{item.volume ? `${item.volume} ${item.satuan || ''}` : '—'}</td>
+                    <td className="py-3 text-right tabular-nums text-navy-500 whitespace-nowrap">{item.harga_satuan ? `IDR ${Number(item.harga_satuan).toLocaleString('en-US')}` : '—'}</td>
+                    <td className="py-3 text-right tabular-nums whitespace-nowrap">{item.total_harga ? `IDR ${Number(item.total_harga).toLocaleString('en-US')}` : '—'}</td>
                     <td className="py-3 text-right">{item.bobot_persen}%</td>
                   </tr>
                 ))}
