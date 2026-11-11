@@ -268,7 +268,7 @@ export default function MandorReportForm({ initialItemId }) {
           'mandor_report_success',
           result.message || (editingReport ? 'Report updated successfully.' : 'Report submitted successfully.')
         );
-        router.replace('/dashboard/mandor', { scroll: false });
+        router.replace('/dashboard/foreman', { scroll: false });
       } else {
         showError('Submission rejected', result.message || 'Could not submit the report.');
       }
@@ -314,7 +314,7 @@ export default function MandorReportForm({ initialItemId }) {
             <p className="font-medium">No project selected.</p>
             <button
               type="button"
-              onClick={() => router.push('/dashboard/mandor')}
+              onClick={() => router.push('/dashboard/foreman')}
               className="btn-primary mt-3 px-3"
             >
               <ArrowLeft className="h-3 w-3" />
@@ -463,7 +463,7 @@ export default function MandorReportForm({ initialItemId }) {
                   {msg.type === 'success' && (
                     <button
                       type="button"
-                      onClick={() => router.push('/dashboard/mandor')}
+                      onClick={() => router.push('/dashboard/foreman')}
                       className="shrink-0 rounded-lg border border-orange-100 bg-surface px-2.5 py-1 text-xs font-semibold text-orange-700 hover:bg-orange-50"
                     >
                       Back to Reports
@@ -475,7 +475,7 @@ export default function MandorReportForm({ initialItemId }) {
               <div className="flex items-center justify-end gap-2 pt-2 border-t border-line">
                 <button
                   type="button"
-                  onClick={() => router.push('/dashboard/mandor')}
+                  onClick={() => router.push('/dashboard/foreman')}
                   className="btn-secondary px-3"
                 >
                   Cancel

@@ -9,23 +9,23 @@ import { MotionProvider } from '@/components/motion';
 import { useScrollLock } from '@/lib/useScrollLock';
 
 const ROLE_HOME = {
-  manajemen: '/dashboard/manajemen',
-  pengawas: '/dashboard/pengawas',
-  mandor: '/dashboard/mandor',
+  manajemen: '/dashboard/management',
+  pengawas: '/dashboard/supervisor',
+  mandor: '/dashboard/foreman',
 };
 
 const PAGE_TITLE = {
-  '/dashboard/manajemen': 'Dashboard',
-  '/dashboard/manajemen/import-rab': 'Cost Estimate Import',
-  '/dashboard/pengawas': 'Dashboard',
-  '/dashboard/mandor': 'Dashboard',
-  '/dashboard/mandor/laporan-baru': 'Submit Progress Report',
+  '/dashboard/management': 'Dashboard',
+  '/dashboard/management/import-cost-estimate': 'Cost Estimate Import',
+  '/dashboard/supervisor': 'Dashboard',
+  '/dashboard/foreman': 'Dashboard',
+  '/dashboard/foreman/new-report': 'Submit Progress Report',
 };
 
 function pathAllowed(role, pathname) {
-  if (role === 'manajemen') return pathname.startsWith('/dashboard/manajemen');
-  if (role === 'pengawas') return pathname.startsWith('/dashboard/pengawas');
-  if (role === 'mandor') return pathname.startsWith('/dashboard/mandor');
+  if (role === 'manajemen') return pathname.startsWith('/dashboard/management');
+  if (role === 'pengawas') return pathname.startsWith('/dashboard/supervisor');
+  if (role === 'mandor') return pathname.startsWith('/dashboard/foreman');
   return false;
 }
 

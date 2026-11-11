@@ -7,9 +7,9 @@ import ActionToast from '@/components/ActionToast';
 import LoginVisual from '@/components/login/LoginVisual';
 
 const ROLES = [
-  { id: 'manajemen', label: 'Management', icon: Building2, route: '/dashboard/manajemen' },
-  { id: 'pengawas', label: 'Supervisor', icon: ShieldCheck, route: '/dashboard/pengawas' },
-  { id: 'mandor', label: 'Foreman', icon: HardHat, route: '/dashboard/mandor' },
+  { id: 'manajemen', label: 'Management', icon: Building2, route: '/dashboard/management' },
+  { id: 'pengawas', label: 'Supervisor', icon: ShieldCheck, route: '/dashboard/supervisor' },
+  { id: 'mandor', label: 'Foreman', icon: HardHat, route: '/dashboard/foreman' },
 ];
 
 export default function LoginPage() {
@@ -69,7 +69,7 @@ export default function LoginPage() {
       localStorage.setItem('user_username', data.user.username || username);
       sessionStorage.removeItem('curveup_selected_proyek_id');
 
-      const target = ROLES.find((r) => r.id === data.user.role)?.route || '/dashboard/manajemen';
+      const target = ROLES.find((r) => r.id === data.user.role)?.route || '/dashboard/management';
       navigateAfterTransition(() => router.push(target));
     } catch (err) {
       const text = 'Could not connect to the server.';

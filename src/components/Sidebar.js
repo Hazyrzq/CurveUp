@@ -22,9 +22,9 @@ import SidebarScene from '@/components/SidebarScene';
 import { indicatorSpring } from '@/components/motion';
 
 const ROLE_HOME = {
-  manajemen: '/dashboard/manajemen',
-  pengawas: '/dashboard/pengawas',
-  mandor: '/dashboard/mandor',
+  manajemen: '/dashboard/management',
+  pengawas: '/dashboard/supervisor',
+  mandor: '/dashboard/foreman',
 };
 
 // Orange 3px indicator on the active item; slides between items (shared layoutId).
@@ -89,8 +89,8 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
     onMobileClose();
     if (Number(selectedId) === Number(id)) {
       selectProject(null);
-      if (pathname.includes('/laporan-baru')) {
-        router.push(ROLE_HOME[role] || '/dashboard/mandor');
+      if (pathname.includes('/new-report')) {
+        router.push(ROLE_HOME[role] || '/dashboard/foreman');
       }
       return;
     }
@@ -98,13 +98,13 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
     selectProject(id);
 
     if (role === 'mandor') {
-      if (pathname !== '/dashboard/mandor') {
-        router.push('/dashboard/mandor');
+      if (pathname !== '/dashboard/foreman') {
+        router.push('/dashboard/foreman');
       }
       return;
     }
 
-    const home = ROLE_HOME[role] || '/dashboard/manajemen';
+    const home = ROLE_HOME[role] || '/dashboard/management';
     if (pathname !== home) router.push(home);
   };
 
@@ -225,7 +225,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
       <nav className="mb-6 flex flex-col gap-1">
         {role === 'manajemen' && (
           <NavButton
-            active={isCurrent('/dashboard/manajemen') && !selectedId}
+            active={isCurrent('/dashboard/management') && !selectedId}
             icon={<LayoutDashboard className="h-4 w-4" />}
             onClick={() => {
               selectProject(null);
@@ -238,7 +238,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
         )}
         {role === 'pengawas' && (
           <NavButton
-            active={isCurrent('/dashboard/pengawas') && !selectedId}
+            active={isCurrent('/dashboard/supervisor') && !selectedId}
             icon={<CheckSquare className="h-4 w-4" />}
             onClick={() => {
               selectProject(null);
@@ -251,12 +251,12 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
         )}
         {role === 'mandor' && (
           <NavButton
-            active={pathname === '/dashboard/mandor' && !selectedId}
+            active={pathname === '/dashboard/foreman' && !selectedId}
             icon={<LayoutDashboard className="h-4 w-4" />}
             onClick={() => {
               selectProject(null);
               onMobileClose();
-              if (pathname !== '/dashboard/mandor') router.push('/dashboard/mandor');
+              if (pathname !== '/dashboard/foreman') router.push('/dashboard/foreman');
             }}
           >
             Dashboard

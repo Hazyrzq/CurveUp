@@ -11,7 +11,7 @@ export default function NewReportPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Link
-          href="/dashboard/mandor"
+          href="/dashboard/foreman"
           className="btn-secondary w-fit px-3.5"
         >
           <ArrowLeft className="h-3.5 w-3.5" />

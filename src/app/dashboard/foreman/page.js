@@ -350,7 +350,7 @@ export default function MandorDashboard() {
 
   const handleOpenReportForm = (itemId) => {
     const pid = selectedId ? `&proyek_id=${selectedId}` : '';
-    router.push(`/dashboard/mandor/laporan-baru?item_id=${itemId}${pid}`);
+    router.push(`/dashboard/foreman/new-report?item_id=${itemId}${pid}`);
   };
 
   const canManageReport = (report) =>
@@ -363,7 +363,7 @@ export default function MandorDashboard() {
       selectProject(pid);
     }
     router.push(
-      `/dashboard/mandor/laporan-baru?item_id=${report.item_pekerjaan_id}&report_id=${report.id}${pid ? `&proyek_id=${pid}` : ''}`
+      `/dashboard/foreman/new-report?item_id=${report.item_pekerjaan_id}&report_id=${report.id}${pid ? `&proyek_id=${pid}` : ''}`
     );
   };
 
@@ -1219,7 +1219,7 @@ export default function MandorDashboard() {
       {selectedId && (
         <button
           type="button"
-          onClick={() => router.push('/dashboard/mandor/laporan-baru')}
+          onClick={() => router.push('/dashboard/foreman/new-report')}
           aria-label="Submit progress report"
           className="btn-primary fixed bottom-5 right-5 z-30 px-4 active:scale-95 md:hidden"
         >

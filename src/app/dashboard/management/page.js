@@ -1439,7 +1439,7 @@ export default function ManajemenDashboard() {
                         const targetId = projectToEdit.id;
                         setProjectToEdit(null);
                         selectProject(targetId);
-                        router.push('/dashboard/manajemen/import-rab');
+                        router.push('/dashboard/management/import-cost-estimate');
                       }}
                       className="btn-secondary shrink-0 px-2.5"
                     >

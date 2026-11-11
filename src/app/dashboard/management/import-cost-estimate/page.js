@@ -97,7 +97,7 @@ export default function ImportRABPage() {
         return;
       }
       await reload();
-      router.push('/dashboard/manajemen');
+      router.push('/dashboard/management');
     } catch (err) {
       setMsg({ type: 'error', text: err.message });
     } finally {
