@@ -2,9 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  /* Glass surface for cards, header and floating panels */
+  .glass {
+    background-color: rgba(255, 255, 255, 0.78);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    backdrop-filter: saturate(160%) blur(14px);
+  }
+
+  .glass-dark {
+    background-color: rgba(11, 19, 36, 0.72);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    backdrop-filter: saturate(160%) blur(14px);
+  }
+
+  /* Thin SDG accent stripe used on headers / hero cards */
+  .accent-bar {
+    background-image: linear-gradient(90deg, #fd6925 0%, #fe8547 45%, rgba(253, 105, 37, 0) 100%);
+  }
+
+  .text-gradient-brand {
+    background-image: linear-gradient(90deg, #e2541a, #fd6925 60%, #fe8547);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
 :root {
   --motion-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --motion-settle: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --brand: #fd6925;
+  --navy: #0b1324;
+}
+
+::selection {
+  background: rgba(253, 105, 37, 0.22);
+  color: #0b1324;
 }
 
 html,
@@ -17,13 +51,15 @@ body {
 }
 
 body {
-  color: #0f172a;
-  background-color: #ffffff;
+  color: #0b1324;
+  background-color: #f3f5f9;
   background-image:
-    linear-gradient(rgba(15, 23, 42, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15, 23, 42, 0.025) 1px, transparent 1px),
-    linear-gradient(135deg, rgba(13, 148, 136, 0.055), transparent 48%);
-  background-size: 40px 40px, 40px 40px, auto;
+    radial-gradient(1200px 600px at 100% -10%, rgba(253, 105, 37, 0.07), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(31, 42, 64, 0.06), transparent 60%),
+    linear-gradient(rgba(11, 19, 36, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 19, 36, 0.028) 1px, transparent 1px);
+  background-size: auto, auto, 40px 40px, 40px 40px;
+  background-attachment: fixed;
   min-height: 100vh;
   min-height: 100dvh;
 }
@@ -35,6 +71,11 @@ textarea,
 button {
   outline: none;
   transition: border-color 0.22s var(--motion-settle), background-color 0.22s var(--motion-settle), color 0.22s var(--motion-settle), box-shadow 0.22s var(--motion-settle), opacity 0.22s var(--motion-settle), transform 0.22s var(--motion-settle);
+}
+
+/* Keyboard focus — consistent SDG orange ring everywhere */
+:where(a, button, [role="button"], input, select, textarea, summary):focus-visible {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(253, 105, 37, 0.6);
 }
 
 /* Prevent iOS Safari from zooming in on input focus and causing viewport offset/excess space */
@@ -145,13 +186,14 @@ button {
 
 .card-hover:hover {
   transform: translateY(-3px);
-  border-color: rgba(13, 148, 136, 0.22);
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.075), 0 3px 8px rgba(15, 23, 42, 0.035);
+  border-color: rgba(253, 105, 37, 0.28);
+  box-shadow: 0 2px 4px rgba(11, 19, 36, 0.04), 0 18px 40px -10px rgba(11, 19, 36, 0.16);
 }
 
 .modal-backdrop {
   animation: fade-in 0.28s var(--motion-settle) both;
-  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   overscroll-behavior: contain;
 }
 

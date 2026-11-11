@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { Building2, ShieldCheck, HardHat, Eye, EyeOff } from 'lucide-react';
 import ActionToast from '@/components/ActionToast';
+import LoginVisual from '@/components/login/LoginVisual';
 
 const ROLES = [
   { id: 'manajemen', label: 'Management', hint: 'Manage projects', icon: Building2, route: '/dashboard/manajemen' },
@@ -70,20 +70,20 @@ export default function LoginPage() {
           onDismiss={() => setToast(null)}
         />
       )}
-      <div className="w-full max-w-6xl bg-white rounded-2xl sm:rounded-[28px] shadow-shell overflow-hidden grid grid-cols-1 md:grid-cols-[0.95fr_1.05fr] border border-slate-200/80 anim-shell">
+      <div className="w-full max-w-6xl glass rounded-2xl sm:rounded-[28px] shadow-shell overflow-hidden grid grid-cols-1 md:grid-cols-[0.95fr_1.05fr] border border-white/70 ring-1 ring-navy-900/5 anim-shell">
         <div className="px-5 sm:px-10 xl:px-14 py-7 sm:py-8 flex flex-col justify-center">
           <div className="flex items-center gap-2.5 mb-7 anim-up">
-            <span className="h-2.5 w-2.5 rounded-sm bg-teal-600" />
-            <p className="text-sm font-semibold text-gray-900">CurveUp</p>
+            <span className="h-2.5 w-2.5 rounded-sm bg-brand-500 shadow-glow" />
+            <p className="text-sm font-semibold tracking-tight text-navy-950">CurveUp</p>
           </div>
 
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-teal-700 anim-up-1">Project control center</p>
-          <h1 className="text-3xl font-semibold text-gray-900 anim-up-1">Sign in to CurveUp</h1>
-          <p className="text-sm text-gray-500 mt-2 mb-6 anim-up-1">Choose your role, then enter your account details.</p>
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-brand-700 anim-up-1">Project control center</p>
+          <h1 className="text-3xl font-semibold tracking-tight text-navy-950 anim-up-1">Sign in to CurveUp</h1>
+          <p className="text-sm text-navy-500 mt-2 mb-6 anim-up-1">Choose your role, then enter your account details.</p>
 
           <form onSubmit={handleLogin} className="space-y-4 anim-up-2">
             <div>
-              <p className="mb-2 text-xs font-medium text-gray-600">Your role</p>
+              <p className="mb-2 text-xs font-medium text-navy-600">Your role</p>
               <div className="grid grid-cols-3 gap-2">
               {ROLES.map((r) => {
                 const Icon = r.icon;
@@ -99,13 +99,13 @@ export default function LoginPage() {
                     }}
                     className={`flex min-h-[82px] flex-col items-center justify-center gap-1 rounded-xl border px-1.5 py-2 text-center duration-200 ${
                       active
-                        ? 'bg-gray-900 text-white border-gray-900 shadow-sm'
-                        : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        ? 'bg-navy-950 text-white border-navy-950 shadow-lift ring-2 ring-brand-500/70 ring-offset-2 ring-offset-white'
+                        : 'bg-white/80 text-navy-600 border-navy-100 hover:-translate-y-0.5 hover:border-brand-200 hover:bg-white hover:shadow-soft'
                     }`}
                   >
-                    <Icon className={`h-4 w-4 duration-200 ${active ? 'scale-110' : ''}`} />
+                    <Icon className={`h-4 w-4 duration-200 ${active ? 'scale-110 text-brand-400' : ''}`} />
                     <span className="text-xs font-semibold">{r.label}</span>
-                    <span className={`text-[10px] leading-tight ${active ? 'text-white/70' : 'text-gray-400'}`}>{r.hint}</span>
+                    <span className={`text-[10px] leading-tight ${active ? 'text-white/70' : 'text-navy-400'}`}>{r.hint}</span>
                   </button>
                 );
               })}
@@ -113,7 +113,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-sm text-gray-700 mb-1.5">Username</label>
+              <label className="block text-sm font-medium text-navy-700 mb-1.5">Username</label>
               <input
                 type="text"
                 value={username}
@@ -121,12 +121,12 @@ export default function LoginPage() {
                 required
                 autoComplete="username"
                 placeholder="Enter your username"
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-base md:text-sm placeholder:text-gray-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-50"
+                className="w-full px-4 py-3 bg-white/90 border border-navy-100 rounded-xl text-base md:text-sm placeholder:text-navy-300 hover:border-navy-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
               />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-700 mb-1.5">Password</label>
+              <label className="block text-sm font-medium text-navy-700 mb-1.5">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -135,12 +135,12 @@ export default function LoginPage() {
                   required
                   autoComplete="current-password"
                   placeholder="Enter your password"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-base md:text-sm placeholder:text-gray-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-50 pr-11"
+                  className="w-full px-4 py-3 bg-white/90 border border-navy-100 rounded-xl text-base md:text-sm placeholder:text-navy-300 hover:border-navy-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 pr-11"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-navy-400 hover:text-brand-600"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -153,7 +153,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-press w-full py-3.5 bg-gray-900 hover:bg-black text-white text-sm font-medium rounded-xl disabled:opacity-60 flex items-center justify-center gap-2"
+              className="btn-press group relative w-full overflow-hidden py-3.5 bg-navy-950 hover:bg-navy-900 hover:shadow-glow text-white text-sm font-medium rounded-xl disabled:opacity-60 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -167,23 +167,17 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <div className="relative hidden min-h-[620px] overflow-hidden bg-slate-900 md:flex">
-          <Image
-            src="/images/login_illustration.jpg"
-            alt="A construction team reviewing project progress"
-            fill
-            priority
-            sizes="(min-width: 768px) 52vw, 0px"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-slate-950/5 to-slate-950/75" />
-          <div className="relative z-10 flex w-full flex-col justify-between p-8 xl:p-10">
+        <div className="relative hidden min-h-[620px] overflow-hidden bg-navy-950 md:flex">
+          <LoginVisual />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-navy-950/50 via-transparent to-navy-950/85" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-1 accent-bar" />
+          <div className="pointer-events-none relative z-10 flex w-full flex-col justify-between p-8 xl:p-10">
             <div className="flex items-center gap-3 text-white">
-              <span className="h-px w-8 bg-teal-300" />
+              <span className="h-px w-8 bg-brand-400" />
               <p className="text-xs font-semibold uppercase tracking-[0.12em]">Project delivery</p>
             </div>
             <div className="max-w-md pb-2 anim-up-3">
-              <p className="text-sm font-medium text-teal-200">FIELD AND OFFICE, IN SYNC</p>
+              <p className="text-sm font-medium tracking-wide text-brand-300">FIELD AND OFFICE, IN SYNC</p>
               <h2 className="mt-3 text-3xl font-semibold leading-tight text-white xl:text-4xl">A clearer view of every project.</h2>
               <p className="mt-4 max-w-sm text-sm leading-6 text-white/85">
                 Keep planned and actual progress in focus from the first report to handover.

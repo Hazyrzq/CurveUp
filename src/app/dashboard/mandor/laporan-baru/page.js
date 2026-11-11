@@ -12,7 +12,7 @@ export default function NewReportPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Link
           href="/dashboard/mandor"
-          className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm transition hover:bg-slate-50"
+          className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-navy-200 bg-white px-3 py-1.5 text-xs font-medium text-navy-600 shadow-sm transition hover:bg-navy-50"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           Back to Project
@@ -25,7 +25,7 @@ export default function NewReportPage() {
         subtitle="Report weekly actual progress for the selected Cost Estimate item."
       />
 
-      <Suspense fallback={<div className="p-8 text-center text-xs text-slate-400">Loading form...</div>}>
+      <Suspense fallback={<div className="p-8 text-center text-xs text-navy-400">Loading form...</div>}>
         <MandorReportForm />
       </Suspense>
     </div>

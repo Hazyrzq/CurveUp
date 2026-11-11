@@ -45,10 +45,10 @@ function formatDate(value) {
 function InfoRow({ icon, label, value }) {
   return (
     <div className="flex items-start gap-3 px-5 py-3">
-      <span className="mt-0.5 shrink-0 text-slate-400">{icon}</span>
+      <span className="mt-0.5 shrink-0 text-navy-400">{icon}</span>
       <div>
-        <p className="text-[11px] text-slate-500">{label}</p>
-        <p className="mt-0.5 text-sm font-medium text-slate-900">{value || '—'}</p>
+        <p className="text-[11px] text-navy-500">{label}</p>
+        <p className="mt-0.5 text-sm font-medium text-navy-900">{value || '—'}</p>
       </div>
     </div>
   );
@@ -428,9 +428,9 @@ export default function ManajemenDashboard() {
           icon: <span className="inline-flex rounded-full h-2 w-2 bg-emerald-500 mr-0.5"></span>,
         }
       : {
-          chip: 'bg-slate-100 text-slate-600 border border-slate-200',
-          value: 'text-slate-500',
-          icon: <span className="inline-flex rounded-full h-2 w-2 bg-slate-400 mr-0.5"></span>,
+          chip: 'bg-navy-100 text-navy-600 border border-navy-200',
+          value: 'text-navy-500',
+          icon: <span className="inline-flex rounded-full h-2 w-2 bg-navy-400 mr-0.5"></span>,
         };
 
   const totalBobot  = rabItems.reduce((s, i) => s + Number(i.bobot_persen || 0), 0);
@@ -484,7 +484,7 @@ export default function ManajemenDashboard() {
 
       {/* ── Tab Bar ── */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div role="tablist" aria-label="Management dashboard views" className="grid w-full grid-cols-2 rounded-xl bg-slate-100 p-1 sm:inline-flex sm:w-fit">
+        <div role="tablist" aria-label="Management dashboard views" className="grid w-full grid-cols-2 rounded-xl bg-navy-100 p-1 sm:inline-flex sm:w-fit">
           <button
             type="button"
             role="tab"
@@ -495,12 +495,12 @@ export default function ManajemenDashboard() {
               setActiveView('projects');
             }}
             className={`inline-flex min-w-0 items-center justify-center gap-2 rounded-lg px-2 py-2 text-xs transition-colors sm:px-3 sm:text-sm ${
-              activeView === 'projects' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'
+              activeView === 'projects' ? 'bg-white text-navy-900 shadow-sm' : 'text-navy-500 hover:text-navy-800'
             }`}
           >
             <FolderKanban className="h-4 w-4" />
             All Projects
-            <span className="text-xs text-slate-400">{projects.length}</span>
+            <span className="text-xs text-navy-400">{projects.length}</span>
           </button>
           <button
             type="button"
@@ -510,22 +510,22 @@ export default function ManajemenDashboard() {
             disabled={!selectedId}
             className={`inline-flex min-w-0 items-center justify-center gap-2 rounded-lg px-2 py-2 text-xs transition-colors sm:px-3 sm:text-sm ${
               activeView === 'detail'
-                ? 'bg-white text-slate-900 shadow-sm'
+                ? 'bg-white text-navy-900 shadow-sm'
                 : selectedId
-                ? 'text-slate-500 hover:text-slate-800'
-                : 'cursor-not-allowed text-slate-300'
+                ? 'text-navy-500 hover:text-navy-800'
+                : 'cursor-not-allowed text-navy-300'
             }`}
           >
             <LayoutDashboard className="h-4 w-4" />
             Project Detail
             {selectedId && activeProject && (
-              <span className="max-w-[100px] truncate text-[11px] text-teal-700 font-medium">
+              <span className="max-w-[100px] truncate text-[11px] text-brand-700 font-medium">
                 {activeProject.nama_proyek}
               </span>
             )}
           </button>
         </div>
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-navy-400">
           {activeView === 'projects'
             ? 'Click “Open” on a project to view its details and S-Curve.'
             : selectedWorkItem
@@ -550,35 +550,35 @@ export default function ManajemenDashboard() {
               label="Cost Estimate Items"
               value={projectsLoading ? '—' : totalRabItems}
             />
-            <div className="col-span-2 flex min-w-0 items-center gap-3 rounded-2xl border border-gray-100 p-4 sm:col-span-1">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-slate-500">
+            <div className="col-span-2 flex min-w-0 items-center gap-3 rounded-2xl border border-navy-100 p-4 sm:col-span-1">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-navy-50 text-navy-500">
                 <LayoutDashboard className="h-4 w-4" />
               </span>
               <div className="min-w-0">
-                <p className="text-xs font-medium text-gray-500">Current Project</p>
-                <p className="mt-1 truncate text-sm font-semibold text-gray-900">
+                <p className="text-xs font-medium text-navy-500">Current Project</p>
+                <p className="mt-1 truncate text-sm font-semibold text-navy-900">
                   {selected?.nama_proyek || 'None selected'}
                 </p>
               </div>
             </div>
           </div>
 
-          <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-          <div className="flex flex-col gap-3 border-b border-slate-100 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+          <section className="overflow-hidden rounded-2xl border border-navy-100 bg-white/90 shadow-soft">
+          <div className="flex flex-col gap-3 border-b border-navy-100 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
             <div>
-              <h3 className="text-sm font-semibold text-slate-900">All Projects</h3>
-              <p className="mt-0.5 text-xs text-slate-500">
+              <h3 className="text-sm font-semibold text-navy-900">All Projects</h3>
+              <p className="mt-0.5 text-xs text-navy-500">
                 Choose a project to view its progress, S-Curve, and work items.
               </p>
             </div>
-            <label className="flex w-full items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 sm:max-w-xs focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-50 transition">
-              <Search className="h-4 w-4 shrink-0 text-slate-400" />
+            <label className="flex w-full items-center gap-2 rounded-lg border border-navy-200 px-3 py-2 sm:max-w-xs focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-100 transition">
+              <Search className="h-4 w-4 shrink-0 text-navy-400" />
               <input
                 type="search"
                 value={projectQuery}
                 onChange={(e) => setProjectQuery(e.target.value)}
                 placeholder="Search projects or location..."
-                className="w-full bg-transparent text-base sm:text-sm outline-none placeholder:text-slate-400"
+                className="w-full bg-transparent text-base sm:text-sm outline-none placeholder:text-navy-400"
               />
             </label>
           </div>
@@ -586,7 +586,7 @@ export default function ManajemenDashboard() {
             {projectsLoading ? (
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {Array.from({ length: 3 }, (_, index) => (
-                  <div key={index} className="h-40 rounded-xl shimmer border border-slate-100" />
+                  <div key={index} className="h-40 rounded-xl shimmer border border-navy-100" />
                 ))}
               </div>
             ) : visibleProjects.length > 0 ? (
@@ -597,36 +597,36 @@ export default function ManajemenDashboard() {
                     <article
                       key={project.id}
                       className={`flex min-w-0 flex-col rounded-xl border p-4 transition ${
-                        active ? 'border-slate-400 bg-slate-50' : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm'
+                        active ? 'border-navy-400 bg-navy-50' : 'border-navy-200 bg-white hover:border-navy-300 hover:shadow-sm'
                       }`}
                     >
                       <div className="flex items-start gap-3">
-                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-navy-100 text-navy-600">
                           <FolderKanban className="h-5 w-5" />
                         </span>
                         <div className="min-w-0 flex-1">
-                          <h4 className="break-words text-sm font-semibold leading-5 text-slate-900">
+                          <h4 className="break-words text-sm font-semibold leading-5 text-navy-900">
                             {project.nama_proyek}
                           </h4>
-                          <p className="mt-1 flex items-start gap-1.5 break-words text-xs text-slate-500">
+                          <p className="mt-1 flex items-start gap-1.5 break-words text-xs text-navy-500">
                             <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                             {project.lokasi || 'Location not set'}
                           </p>
                         </div>
                       </div>
-                      <div className="mt-4 grid grid-cols-2 gap-2 rounded-lg bg-slate-50 px-3 py-2.5">
+                      <div className="mt-4 grid grid-cols-2 gap-2 rounded-lg bg-navy-50 px-3 py-2.5">
                         <div>
-                          <p className="text-[10px] uppercase tracking-wide text-slate-400">Cost Estimate Items</p>
-                          <p className="mt-0.5 text-sm font-semibold text-slate-800">{Number(project.rab_count || 0)}</p>
+                          <p className="text-[10px] uppercase tracking-wide text-navy-400">Cost Estimate Items</p>
+                          <p className="mt-0.5 text-sm font-semibold text-navy-800">{Number(project.rab_count || 0)}</p>
                         </div>
                         <div>
-                          <p className="text-[10px] uppercase tracking-wide text-slate-400">Start Date</p>
-                          <p className="mt-0.5 text-xs font-medium text-slate-700">{formatDate(project.tgl_mulai)}</p>
+                          <p className="text-[10px] uppercase tracking-wide text-navy-400">Start Date</p>
+                          <p className="mt-0.5 text-xs font-medium text-navy-700">{formatDate(project.tgl_mulai)}</p>
                         </div>
                       </div>
                       <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
                         {active ? (
-                          <span className="text-[11px] font-medium text-slate-500">Selected project</span>
+                          <span className="text-[11px] font-medium text-navy-500">Selected project</span>
                         ) : <span />}
                         <div className="flex flex-wrap items-center gap-1.5">
                           <button
@@ -634,7 +634,7 @@ export default function ManajemenDashboard() {
                             onClick={() => openEditProjectModal(project)}
                             aria-label={`Edit ${project.nama_proyek}`}
                             title="Edit project details"
-                            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                            className="inline-flex items-center gap-1 rounded-lg border border-navy-200 bg-white px-2.5 py-2 text-xs font-medium text-navy-700 transition hover:border-navy-300 hover:bg-navy-50"
                           >
                             <Pencil className="h-3.5 w-3.5" />
                             Edit
@@ -655,7 +655,7 @@ export default function ManajemenDashboard() {
                               selectProject(project.id);
                               setActiveView('detail');
                             }}
-                            className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-2 text-xs font-medium text-white transition hover:bg-slate-700"
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-navy-900 px-3 py-2 text-xs font-medium text-white transition hover:bg-navy-700"
                           >
                             Open project
                             <ChevronRight className="h-3.5 w-3.5" />
@@ -668,13 +668,13 @@ export default function ManajemenDashboard() {
               </div>
             ) : (
               <div className="flex flex-col items-center px-4 py-10 text-center sm:py-14">
-                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-500">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-navy-100 text-navy-500">
                   <FolderKanban className="h-6 w-6" />
                 </span>
-                <h4 className="mt-4 text-sm font-semibold text-slate-900">
+                <h4 className="mt-4 text-sm font-semibold text-navy-900">
                   {projects.length ? 'No projects match your search.' : 'No projects yet'}
                 </h4>
-                <p className="mt-1 max-w-sm text-xs leading-5 text-slate-500">
+                <p className="mt-1 max-w-sm text-xs leading-5 text-navy-500">
                   {projects.length
                     ? 'Try another project name or location.'
                     : 'Create a project with the plus button in the sidebar and upload its Cost Estimate at the same time.'}
@@ -690,16 +690,16 @@ export default function ManajemenDashboard() {
       {/* VIEW: DETAIL PROYEK + KURVA-S                     */}
       {/* ══════════════════════════════════════════════════ */}
       {activeView === 'detail' && !selectedId && (
-        <div className="anim-content-enter rounded-2xl border border-slate-200 bg-white p-10 text-center">
-          <FolderKanban className="mx-auto h-12 w-12 text-slate-300" />
-          <h3 className="mt-3 text-base font-semibold text-slate-800">No project selected</h3>
-          <p className="mt-1 text-xs text-slate-500">
+        <div className="anim-content-enter rounded-2xl border border-navy-200 bg-white p-10 text-center">
+          <FolderKanban className="mx-auto h-12 w-12 text-navy-300" />
+          <h3 className="mt-3 text-base font-semibold text-navy-800">No project selected</h3>
+          <p className="mt-1 text-xs text-navy-500">
             Pick a project from the list or sidebar to view its S-Curve and work items.
           </p>
           <button
             type="button"
             onClick={() => setActiveView('projects')}
-            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-xs font-semibold text-white hover:bg-teal-800 transition"
+            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-brand-700 px-4 py-2.5 text-xs font-semibold text-white hover:bg-brand-800 transition"
           >
             <ArrowLeft className="h-4 w-4" />
             View All Projects
@@ -720,7 +720,7 @@ export default function ManajemenDashboard() {
                   setActiveView('projects');
                 }
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm hover:bg-slate-50 transition"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-navy-200 bg-white px-3 py-1.5 text-xs font-medium text-navy-600 shadow-sm hover:bg-navy-50 transition"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               {selectedWorkItem ? 'Back to Work Items' : 'Back to Projects'}
@@ -730,7 +730,7 @@ export default function ManajemenDashboard() {
                 <button
                   type="button"
                   onClick={() => openEditProjectModal(activeProject)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50 transition"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-navy-200 bg-white px-3 py-1.5 text-xs font-medium text-navy-700 shadow-sm hover:border-navy-300 hover:bg-navy-50 transition"
                 >
                   <Pencil className="h-3.5 w-3.5" />
                   Edit Project
@@ -800,12 +800,12 @@ export default function ManajemenDashboard() {
             </div>
 
             {/* ── Schedule Status: Actual vs Planned ── */}
-            <section className="anim-content-enter overflow-hidden rounded-xl border border-slate-200 bg-white">
-              <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+            <section className="anim-content-enter overflow-hidden rounded-2xl border border-navy-100 bg-white/90 shadow-soft">
+              <div className="flex flex-col gap-3 border-b border-navy-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
                 <div className="min-w-0">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">Schedule Status</p>
-                  <h3 className="mt-1 text-sm font-semibold text-slate-900">Actual vs Planned Status</h3>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">Schedule Status</p>
+                  <h3 className="mt-1 text-sm font-semibold text-navy-900">Actual vs Planned Status</h3>
+                  <p className="mt-0.5 text-xs text-navy-500">
                     {currentWeekNumber ? `As of Week ${currentWeekNumber}. ` : ''}
                     A quick read of how far the actual work is from the plan.
                   </p>
@@ -816,50 +816,50 @@ export default function ManajemenDashboard() {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 divide-y divide-slate-100 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+              <div className="grid grid-cols-1 divide-y divide-navy-100 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
                 {/* Actual */}
                 <div className="p-4 sm:p-5">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-medium text-slate-500">Actual progress</p>
-                    <Activity className="h-4 w-4 text-slate-300" />
+                    <p className="text-xs font-medium text-navy-500">Actual progress</p>
+                    <Activity className="h-4 w-4 text-navy-300" />
                   </div>
-                  <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
+                  <div className="mt-2 text-2xl font-semibold tracking-tight text-navy-900">
                     {loading ? '—' : lastRealisasi != null ? <AnimatedCounter value={lastRealisasi} suffix="%" /> : '—'}
                   </div>
-                  <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-100">
-                    <div className="h-full rounded-full bg-teal-600 transition-all duration-700 ease-out" style={{ width: `${clampPct(lastRealisasi)}%` }} />
+                  <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-navy-100">
+                    <div className="h-full rounded-full bg-brand-500 transition-all duration-700 ease-out" style={{ width: `${clampPct(lastRealisasi)}%` }} />
                   </div>
-                  <p className="mt-2 text-[11px] text-slate-400">Work completed so far</p>
+                  <p className="mt-2 text-[11px] text-navy-400">Work completed so far</p>
                 </div>
 
                 {/* Planned */}
                 <div className="p-4 sm:p-5">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-medium text-slate-500">
+                    <p className="text-xs font-medium text-navy-500">
                       {currentWeekNumber ? `Planned target (W${currentWeekNumber})` : 'Planned target'}
                     </p>
-                    <TrendingUp className="h-4 w-4 text-slate-300" />
+                    <TrendingUp className="h-4 w-4 text-navy-300" />
                   </div>
-                  <div className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
+                  <div className="mt-2 text-2xl font-semibold tracking-tight text-navy-900">
                     {loading ? '—' : plannedDisplayValue != null ? <AnimatedCounter value={plannedDisplayValue} suffix="%" /> : '—'}
                   </div>
-                  <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-100">
-                    <div className="h-full rounded-full bg-slate-400 transition-all" style={{ width: `${clampPct(plannedDisplayValue)}%` }} />
+                  <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-navy-100">
+                    <div className="h-full rounded-full bg-navy-400 transition-all" style={{ width: `${clampPct(plannedDisplayValue)}%` }} />
                   </div>
-                  <p className="mt-2 text-[11px] text-slate-400">What should be done by now</p>
+                  <p className="mt-2 text-[11px] text-navy-400">What should be done by now</p>
                 </div>
 
                 {/* Status / Variance */}
                 <div className="p-4 sm:p-5">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-medium text-slate-500">
+                    <p className="text-xs font-medium text-navy-500">
                       {delayStatus === 'ahead'
                         ? 'Ahead of Schedule'
                         : delayStatus === 'delayed'
                         ? 'Delay'
                         : 'Schedule Status'}
                     </p>
-                    <Clock className="h-4 w-4 text-slate-300" />
+                    <Clock className="h-4 w-4 text-navy-300" />
                   </div>
                   <p className={`mt-2 text-2xl font-semibold tracking-tight ${scheduleTone.value}`}>
                     {loading ? '—' : delayBigValue}
@@ -868,7 +868,7 @@ export default function ManajemenDashboard() {
                     {scheduleTone.icon}
                     {loading ? 'Loading...' : delayBigCaption}
                   </p>
-                  <p className="mt-2 text-[11px] text-slate-400">
+                  <p className="mt-2 text-[11px] text-navy-400">
                     {deviasi != null
                       ? `${deviasi > 0 ? '+' : ''}${deviasi}% vs plan`
                       : 'No approved reports yet'}
@@ -877,7 +877,7 @@ export default function ManajemenDashboard() {
               </div>
 
               {!loading && delaySummaryText && (
-                <p className="border-t border-slate-100 bg-slate-50/60 px-4 py-3 text-xs leading-5 text-slate-600 sm:px-5">
+                <p className="border-t border-navy-100 bg-navy-50/60 px-4 py-3 text-xs leading-5 text-navy-600 sm:px-5">
                   {delaySummaryText}
                 </p>
               )}
@@ -886,29 +886,29 @@ export default function ManajemenDashboard() {
           )}
 
           {/* Item review records */}
-          {selectedWorkItem && <section className="anim-content-enter overflow-hidden rounded-xl border border-slate-200 bg-white">
-            <div className="border-b border-slate-100 px-4 py-4 sm:px-5">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+          {selectedWorkItem && <section className="anim-content-enter overflow-hidden rounded-2xl border border-navy-100 bg-white/90 shadow-soft">
+            <div className="border-b border-navy-100 px-4 py-4 sm:px-5">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">
                 Work Item · {selectedWorkItem.kode_pekerjaan}
               </p>
-              <h3 className="mt-1 text-base font-semibold text-slate-900">{selectedWorkItem.nama_pekerjaan}</h3>
-              <p className="mt-0.5 text-xs text-slate-500">
+              <h3 className="mt-1 text-base font-semibold text-navy-900">{selectedWorkItem.nama_pekerjaan}</h3>
+              <p className="mt-0.5 text-xs text-navy-500">
                 {selectedWorkItem.volume ? `${selectedWorkItem.volume} ${selectedWorkItem.satuan || ''} · ` : ''}
                 Cost Estimate weight {Number(selectedWorkItem.bobot_persen).toFixed(2)}% ·{' '}
                 {selectedWorkItemApprovedProgress}% approved · {selectedWorkItemReports.length} reports
               </p>
             </div>
             {loading ? (
-              <p className="px-5 py-8 text-center text-sm text-slate-400">Loading reports...</p>
+              <p className="px-5 py-8 text-center text-sm text-navy-400">Loading reports...</p>
             ) : selectedWorkItemReports.length === 0 ? (
-              <p className="px-5 py-8 text-center text-sm text-slate-400">
+              <p className="px-5 py-8 text-center text-sm text-navy-400">
                 No progress reports have been submitted for this work item yet.
               </p>
             ) : (
               <>
                 <div className="hidden overflow-x-auto md:block">
                   <table className="w-full min-w-[760px] text-left text-sm">
-                    <thead className="bg-slate-50 text-xs text-slate-500">
+                    <thead className="bg-navy-50/80 text-xs text-navy-500">
                       <tr>
                         <th className="px-4 py-3 font-medium">Week / Date</th>
                         <th className="px-4 py-3 font-medium">Foreman</th>
@@ -917,32 +917,32 @@ export default function ManajemenDashboard() {
                         <th className="px-4 py-3 font-medium">Evidence</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-navy-100">
                       {selectedWorkItemReports.map((report) => (
-                        <tr key={report.id} className="align-top transition-colors hover:bg-slate-50/70">
+                        <tr key={report.id} className="align-top transition-colors hover:bg-navy-50/70">
                           <td className="px-4 py-3">
-                            <p className="font-medium text-slate-900">Week {report.minggu_ke}</p>
-                            <p className="mt-0.5 text-xs text-slate-400">
+                            <p className="font-medium text-navy-900">Week {report.minggu_ke}</p>
+                            <p className="mt-0.5 text-xs text-navy-400">
                               {formatDate(report.tgl_laporan)}
                             </p>
                           </td>
-                          <td className="px-4 py-3 text-xs text-slate-600">
+                          <td className="px-4 py-3 text-xs text-navy-600">
                             <p>{report.mandor_nama || 'Foreman'}</p>
                           </td>
-                          <td className="px-4 py-3 text-right font-semibold tabular-nums text-slate-800">
+                          <td className="px-4 py-3 text-right font-semibold tabular-nums text-navy-800">
                             {Number(report.realisasi_bobot)}%
                           </td>
                           <td className="max-w-[260px] px-4 py-3">
                             <StatusBadge status={report.status_verifikasi} />
                             {report.pengawas_nama && (
-                              <p className="mt-1 text-xs text-slate-500">Reviewed by {report.pengawas_nama}</p>
+                              <p className="mt-1 text-xs text-navy-500">Reviewed by {report.pengawas_nama}</p>
                             )}
                             {report.catatan_pengawas ? (
-                              <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-5 text-slate-600">
+                              <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-5 text-navy-600">
                                 {report.catatan_pengawas}
                               </p>
                             ) : (
-                              <p className="mt-1 text-xs text-slate-400">No review note</p>
+                              <p className="mt-1 text-xs text-navy-400">No review note</p>
                             )}
                           </td>
                           <td className="px-4 py-3">
@@ -954,7 +954,7 @@ export default function ManajemenDashboard() {
                                   alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
                                   subtitle: `Submitted by ${report.mandor_nama || 'Foreman'} on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
                                 })}
-                                className="group relative block overflow-hidden rounded-lg border border-slate-200 transition hover:border-teal-500 focus:outline-none"
+                                className="group relative block overflow-hidden rounded-lg border border-navy-200 transition hover:border-brand-500 focus:outline-none"
                               >
                                 <img
                                   src={report.foto_bukti}
@@ -963,7 +963,7 @@ export default function ManajemenDashboard() {
                                 />
                               </button>
                             ) : (
-                              <span className="text-xs text-slate-400">No photo attached</span>
+                              <span className="text-xs text-navy-400">No photo attached</span>
                             )}
                           </td>
                         </tr>
@@ -971,30 +971,30 @@ export default function ManajemenDashboard() {
                     </tbody>
                   </table>
                 </div>
-                <div className="divide-y divide-slate-100 md:hidden">
+                <div className="divide-y divide-navy-100 md:hidden">
                   {selectedWorkItemReports.map((report) => (
                     <article key={report.id} className="space-y-3 p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <h4 className="break-words text-sm font-semibold leading-5 text-slate-900">
+                          <h4 className="break-words text-sm font-semibold leading-5 text-navy-900">
                             Week {report.minggu_ke}
                           </h4>
-                          <p className="mt-1 text-xs text-slate-500">{formatDate(report.tgl_laporan)}</p>
+                          <p className="mt-1 text-xs text-navy-500">{formatDate(report.tgl_laporan)}</p>
                         </div>
                         <StatusBadge status={report.status_verifikasi} />
                       </div>
-                      <div className="flex items-center justify-between gap-3 text-xs text-slate-500">
+                      <div className="flex items-center justify-between gap-3 text-xs text-navy-500">
                         <span className="truncate">{report.mandor_nama || 'Foreman'}</span>
-                        <span className="shrink-0 font-semibold text-slate-800">
+                        <span className="shrink-0 font-semibold text-navy-800">
                           {Number(report.realisasi_bobot)}% actual
                         </span>
                       </div>
                       {report.pengawas_nama && (
-                        <p className="text-xs text-slate-500">Reviewed by {report.pengawas_nama}</p>
+                        <p className="text-xs text-navy-500">Reviewed by {report.pengawas_nama}</p>
                       )}
-                      <div className="rounded-lg bg-slate-50 p-3">
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Supervisor note</p>
-                        <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-5 text-slate-700">
+                      <div className="rounded-lg bg-navy-50 p-3">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-navy-500">Supervisor note</p>
+                        <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-5 text-navy-700">
                           {report.catatan_pengawas || 'No review note'}
                         </p>
                       </div>
@@ -1006,17 +1006,17 @@ export default function ManajemenDashboard() {
                             alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
                             subtitle: `Submitted by ${report.mandor_nama || 'Foreman'} on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
                           })}
-                          className="group relative block overflow-hidden rounded-lg border border-slate-200 transition hover:border-teal-500 focus:outline-none"
+                          className="group relative block overflow-hidden rounded-lg border border-navy-200 transition hover:border-brand-500 focus:outline-none"
                         >
                           <img
                             src={report.foto_bukti}
                             alt={`Evidence for ${report.nama_pekerjaan}, week ${report.minggu_ke}`}
                             className="h-28 w-40 rounded-lg object-cover transition duration-200 group-hover:scale-105"
                           />
-                          <span className="mt-1 block text-left text-xs font-medium text-teal-700">Tap to enlarge photo</span>
+                          <span className="mt-1 block text-left text-xs font-medium text-brand-700">Tap to enlarge photo</span>
                         </button>
                       ) : (
-                        <p className="text-xs text-slate-400">No photo evidence attached.</p>
+                        <p className="text-xs text-navy-400">No photo evidence attached.</p>
                       )}
                     </article>
                   ))}
@@ -1031,19 +1031,19 @@ export default function ManajemenDashboard() {
             {/* Left column */}
             <div className="space-y-5">
               {/* Kurva-S */}
-              <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-                <div className="border-b border-slate-100 px-5 py-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">Progress Visualization</p>
-                  <h3 className="mt-1 text-sm font-semibold text-slate-900">S-Curve (Planned vs Actual)</h3>
-                  <p className="mt-0.5 text-xs text-slate-500">
+              <section className="overflow-hidden rounded-2xl border border-navy-100 bg-white/90 shadow-soft">
+                <div className="border-b border-navy-100 px-5 py-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">Progress Visualization</p>
+                  <h3 className="mt-1 text-sm font-semibold text-navy-900">S-Curve (Planned vs Actual)</h3>
+                  <p className="mt-0.5 text-xs text-navy-500">
                     Weekly cumulative comparison. Actual progress includes approved reports from this and earlier weeks.
                   </p>
                 </div>
                 <div className="p-5">
                   {loading ? (
                     <div className="flex h-72 items-center justify-center">
-                      <div className="flex flex-col items-center gap-2 text-slate-400">
-                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-200 border-t-teal-600" />
+                      <div className="flex flex-col items-center gap-2 text-navy-400">
+                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-navy-200 border-t-brand-500" />
                         <span className="text-xs">Loading data...</span>
                       </div>
                     </div>
@@ -1060,23 +1060,23 @@ export default function ManajemenDashboard() {
                   )}
                 </div>
                 {selectedCurveWeek && (
-                  <div className="border-t border-slate-100 bg-slate-50/60 p-4 sm:p-5">
+                  <div className="border-t border-navy-100 bg-navy-50/60 p-4 sm:p-5">
                     <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
                       <div>
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">
                           Selected week
                         </p>
-                        <h4 className="mt-1 text-base font-semibold text-slate-900">
+                        <h4 className="mt-1 text-base font-semibold text-navy-900">
                           Week {selectedCurveWeek} reported work
                         </h4>
                       </div>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-navy-500">
                         Planned cumulative: {sCurveData.rencana[selectedCurveWeek - 1] ?? 0}% ·
                         {' '}Actual cumulative: {sCurveData.realisasi[selectedCurveWeek - 1] ?? '—'}%
                       </p>
                     </div>
                     {laporan.filter((report) => Number(report.minggu_ke) === selectedCurveWeek).length ? (
-                      <div className="mt-3 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+                      <div className="mt-3 divide-y divide-navy-200 overflow-hidden rounded-2xl border border-navy-100 bg-white/90 shadow-soft">
                         {laporan
                           .filter((report) => Number(report.minggu_ke) === selectedCurveWeek)
                           .map((report) => (
@@ -1085,18 +1085,18 @@ export default function ManajemenDashboard() {
                               className="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4"
                             >
                               <div className="min-w-0">
-                                <p className="break-words text-sm font-medium text-slate-900">
-                                  <span className="mr-1 font-mono text-xs text-slate-400">
+                                <p className="break-words text-sm font-medium text-navy-900">
+                                  <span className="mr-1 font-mono text-xs text-navy-400">
                                     {report.kode_pekerjaan}
                                   </span>
                                   {report.nama_pekerjaan}
                                 </p>
-                                <p className="mt-1 text-xs text-slate-500">
+                                <p className="mt-1 text-xs text-navy-500">
                                   {Number(report.realisasi_bobot)}% reported · {report.mandor_nama || 'Foreman'} ·{' '}
                                   {formatDate(report.tgl_laporan)}
                                 </p>
                                 {report.catatan_pengawas && (
-                                  <p className="mt-1 whitespace-pre-wrap break-words text-xs text-slate-500">
+                                  <p className="mt-1 whitespace-pre-wrap break-words text-xs text-navy-500">
                                     Supervisor note: {report.catatan_pengawas}
                                   </p>
                                 )}
@@ -1111,7 +1111,7 @@ export default function ManajemenDashboard() {
                                       alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
                                       subtitle: `Submitted by ${report.mandor_nama || 'Foreman'} on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
                                     })}
-                                    className="text-xs font-medium text-teal-700 underline decoration-teal-300 underline-offset-2 hover:text-teal-900 transition"
+                                    className="text-xs font-medium text-brand-700 underline decoration-brand-300 underline-offset-2 hover:text-brand-900 transition"
                                   >
                                     View evidence
                                   </button>
@@ -1121,7 +1121,7 @@ export default function ManajemenDashboard() {
                           ))}
                       </div>
                     ) : (
-                      <p className="mt-3 rounded-xl border border-dashed border-slate-300 bg-white px-4 py-5 text-center text-sm text-slate-500">
+                      <p className="mt-3 rounded-xl border border-dashed border-navy-300 bg-white px-4 py-5 text-center text-sm text-navy-500">
                         No reports were submitted for this week.
                       </p>
                     )}
@@ -1130,29 +1130,29 @@ export default function ManajemenDashboard() {
               </section>
 
               {/* Cost Estimate items table */}
-              <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-                <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+              <section className="overflow-hidden rounded-2xl border border-navy-100 bg-white/90 shadow-soft">
+                <div className="flex items-center justify-between border-b border-navy-100 px-5 py-4">
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">Cost Estimate</p>
-                    <h3 className="mt-1 text-sm font-semibold text-slate-900">Work Items</h3>
-                    <p className="mt-0.5 text-xs text-slate-500">Select an item to view its review records and evidence.</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">Cost Estimate</p>
+                    <h3 className="mt-1 text-sm font-semibold text-navy-900">Work Items</h3>
+                    <p className="mt-0.5 text-xs text-navy-500">Select an item to view its review records and evidence.</p>
                   </div>
-                  <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                  <span className="rounded-full bg-navy-100 px-2.5 py-1 text-xs font-medium text-navy-700">
                     {loading ? '—' : rabItems.length} items
                   </span>
                 </div>
                 {loading ? (
-                  <p className="px-5 py-10 text-center text-sm text-slate-400">Loading...</p>
+                  <p className="px-5 py-10 text-center text-sm text-navy-400">Loading...</p>
                 ) : rabItems.length === 0 ? (
                   <div className="flex flex-col items-center gap-2 py-14">
-                    <FileText className="h-8 w-8 text-slate-200" />
-                    <p className="text-sm text-slate-400">No work items yet for this project.</p>
+                    <FileText className="h-8 w-8 text-navy-200" />
+                    <p className="text-sm text-navy-400">No work items yet for this project.</p>
                   </div>
                 ) : (
                   <>
                   <div className="hidden max-h-[380px] overflow-auto md:block">
                     <table className="w-full min-w-[480px] text-left text-sm">
-                      <thead className="sticky top-0 bg-slate-50 text-xs text-slate-500">
+                      <thead className="sticky top-0 bg-navy-50 text-xs text-navy-500">
                         <tr>
                           <th className="px-5 py-3 font-medium">Code</th>
                           <th className="px-5 py-3 font-medium">Work Item</th>
@@ -1160,7 +1160,7 @@ export default function ManajemenDashboard() {
                           <th className="px-5 py-3 text-right font-medium">Weight</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100">
+                      <tbody className="divide-y divide-navy-100">
                         {rabItems.map((item) => (
                           <tr
                             key={item.id}
@@ -1173,47 +1173,47 @@ export default function ManajemenDashboard() {
                                 setSelectedWorkItemId(item.id);
                               }
                             }}
-                            className="cursor-pointer hover:bg-slate-50/70 focus:bg-slate-50 focus:outline-none transition"
+                            className="cursor-pointer hover:bg-navy-50/70 focus:bg-navy-50 focus:outline-none transition"
                             aria-label={`View reports for ${item.kode_pekerjaan} ${item.nama_pekerjaan}`}
                           >
-                            <td className="px-5 py-3 font-mono text-xs text-slate-500">{item.kode_pekerjaan}</td>
-                            <td className="px-5 py-3 font-medium text-slate-900">
+                            <td className="px-5 py-3 font-mono text-xs text-navy-500">{item.kode_pekerjaan}</td>
+                            <td className="px-5 py-3 font-medium text-navy-900">
                               <span className="flex items-center justify-between gap-3">
                                 <span>{item.nama_pekerjaan}</span>
-                                <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
+                                <ChevronRight className="h-4 w-4 shrink-0 text-navy-400" />
                               </span>
                             </td>
-                            <td className="px-5 py-3 text-right text-xs tabular-nums text-slate-500">
+                            <td className="px-5 py-3 text-right text-xs tabular-nums text-navy-500">
                               {item.volume ? `${item.volume} ${item.satuan || ''}` : '—'}
                             </td>
                             <td className="px-5 py-3 text-right tabular-nums">
-                              <span className="font-semibold text-teal-700">{item.bobot_persen}%</span>
+                              <span className="font-semibold text-brand-700">{item.bobot_persen}%</span>
                             </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
                   </div>
-                  <div className="divide-y divide-slate-100 md:hidden">
+                  <div className="divide-y divide-navy-100 md:hidden">
                     {rabItems.map((item) => (
                       <button
                         key={item.id}
                         type="button"
                         onClick={() => setSelectedWorkItemId(item.id)}
-                        className="flex w-full items-center justify-between gap-3 p-4 text-left transition hover:bg-slate-50 focus:bg-slate-50 focus:outline-none"
+                        className="flex w-full items-center justify-between gap-3 p-4 text-left transition hover:bg-navy-50 focus:bg-navy-50 focus:outline-none"
                         aria-label={`View reports for ${item.kode_pekerjaan} ${item.nama_pekerjaan}`}
                       >
                         <span className="min-w-0">
-                          <span className="block font-mono text-[11px] text-slate-400">{item.kode_pekerjaan}</span>
-                          <span className="mt-1 block break-words text-sm font-medium leading-5 text-slate-900">
+                          <span className="block font-mono text-[11px] text-navy-400">{item.kode_pekerjaan}</span>
+                          <span className="mt-1 block break-words text-sm font-medium leading-5 text-navy-900">
                             {item.nama_pekerjaan}
                           </span>
-                          <span className="mt-1 block text-xs text-slate-500">
+                          <span className="mt-1 block text-xs text-navy-500">
                             {item.volume ? `${item.volume} ${item.satuan || ''} · ` : ''}
                             Weight {Number(item.bobot_persen).toFixed(2)}%
                           </span>
                         </span>
-                        <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
+                        <ChevronRight className="h-4 w-4 shrink-0 text-navy-400" />
                       </button>
                     ))}
                   </div>
@@ -1225,11 +1225,11 @@ export default function ManajemenDashboard() {
             {/* Right column: Info proyek + ringkasan laporan */}
             <aside className="space-y-4">
               {/* Info Proyek */}
-              <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-                <div className="border-b border-slate-100 px-5 py-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">Project Info</p>
+              <div className="overflow-hidden rounded-2xl border border-navy-100 bg-white/90 shadow-soft">
+                <div className="border-b border-navy-100 px-5 py-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">Project Info</p>
                 </div>
-                <dl className="divide-y divide-slate-100">
+                <dl className="divide-y divide-navy-100">
                   <InfoRow
                     icon={<FolderKanban className="h-4 w-4" />}
                     label="Project Name"
@@ -1261,19 +1261,19 @@ export default function ManajemenDashboard() {
               </div>
 
               {/* Report summary */}
-              <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-                <div className="border-b border-slate-100 px-4 py-3.5 sm:px-5">
-                  <h3 className="text-sm font-semibold text-slate-900">Report summary</h3>
+              <div className="overflow-hidden rounded-2xl border border-navy-100 bg-white/90 shadow-soft">
+                <div className="border-b border-navy-100 px-4 py-3.5 sm:px-5">
+                  <h3 className="text-sm font-semibold text-navy-900">Report summary</h3>
                 </div>
-                <div className="divide-y divide-slate-100 px-4 sm:px-5">
+                <div className="divide-y divide-navy-100 px-4 sm:px-5">
                   {[
                     { label: 'Pending review', value: pendingCount, tone: 'text-amber-700' },
-                    { label: 'Approved', value: approvedCount, tone: 'text-slate-700' },
+                    { label: 'Approved', value: approvedCount, tone: 'text-navy-700' },
                     { label: 'Rejected', value: rejectedCount, tone: 'text-rose-700' },
-                    { label: 'Total reports', value: laporan.length, tone: 'text-slate-900' },
+                    { label: 'Total reports', value: laporan.length, tone: 'text-navy-900' },
                   ].map((row) => (
                     <div key={row.label} className="flex items-center justify-between gap-4 py-3">
-                      <span className="text-sm text-slate-600">{row.label}</span>
+                      <span className="text-sm text-navy-600">{row.label}</span>
                       <span className={`text-sm font-semibold tabular-nums ${row.tone}`}>
                         {loading ? '—' : row.value}
                       </span>
@@ -1284,10 +1284,10 @@ export default function ManajemenDashboard() {
 
               {/* Deviasi indicator */}
               {!loading && (
-                <div className="rounded-xl border border-slate-200 bg-white p-4">
+                <div className="rounded-2xl border border-navy-100 bg-white/90 shadow-soft p-4">
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="text-xs font-medium text-slate-500">Schedule variance</p>
+                      <p className="text-xs font-medium text-navy-500">Schedule variance</p>
                       <p className={`mt-1 text-sm font-semibold ${scheduleTone.value}`}>
                         {delayStatus === 'ahead'
                           ? 'Ahead of schedule'
@@ -1302,7 +1302,7 @@ export default function ManajemenDashboard() {
                       {deviasi != null ? `${deviasi > 0 ? '+' : ''}${deviasi}%` : '—'}
                     </p>
                   </div>
-                  <p className="mt-2 border-t border-slate-100 pt-2 text-xs leading-5 text-slate-500">
+                  <p className="mt-2 border-t border-navy-100 pt-2 text-xs leading-5 text-navy-500">
                     {deviasi != null
                       ? `Difference between actual progress (${lastRealisasi}%) and planned progress (${plannedAtCutoff}%)${currentWeekNumber ? ` at Week ${currentWeekNumber}` : ''}.`
                       : 'No approved progress reports yet for this project.'}
@@ -1329,7 +1329,7 @@ export default function ManajemenDashboard() {
         projectToEdit &&
         createPortal(
           <div
-            className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/45 p-4 backdrop-blur-[2px] anim-fade"
+            className="fixed inset-0 z-[70] flex items-center justify-center bg-navy-950/50 p-4 backdrop-blur-[2px] anim-fade"
             onClick={() => {
               if (!savingEdit) setProjectToEdit(null);
             }}
@@ -1339,18 +1339,18 @@ export default function ManajemenDashboard() {
               aria-modal="true"
               aria-labelledby="edit-project-title"
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl anim-scale"
+              className="w-full max-w-lg overflow-hidden rounded-2xl border border-white/70 bg-white shadow-lift ring-1 ring-navy-900/5 anim-scale"
             >
-              <div className="flex items-start justify-between gap-3 border-b border-slate-100 px-5 py-4">
+              <div className="flex items-start justify-between gap-3 border-b border-navy-100 px-5 py-4">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
                     <Pencil className="h-5 w-5" />
                   </span>
                   <div>
-                    <h3 id="edit-project-title" className="text-base font-semibold text-slate-900">
+                    <h3 id="edit-project-title" className="text-base font-semibold text-navy-900">
                       Edit Project Details
                     </h3>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-navy-500">
                       Update the project name, location, or contract schedule dates.
                     </p>
                   </div>
@@ -1360,7 +1360,7 @@ export default function ManajemenDashboard() {
                   disabled={savingEdit}
                   onClick={() => setProjectToEdit(null)}
                   aria-label="Close"
-                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:opacity-50"
+                  className="rounded-lg p-1.5 text-navy-400 hover:bg-navy-100 hover:text-navy-600 disabled:opacity-50"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -1369,7 +1369,7 @@ export default function ManajemenDashboard() {
               <form onSubmit={handleSaveEditProject}>
                 <div className="space-y-4 px-5 py-4">
                   <div>
-                    <label className="mb-1.5 block text-xs font-medium text-slate-700">
+                    <label className="mb-1.5 block text-xs font-medium text-navy-700">
                       Project Name <span className="text-rose-500">*</span>
                     </label>
                     <input
@@ -1380,12 +1380,12 @@ export default function ManajemenDashboard() {
                         setEditForm((prev) => ({ ...prev, nama_proyek: e.target.value }))
                       }
                       placeholder="Enter project name"
-                      className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-base sm:text-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-50"
+                      className="w-full rounded-xl border border-navy-200 px-3.5 py-2.5 text-base sm:text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
                     />
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-medium text-slate-700">
+                    <label className="mb-1.5 block text-xs font-medium text-navy-700">
                       Location
                     </label>
                     <input
@@ -1395,13 +1395,13 @@ export default function ManajemenDashboard() {
                         setEditForm((prev) => ({ ...prev, lokasi: e.target.value }))
                       }
                       placeholder="Enter project site location"
-                      className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-base sm:text-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-50"
+                      className="w-full rounded-xl border border-navy-200 px-3.5 py-2.5 text-base sm:text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1.5 block text-xs font-medium text-slate-700">
+                      <label className="mb-1.5 block text-xs font-medium text-navy-700">
                         Start Date
                       </label>
                       <input
@@ -1410,11 +1410,11 @@ export default function ManajemenDashboard() {
                         onChange={(e) =>
                           setEditForm((prev) => ({ ...prev, tgl_mulai: e.target.value }))
                         }
-                        className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-base sm:text-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-50"
+                        className="w-full rounded-xl border border-navy-200 px-3.5 py-2.5 text-base sm:text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
                       />
                     </div>
                     <div>
-                      <label className="mb-1.5 block text-xs font-medium text-slate-700">
+                      <label className="mb-1.5 block text-xs font-medium text-navy-700">
                         Target End Date
                       </label>
                       <input
@@ -1423,15 +1423,15 @@ export default function ManajemenDashboard() {
                         onChange={(e) =>
                           setEditForm((prev) => ({ ...prev, tgl_selesai: e.target.value }))
                         }
-                        className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-base sm:text-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-50"
+                        className="w-full rounded-xl border border-navy-200 px-3.5 py-2.5 text-base sm:text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
                       />
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-200/80 bg-slate-50 px-3.5 py-3">
+                  <div className="flex items-center justify-between gap-3 rounded-xl border border-navy-200/80 bg-navy-50 px-3.5 py-3">
                     <div className="min-w-0">
-                      <p className="text-xs font-medium text-slate-800">Update Cost Estimate Items (.xlsx)</p>
-                      <p className="mt-0.5 text-[11px] text-slate-500">
+                      <p className="text-xs font-medium text-navy-800">Update Cost Estimate Items (.xlsx)</p>
+                      <p className="mt-0.5 text-[11px] text-navy-500">
                         Re-upload an Excel file to replace work items and weekly planned weights.
                       </p>
                     </div>
@@ -1443,7 +1443,7 @@ export default function ManajemenDashboard() {
                         selectProject(targetId);
                         router.push('/dashboard/manajemen/import-rab');
                       }}
-                      className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-sm hover:bg-slate-50 transition"
+                      className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-navy-200 bg-white px-2.5 py-1.5 text-xs font-medium text-navy-700 shadow-sm hover:bg-navy-50 transition"
                     >
                       <Upload className="h-3.5 w-3.5" />
                       Upload Excel
@@ -1451,19 +1451,19 @@ export default function ManajemenDashboard() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-end gap-2.5 border-t border-slate-100 bg-slate-50/70 px-5 py-3.5">
+                <div className="flex items-center justify-end gap-2.5 border-t border-navy-100 bg-navy-50/70 px-5 py-3.5">
                   <button
                     type="button"
                     disabled={savingEdit}
                     onClick={() => setProjectToEdit(null)}
-                    className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition"
+                    className="rounded-2xl border border-navy-100 bg-white/90 shadow-soft px-4 py-2 text-xs font-semibold text-navy-700 hover:bg-navy-50 disabled:opacity-50 transition"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={savingEdit}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-800 disabled:opacity-60 transition"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-navy-900 px-4 py-2 text-xs font-semibold text-white hover:bg-navy-800 disabled:opacity-60 transition"
                   >
                     {savingEdit ? (
                       <>
@@ -1486,7 +1486,7 @@ export default function ManajemenDashboard() {
         projectToDelete &&
         createPortal(
           <div
-            className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/45 p-4 backdrop-blur-[2px] anim-fade"
+            className="fixed inset-0 z-[70] flex items-center justify-center bg-navy-950/50 p-4 backdrop-blur-[2px] anim-fade"
             onClick={() => {
               if (!deletingProject) setProjectToDelete(null);
             }}
@@ -1496,18 +1496,18 @@ export default function ManajemenDashboard() {
               aria-modal="true"
               aria-labelledby="delete-project-title"
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl anim-scale"
+              className="w-full max-w-md overflow-hidden rounded-2xl border border-white/70 bg-white shadow-lift ring-1 ring-navy-900/5 anim-scale"
             >
-              <div className="flex items-start justify-between gap-3 border-b border-slate-100 px-5 py-4">
+              <div className="flex items-start justify-between gap-3 border-b border-navy-100 px-5 py-4">
                 <div className="flex items-center gap-3">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
                     <Trash2 className="h-5 w-5" />
                   </span>
                   <div>
-                    <h3 id="delete-project-title" className="text-base font-semibold text-slate-900">
+                    <h3 id="delete-project-title" className="text-base font-semibold text-navy-900">
                       Delete project?
                     </h3>
-                    <p className="text-xs text-slate-500">This action cannot be undone.</p>
+                    <p className="text-xs text-navy-500">This action cannot be undone.</p>
                   </div>
                 </div>
                 <button
@@ -1515,26 +1515,26 @@ export default function ManajemenDashboard() {
                   disabled={deletingProject}
                   onClick={() => setProjectToDelete(null)}
                   aria-label="Close"
-                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:opacity-50"
+                  className="rounded-lg p-1.5 text-navy-400 hover:bg-navy-100 hover:text-navy-600 disabled:opacity-50"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <div className="px-5 py-4">
-                <p className="text-sm leading-6 text-slate-600">
+                <p className="text-sm leading-6 text-navy-600">
                   Are you sure you want to permanently delete{' '}
-                  <span className="font-semibold text-slate-900">&ldquo;{projectToDelete.nama_proyek}&rdquo;</span>?
+                  <span className="font-semibold text-navy-900">&ldquo;{projectToDelete.nama_proyek}&rdquo;</span>?
                   All associated Cost Estimate work items, weekly planned schedules, and progress reports will also be deleted.
                 </p>
               </div>
 
-              <div className="flex items-center justify-end gap-2.5 border-t border-slate-100 bg-slate-50/70 px-5 py-3.5">
+              <div className="flex items-center justify-end gap-2.5 border-t border-navy-100 bg-navy-50/70 px-5 py-3.5">
                 <button
                   type="button"
                   disabled={deletingProject}
                   onClick={() => setProjectToDelete(null)}
-                  className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition"
+                  className="rounded-2xl border border-navy-100 bg-white/90 shadow-soft px-4 py-2 text-xs font-semibold text-navy-700 hover:bg-navy-50 disabled:opacity-50 transition"
                 >
                   Cancel
                 </button>

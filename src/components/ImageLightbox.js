@@ -37,7 +37,7 @@ export default function ImageLightbox({
       role="dialog"
       aria-modal="true"
       aria-label="Image preview"
-      className="fixed inset-0 z-[120] flex flex-col items-center justify-between bg-slate-950/90 p-3 sm:p-6 backdrop-blur-md anim-fade"
+      className="fixed inset-0 z-[120] flex flex-col items-center justify-between bg-navy-950/90 p-3 sm:p-6 backdrop-blur-md anim-fade"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -45,11 +45,11 @@ export default function ImageLightbox({
       {/* Top Header / Bar */}
       <div className="flex w-full max-w-5xl items-center justify-between text-white shrink-0 z-10">
         <div className="min-w-0 pr-4">
-          <p className="truncate text-sm font-semibold tracking-wide text-slate-100 sm:text-base">
+          <p className="truncate text-sm font-semibold tracking-wide text-navy-100 sm:text-base">
             {alt}
           </p>
           {subtitle && (
-            <p className="truncate text-xs text-slate-400 mt-0.5">{subtitle}</p>
+            <p className="truncate text-xs text-navy-400 mt-0.5">{subtitle}</p>
           )}
         </div>
 
@@ -104,7 +104,7 @@ export default function ImageLightbox({
 
       {/* Bottom Caption Bar */}
       {caption && (
-        <div className="w-full max-w-2xl rounded-xl bg-black/40 px-4 py-2.5 text-center text-xs text-slate-300 backdrop-blur-sm shrink-0 z-10 border border-white/10">
+        <div className="w-full max-w-2xl rounded-xl bg-black/40 px-4 py-2.5 text-center text-xs text-navy-300 backdrop-blur-sm shrink-0 z-10 border border-white/10">
           {caption}
         </div>
       )}
