@@ -97,13 +97,13 @@ function DashboardShell({ children }) {
 
   return (
     <div className="h-[100dvh] w-full max-w-full overflow-hidden bg-white sm:bg-canvas sm:h-auto sm:min-h-screen sm:overflow-visible p-0 sm:p-6 lg:p-8 anim-fade">
-      <div className="relative mx-auto flex h-full w-full max-w-[1400px] flex-col overflow-hidden border-0 sm:border border-slate-200/70 bg-white shadow-none sm:shadow-shell sm:rounded-2xl sm:h-[calc(100dvh-3rem)] md:h-[calc(100dvh-3rem)] md:rounded-[28px] lg:h-[calc(100dvh-4rem)] md:flex-row anim-shell">
+      <div className="relative mx-auto flex h-full w-full max-w-[1400px] flex-col overflow-hidden border-0 sm:border border-white bg-white/80 sm:backdrop-blur-xl ring-0 sm:ring-1 sm:ring-brand-900/5 shadow-none sm:shadow-shell sm:rounded-2xl sm:h-[calc(100dvh-3rem)] md:h-[calc(100dvh-3rem)] md:rounded-[28px] lg:h-[calc(100dvh-4rem)] md:flex-row anim-shell">
         <Sidebar
           role={role}
           mobileOpen={mobileSidebarOpen}
           onMobileClose={closeMobileSidebar}
         />
-        <div className="flex-1 min-w-0 w-full max-w-full flex flex-col overflow-hidden bg-white">
+        <div className="flex-1 min-w-0 w-full max-w-full flex flex-col overflow-hidden bg-white/60">
           <Navbar
             title={PAGE_TITLE[pathname] || 'Dashboard'}
             userNama={userNama}
@@ -111,7 +111,7 @@ function DashboardShell({ children }) {
             onLogout={handleLogout}
             onMenuClick={() => setMobileSidebarOpen(true)}
           />
-          <main key={pathname} className="min-w-0 w-full max-w-full flex-1 min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain p-3 sm:p-6 anim-page pb-6 bg-white">
+          <main key={pathname} className="min-w-0 w-full max-w-full flex-1 min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain p-3 sm:p-6 anim-page pb-6 bg-transparent">
             {children}
           </main>
         </div>

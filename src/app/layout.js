@@ -23,7 +23,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${jakarta.variable} font-sans antialiased text-slate-900 bg-canvas`}>{children}</body>
+      <body className={`${jakarta.variable} font-sans antialiased text-navy-950 bg-canvas`}>{children}</body>
     </html>
   );
 }

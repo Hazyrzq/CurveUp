@@ -40,12 +40,12 @@ export default function SCurveChart({
 
   if (!hasData) {
     return (
-      <div className="w-full h-72 flex flex-col items-center justify-center text-sm text-gray-400">
+      <div className="w-full h-72 flex flex-col items-center justify-center text-sm text-navy-400">
         <div className="flex items-end justify-center gap-2 h-24 mb-4 opacity-40">
-          <div className="w-6 bg-slate-200 rounded-t h-[30%]" />
-          <div className="w-6 bg-slate-300 rounded-t h-[55%]" />
-          <div className="w-6 bg-teal-400 rounded-t h-[80%]" />
-          <div className="w-6 bg-slate-800 rounded-t h-[45%]" />
+          <div className="w-6 bg-navy-200 rounded-t h-[30%]" />
+          <div className="w-6 bg-navy-300 rounded-t h-[55%]" />
+          <div className="w-6 bg-brand-400 rounded-t h-[80%]" />
+          <div className="w-6 bg-teal-400 rounded-t h-[45%]" />
         </div>
         No S-curve data available yet
       </div>
@@ -58,24 +58,25 @@ export default function SCurveChart({
       {
         label: 'Planned',
         data: rencana,
+        // Planned: dashed teal baseline with a faint wash
         borderColor: '#0d9488',
         backgroundColor: (context) => {
           const chart = context.chart;
           const { ctx, chartArea } = chart;
-          if (!chartArea) return 'rgba(13, 148, 136, 0.08)';
+          if (!chartArea) return 'rgba(13, 148, 136, 0.03)';
           const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-          gradient.addColorStop(0, 'rgba(13, 148, 136, 0.22)');
-          gradient.addColorStop(0.7, 'rgba(13, 148, 136, 0.05)');
+          gradient.addColorStop(0, 'rgba(13, 148, 136, 0.07)');
           gradient.addColorStop(1, 'rgba(13, 148, 136, 0.0)');
           return gradient;
         },
-        borderWidth: 2.5,
+        borderWidth: 2.25,
+        borderDash: [7, 5],
         tension: 0.35,
         fill: true,
-        pointRadius: (context) => (context.dataIndex + 1 === selectedWeek ? 7 : 3.5),
+        pointRadius: (context) => (context.dataIndex + 1 === selectedWeek ? 7 : 3),
         pointHoverRadius: 7,
-        pointBackgroundColor: '#0d9488',
-        pointBorderColor: '#ffffff',
+        pointBackgroundColor: '#ffffff',
+        pointBorderColor: '#0d9488',
         pointBorderWidth: 2,
         pointHoverBackgroundColor: '#0d9488',
         pointHoverBorderColor: '#ffffff',
@@ -84,28 +85,29 @@ export default function SCurveChart({
       {
         label: 'Actual',
         data: realisasi,
-        borderColor: '#0f172a',
+        // Actual: solid SDG 9 orange with gradient fill
+        borderColor: '#fd6925',
         backgroundColor: (context) => {
           const chart = context.chart;
           const { ctx, chartArea } = chart;
-          if (!chartArea) return 'rgba(15, 23, 42, 0.04)';
+          if (!chartArea) return 'rgba(253, 105, 37, 0.08)';
           const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-          gradient.addColorStop(0, 'rgba(15, 23, 42, 0.14)');
-          gradient.addColorStop(0.7, 'rgba(15, 23, 42, 0.03)');
-          gradient.addColorStop(1, 'rgba(15, 23, 42, 0.0)');
+          gradient.addColorStop(0, 'rgba(253, 105, 37, 0.22)');
+          gradient.addColorStop(0.65, 'rgba(253, 105, 37, 0.05)');
+          gradient.addColorStop(1, 'rgba(253, 105, 37, 0.0)');
           return gradient;
         },
-        borderWidth: 2.5,
+        borderWidth: 3,
         tension: 0.35,
         fill: true,
-        pointRadius: (context) => (context.dataIndex + 1 === selectedWeek ? 7 : 3.5),
-        pointHoverRadius: 7,
-        pointBackgroundColor: '#0f172a',
+        pointRadius: (context) => (context.dataIndex + 1 === selectedWeek ? 7.5 : 4),
+        pointHoverRadius: 7.5,
+        pointBackgroundColor: '#fd6925',
         pointBorderColor: '#ffffff',
         pointBorderWidth: 2,
-        pointHoverBackgroundColor: '#0f172a',
+        pointHoverBackgroundColor: '#fd6925',
         pointHoverBorderColor: '#ffffff',
-        pointHoverBorderWidth: 2.5,
+        pointHoverBorderWidth: 3,
       },
     ],
   };
@@ -122,7 +124,8 @@ export default function SCurveChart({
         position: 'top',
         align: 'end',
         labels: {
-          font: { size: 12, weight: '500' },
+          font: { size: 12, weight: '600', family: 'var(--font-jakarta), Arial, sans-serif' },
+          color: '#475569',
           usePointStyle: true,
           pointStyle: 'circle',
           boxWidth: 8,
@@ -132,14 +135,17 @@ export default function SCurveChart({
       tooltip: {
         mode: 'index',
         intersect: false,
-        backgroundColor: 'rgba(15, 23, 42, 0.94)',
-        titleColor: '#ffffff',
-        bodyColor: '#e2e8f0',
-        borderColor: 'rgba(255, 255, 255, 0.1)',
+        backgroundColor: 'rgba(255, 255, 255, 0.97)',
+        titleColor: '#1e293b',
+        bodyColor: '#475569',
+        footerColor: '#64748b',
+        borderColor: 'rgba(253, 105, 37, 0.3)',
         borderWidth: 1,
         padding: 12,
         boxPadding: 6,
-        cornerRadius: 10,
+        cornerRadius: 12,
+        caretSize: 6,
+        titleFont: { weight: '600' },
         usePointStyle: true,
         callbacks: {
           afterTitle(items) {
@@ -197,6 +203,7 @@ export default function SCurveChart({
       x: {
         grid: { display: false },
         ticks: { font: { size: 11 }, color: '#94a3b8' },
+        border: { color: 'rgba(148, 163, 184, 0.35)' },
       },
       y: {
         min: 0,
@@ -207,7 +214,8 @@ export default function SCurveChart({
             return `${value}%`;
           },
         },
-        grid: { color: 'rgba(241, 245, 249, 0.9)' },
+        grid: { color: 'rgba(148, 163, 184, 0.16)', drawTicks: false },
+        border: { display: false, dash: [4, 4] },
       },
     },
   };

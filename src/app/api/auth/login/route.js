@@ -4,18 +4,15 @@ import { query, ROLE_TO_DB, DB_TO_APP_ROLE } from '@/lib/db';
 const ALLOWED_ROLES = ['manajemen', 'pengawas', 'mandor', 'management', 'supervisor', 'foreman'];
 
 const USERNAME_ALIASES = {
-  manajemen: ['manajemen', 'management'],
-  management: ['management', 'manajemen'],
-  pengawas: ['pengawas', 'supervisor'],
-  supervisor: ['supervisor', 'pengawas'],
-  mandor: ['mandor', 'foreman'],
-  foreman: ['foreman', 'mandor'],
+  management: ['management', 'management'],
+  supervisor: ['supervisor', 'supervisor'],
+  foreman: ['foreman', 'foreman'],
 };
 
 const LOCAL_ACCOUNTS = [
-  { id: 1, nama: 'CurveUp Management', usernames: ['management', 'manajemen'], password: '123456', role: 'manajemen' },
-  { id: 2, nama: 'Site Supervisor', usernames: ['supervisor', 'pengawas'], password: '123456', role: 'pengawas' },
-  { id: 3, nama: 'Lead Foreman', usernames: ['foreman', 'mandor'], password: '123456', role: 'mandor' },
+  { id: 1, nama: 'CurveUp Management', usernames: ['management'], password: '123456', role: 'manajemen' },
+  { id: 2, nama: 'Site Supervisor', usernames: ['supervisor'], password: '123456', role: 'pengawas' },
+  { id: 3, nama: 'Lead Foreman', usernames: ['foreman'], password: '123456', role: 'mandor' },
 ];
 
 function findLocalAccount(username, password, appRole) {

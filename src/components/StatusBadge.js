@@ -5,7 +5,7 @@ export default function StatusBadge({ status }) {
 
   if (s === 'approved') {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/70 shadow-[0_1px_0_rgba(16,185,129,0.08)]">
         <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
         Approved
       </span>
@@ -14,7 +14,7 @@ export default function StatusBadge({ status }) {
 
   if (s === 'rejected') {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200/60">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200/70 shadow-[0_1px_0_rgba(244,63,94,0.08)]">
         <span className="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
         Rejected
       </span>
@@ -22,7 +22,7 @@ export default function StatusBadge({ status }) {
   }
 
   return (
-    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200/60">
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200/70 shadow-[0_1px_0_rgba(245,158,11,0.08)]">
       <span className="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
       Pending
     </span>

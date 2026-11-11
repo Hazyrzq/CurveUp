@@ -61,7 +61,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
 
   const itemClass = (active) =>
     `flex items-center gap-3 px-3 py-2.5 text-sm rounded-xl duration-200 ${
-      active ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
+      active ? 'bg-brand-50 font-semibold text-navy-800 ring-1 ring-brand-200/80 [&>svg]:text-brand-600' : 'text-navy-500 hover:bg-brand-50/50 hover:text-navy-800 [&>svg]:transition-colors hover:[&>svg]:text-brand-500'
     }`;
 
   const handleProjectClick = (id) => {
@@ -176,27 +176,27 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
       aria-label="Close navigation menu"
       tabIndex={mobileOpen ? 0 : -1}
       onClick={onMobileClose}
-      className={`fixed inset-0 z-40 min-h-screen bg-slate-950/45 transition-opacity duration-300 ease-out md:hidden ${
+      className={`fixed inset-0 z-40 min-h-screen bg-navy-900/30 transition-opacity duration-300 ease-out md:hidden ${
         mobileOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
       }`}
     />
     <aside
       id="dashboard-sidebar"
       aria-label="Main navigation"
-      className={`fixed inset-y-0 left-0 z-50 flex w-[min(84vw,300px)] shrink-0 flex-col border-r border-slate-200 bg-white p-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-xl transition-[transform,box-shadow] duration-300 ease-out md:relative md:inset-auto md:z-auto md:h-full md:w-[220px] md:translate-x-0 md:border-r md:bg-slate-50/70 md:p-4 md:shadow-none lg:w-[250px] lg:p-5 ${
+      className={`fixed inset-y-0 left-0 z-50 flex w-[min(84vw,300px)] shrink-0 flex-col border-r border-navy-200 bg-white p-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-xl transition-[transform,box-shadow] duration-300 ease-out md:relative md:inset-auto md:z-auto md:h-full md:w-[220px] md:translate-x-0 md:border-r md:border-navy-200/60 md:bg-cream/70 md:p-4 md:shadow-none lg:w-[250px] lg:p-5 ${
       mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
     }`}
     >
       <div className="mb-5 flex items-start justify-between px-1 md:mb-6 md:px-2">
         <div>
-          <p className="text-base font-semibold tracking-tight text-slate-900">CurveUp</p>
-          <p className="text-xs text-slate-400">{ROLE_TITLE[role] || ''} workspace</p>
+          <p className="flex items-center gap-2 text-base font-semibold tracking-tight text-navy-800"><span aria-hidden="true" className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 shadow-glow"><svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="white" strokeWidth="2.4" strokeLinecap="round"><path d="M4 19c5 0 6-14 16-14" /></svg></span>CurveUp</p>
+          <p className="text-xs text-navy-400">{ROLE_TITLE[role] || ''} workspace</p>
         </div>
         <button
           type="button"
           onClick={onMobileClose}
           aria-label="Close navigation menu"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 md:hidden"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-navy-500 hover:bg-navy-100 md:hidden"
         >
           <X className="h-5 w-5" />
         </button>
@@ -249,7 +249,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
 
       <div className="mb-3 flex items-center justify-between px-1 md:mb-4 md:px-2">
         <div className="flex items-center gap-2">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">Projects</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-navy-400">Projects</p>
           {selectedId && (
             <button
               type="button"
@@ -258,7 +258,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
                 onMobileClose();
                 if (pathname.includes('/laporan-baru')) router.push(ROLE_HOME[role] || '/dashboard/mandor');
               }}
-              className="text-[10px] font-medium text-slate-400 hover:text-slate-700 underline"
+              className="text-[10px] font-medium text-navy-400 hover:text-navy-700 underline"
               title="Clear selected project"
             >
               (Clear selection)
@@ -272,7 +272,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
               setErr('');
               setAdding(true);
             }}
-            className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-500 hover:bg-white hover:text-slate-900"
+            className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-50 text-brand-600 ring-1 ring-brand-200/70 hover:bg-brand-500 hover:text-white hover:ring-brand-500"
             title="Add project"
             aria-label="Add project"
           >
@@ -281,7 +281,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
         )}
       </div>
 
-      <label className="mb-3 flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-400 transition focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-100 md:mb-4">
+      <label className="mb-3 flex items-center gap-2 rounded-lg border border-navy-200 bg-white px-3 py-2 text-navy-400 transition focus-within:border-brand-400 focus-within:ring-2 focus-within:ring-brand-100 md:mb-4">
         <Search className="h-4 w-4 shrink-0" />
         <span className="sr-only">Search projects</span>
         <input
@@ -289,13 +289,13 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           placeholder="Find project..."
-          className="w-full bg-transparent text-base md:text-xs text-slate-700 outline-none placeholder:text-slate-400"
+          className="w-full bg-transparent text-base md:text-xs text-navy-700 outline-none placeholder:text-navy-400"
         />
       </label>
 
       <div className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain pb-4 md:pb-3">
         {filtered.length === 0 ? (
-          <p className="px-2 py-5 text-center text-xs text-slate-400">No projects found.</p>
+          <p className="px-2 py-5 text-center text-xs text-navy-400">No projects found.</p>
         ) : (
           filtered.map((p) => {
             const active = Number(selectedId) === Number(p.id);
@@ -308,23 +308,23 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
                 aria-label={`${p.nama_proyek}${p.lokasi ? ` at ${p.lokasi}` : ''}`}
                 className={`group flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left transition ${
                   active
-                    ? 'bg-slate-900 text-white shadow-sm'
-                    : 'text-slate-600 hover:bg-white hover:text-slate-900 hover:shadow-sm'
+                    ? 'bg-brand-50 ring-1 ring-inset ring-brand-200/80'
+                    : 'text-navy-600 hover:bg-navy-50 hover:text-navy-800'
                 }`}
               >
                 <div className="min-w-0 flex-1 pr-2">
-                  <span className={`block truncate text-xs font-semibold ${active ? 'text-white' : 'text-slate-700'}`}>
+                  <span className={`block truncate text-xs font-semibold ${active ? 'text-navy-800' : 'text-navy-700'}`}>
                     {p.nama_proyek}
                   </span>
                   {p.lokasi && (
-                    <span className={`mt-0.5 block truncate text-[10px] ${active ? 'text-slate-300' : 'text-slate-400'}`}>
+                    <span className={`mt-0.5 block truncate text-[10px] ${active ? 'text-brand-700' : 'text-navy-400'}`}>
                       {p.lokasi}
                     </span>
                   )}
                 </div>
                 {active && (
                   <span
-                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-white/20 text-white hover:bg-white/30"
+                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-white text-brand-600 ring-1 ring-brand-200 hover:bg-brand-100"
                     title="Click again to clear selection"
                   >
                     <X className="h-3 w-3" />
@@ -347,54 +347,54 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
     )}
     {portalReady && adding && role === 'manajemen' && createPortal(
       <div
-        className="fixed inset-0 z-50 flex flex-col min-h-screen bg-white sm:bg-slate-950/45 sm:items-center sm:justify-center sm:p-4 modal-backdrop"
+        className="fixed inset-0 z-50 flex flex-col min-h-screen bg-white sm:bg-navy-900/30 sm:items-center sm:justify-center sm:p-4 modal-backdrop"
         onMouseDown={(event) => {
           if (event.target === event.currentTarget && !saving) setAdding(false);
         }}
       >
-        <form noValidate onSubmit={addProject} role="dialog" aria-modal="true" aria-labelledby="add-project-title" className="modal-panel flex flex-col w-full h-full sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:max-w-lg rounded-none sm:rounded-2xl border-0 sm:border border-slate-200 bg-white shadow-none sm:shadow-2xl overflow-hidden">
-          <div className="shrink-0 flex items-center justify-between border-b border-slate-100 px-4 py-3.5 sm:px-6 sm:py-4 bg-white">
+        <form noValidate onSubmit={addProject} role="dialog" aria-modal="true" aria-labelledby="add-project-title" className="modal-panel flex flex-col w-full h-full sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:max-w-lg rounded-none sm:rounded-2xl border-0 sm:border border-navy-200 bg-white shadow-none sm:shadow-2xl overflow-hidden">
+          <div className="shrink-0 flex items-center justify-between border-b border-navy-100 px-4 py-3.5 sm:px-6 sm:py-4 bg-white">
             <div>
-              <h2 id="add-project-title" className="text-base sm:text-lg font-semibold text-slate-900">Add project</h2>
-              <p className="mt-0.5 text-xs text-slate-500">Enter project details and attach Cost Estimate file.</p>
+              <h2 id="add-project-title" className="text-base sm:text-lg font-semibold text-navy-800">Add project</h2>
+              <p className="mt-0.5 text-xs text-navy-500">Enter project details and attach Cost Estimate file.</p>
             </div>
-            <button type="button" onClick={() => setAdding(false)} disabled={saving} aria-label="Close add project dialog" className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 disabled:opacity-50">
+            <button type="button" onClick={() => setAdding(false)} disabled={saving} aria-label="Close add project dialog" className="btn-icon p-2">
               <X className="h-5 w-5 sm:h-4 sm:w-4" />
             </button>
           </div>
           <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-4 px-4 py-4 sm:px-6 sm:py-5 pb-8 sm:pb-5">
             <label className="block">
-              <span className="mb-1.5 block text-xs font-medium text-slate-600">Project name</span>
-              <input required autoFocus value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Project name" className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-base sm:text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
+              <span className="mb-1.5 block text-xs font-medium text-navy-600">Project name</span>
+              <input required autoFocus value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Project name" className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 text-base text-navy-800 sm:text-sm hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />
             </label>
             <label className="block">
-              <span className="mb-1.5 block text-xs font-medium text-slate-600">Location <span className="font-normal text-slate-400">(optional)</span></span>
-              <input value={lokasi} onChange={(e) => setLokasi(e.target.value)} placeholder="City or site address" className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-base sm:text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
+              <span className="mb-1.5 block text-xs font-medium text-navy-600">Location <span className="font-normal text-navy-400">(optional)</span></span>
+              <input value={lokasi} onChange={(e) => setLokasi(e.target.value)} placeholder="City or site address" className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 text-base text-navy-800 sm:text-sm hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />
             </label>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <label className="block">
-                <span className="mb-1.5 block text-xs font-medium text-slate-600">Start date <span className="font-normal text-slate-400">(optional)</span></span>
-                <input type="date" value={tglMulai} onChange={(event) => setTglMulai(event.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-base sm:text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
+                <span className="mb-1.5 block text-xs font-medium text-navy-600">Start date <span className="font-normal text-navy-400">(optional)</span></span>
+                <input type="date" value={tglMulai} onChange={(event) => setTglMulai(event.target.value)} className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 text-base text-navy-800 sm:text-sm hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />
               </label>
               <label className="block">
-                <span className="mb-1.5 block text-xs font-medium text-slate-600">End date <span className="font-normal text-slate-400">(optional)</span></span>
-                <input type="date" value={tglSelesai} onChange={(event) => setTglSelesai(event.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-base sm:text-sm focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
+                <span className="mb-1.5 block text-xs font-medium text-navy-600">End date <span className="font-normal text-navy-400">(optional)</span></span>
+                <input type="date" value={tglSelesai} onChange={(event) => setTglSelesai(event.target.value)} className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 text-base text-navy-800 sm:text-sm hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />
               </label>
             </div>
             <div className="block">
               <div className="mb-1.5 flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-600">Cost Estimate file</span>
+                <span className="text-xs font-medium text-navy-600">Cost Estimate file</span>
                 <button
                   type="button"
                   onClick={downloadTemplate}
-                  className="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-400 hover:text-slate-900 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-[11px] font-medium text-navy-400 hover:text-navy-800 transition-colors"
                 >
                   <Download className="h-3.5 w-3.5" />
                   Download template
                 </button>
               </div>
-              <label className="flex items-center gap-3 rounded-lg border border-slate-200 px-3 py-3 text-sm text-slate-600 transition hover:border-slate-400">
-                <UploadCloud className="h-5 w-5 shrink-0 text-slate-400" />
+              <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-navy-300 bg-white px-3 py-3 text-sm text-navy-600 transition hover:border-brand-300 hover:bg-brand-50/40 focus-within:border-brand-500 focus-within:ring-4 focus-within:ring-brand-100">
+                <UploadCloud className="h-5 w-5 shrink-0 text-navy-400" />
                 <span className="min-w-0 flex-1 truncate">{rabFile?.name || 'Choose an Excel or CSV file'}</span>
                 <input
                   type="file"
@@ -404,13 +404,13 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
                   className="sr-only"
                 />
               </label>
-              <span className="mt-1 block text-[11px] text-slate-400">The project and its Cost Estimate will be saved together.</span>
+              <span className="mt-1 block text-[11px] text-navy-400">The project and its Cost Estimate will be saved together.</span>
             </div>
             {err && <p role="alert" className="text-sm text-rose-600">{err}</p>}
           </div>
-          <div className="shrink-0 flex flex-col-reverse gap-2 border-t border-slate-100 bg-slate-50/90 px-4 py-3 sm:flex-row sm:justify-end sm:px-6 sm:py-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-            <button type="button" onClick={() => setAdding(false)} disabled={saving} className="rounded-lg px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-50">Cancel</button>
-            <button type="submit" disabled={saving} className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700 disabled:opacity-60">
+          <div className="shrink-0 flex flex-col-reverse gap-2 border-t border-navy-100 bg-cream/80 px-4 py-3 sm:flex-row sm:justify-end sm:px-6 sm:py-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+            <button type="button" onClick={() => setAdding(false)} disabled={saving} className="btn-secondary px-4 py-2.5 text-sm">Cancel</button>
+            <button type="submit" disabled={saving} className="btn-primary px-4 py-2.5 text-sm">
               {saving && <span className="spinner" />}
               {saving ? 'Creating project and saving Cost Estimate...' : 'Create project & upload Cost Estimate'}
             </button>
