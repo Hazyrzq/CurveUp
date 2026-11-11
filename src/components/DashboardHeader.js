@@ -50,7 +50,7 @@ function InfraPattern() {
 
 export default function DashboardHeader({ role, title, subtitle, compactTitle = false }) {
   return (
-    <div className="relative isolate overflow-hidden rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50 via-cream to-white px-5 py-5 shadow-soft sm:px-7 sm:py-6 anim-up">
+    <div className="relative isolate overflow-hidden rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50 via-cream to-white px-5 pb-5 pt-7 shadow-soft sm:px-7 sm:pb-6 sm:pt-8 anim-up">
       <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-20 -z-10 h-56 w-56 rounded-full bg-brand-200/40 blur-3xl" />
       <InfraPattern />
       <div className="relative flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">

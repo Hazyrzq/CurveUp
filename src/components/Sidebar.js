@@ -190,7 +190,7 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
       <div className="mb-5 flex items-start justify-between px-1 md:mb-6 md:px-2">
         <div>
           <p className="flex items-center gap-2 text-base font-semibold tracking-tight text-navy-800"><span aria-hidden="true" className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 shadow-glow"><svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="white" strokeWidth="2.4" strokeLinecap="round"><path d="M4 19c5 0 6-14 16-14" /></svg></span>CurveUp</p>
-          <p className="text-xs text-navy-400">{ROLE_TITLE[role] || ''} workspace</p>
+          <p className="mt-1.5 text-xs text-navy-400">{ROLE_TITLE[role] || ''} workspace</p>
         </div>
         <button
           type="button"
