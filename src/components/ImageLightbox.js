@@ -37,19 +37,19 @@ export default function ImageLightbox({
       role="dialog"
       aria-modal="true"
       aria-label="Image preview"
-      className="fixed inset-0 z-[120] flex flex-col items-center justify-between bg-navy-950/90 p-3 sm:p-6 backdrop-blur-md anim-fade"
+      className="fixed inset-0 z-[120] flex flex-col items-center justify-between bg-cream/95 p-3 sm:p-6 backdrop-blur-xl anim-fade"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       {/* Top Header / Bar */}
-      <div className="flex w-full max-w-5xl items-center justify-between text-white shrink-0 z-10">
+      <div className="flex w-full max-w-5xl items-center justify-between text-navy-800 shrink-0 z-10">
         <div className="min-w-0 pr-4">
-          <p className="truncate text-sm font-semibold tracking-wide text-navy-100 sm:text-base">
+          <p className="truncate text-sm font-semibold tracking-tight text-navy-800 sm:text-base">
             {alt}
           </p>
           {subtitle && (
-            <p className="truncate text-xs text-navy-400 mt-0.5">{subtitle}</p>
+            <p className="truncate text-xs text-navy-500 mt-0.5">{subtitle}</p>
           )}
         </div>
 
@@ -58,7 +58,7 @@ export default function ImageLightbox({
             type="button"
             onClick={() => setIsZoomed(!isZoomed)}
             aria-label={isZoomed ? 'Zoom out' : 'Zoom in'}
-            className="hidden sm:inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white transition hover:bg-white/20 active:scale-95"
+            className="btn-secondary hidden h-9 w-9 rounded-lg sm:inline-flex active:scale-95"
           >
             {isZoomed ? <ZoomOut className="h-4 w-4" /> : <ZoomIn className="h-4 w-4" />}
           </button>
@@ -67,7 +67,7 @@ export default function ImageLightbox({
             target="_blank"
             rel="noreferrer"
             aria-label="Open original image in new tab"
-            className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-white/10 px-3 text-xs font-medium text-white transition hover:bg-white/20 active:scale-95"
+            className="btn-secondary h-9 rounded-lg px-3 text-xs active:scale-95"
           >
             <ExternalLink className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Original</span>
@@ -76,7 +76,7 @@ export default function ImageLightbox({
             type="button"
             onClick={onClose}
             aria-label="Close image preview"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/15 text-white transition hover:bg-white/30 active:scale-95"
+            className="btn-primary h-9 w-9 rounded-lg active:scale-95"
           >
             <X className="h-5 w-5" />
           </button>
@@ -94,7 +94,7 @@ export default function ImageLightbox({
           src={src}
           alt={alt}
           onClick={() => setIsZoomed(!isZoomed)}
-          className={`rounded-xl object-contain shadow-2xl transition-transform duration-200 cursor-zoom-in select-none ${
+          className={`rounded-2xl object-contain shadow-lift ring-1 ring-navy-200/70 transition-transform duration-200 cursor-zoom-in select-none ${
             isZoomed
               ? 'scale-150 cursor-zoom-out'
               : 'max-h-[75vh] w-auto max-w-full'
@@ -104,7 +104,7 @@ export default function ImageLightbox({
 
       {/* Bottom Caption Bar */}
       {caption && (
-        <div className="w-full max-w-2xl rounded-xl bg-black/40 px-4 py-2.5 text-center text-xs text-navy-300 backdrop-blur-sm shrink-0 z-10 border border-white/10">
+        <div className="w-full max-w-2xl rounded-full bg-white/90 px-4 py-2 text-center text-xs text-navy-500 shadow-soft backdrop-blur-sm shrink-0 z-10 border border-navy-200/70">
           {caption}
         </div>
       )}

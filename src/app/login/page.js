@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, ShieldCheck, HardHat, Eye, EyeOff } from 'lucide-react';
+import { Building2, ShieldCheck, HardHat, Eye, EyeOff, Check } from 'lucide-react';
 import ActionToast from '@/components/ActionToast';
 import LoginVisual from '@/components/login/LoginVisual';
 
@@ -21,6 +21,26 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [toast, setToast] = useState(null);
+  // Visual-only transition after a successful sign-in: 'idle' -> 'success' (check icon) -> 'exit' (overlay)
+  const [transition, setTransition] = useState('idle');
+  const transitionTimers = useRef([]);
+
+  useEffect(() => () => transitionTimers.current.forEach(clearTimeout), []);
+
+  // Plays the success animation, then runs the original navigation.
+  const navigateAfterTransition = (navigate) => {
+    const reduceMotion =
+      typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) {
+      navigate();
+      return;
+    }
+    setTransition('success');
+    transitionTimers.current.push(
+      setTimeout(() => setTransition('exit'), 280),
+      setTimeout(navigate, 1100)
+    );
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -50,7 +70,7 @@ export default function LoginPage() {
       sessionStorage.removeItem('curveup_selected_proyek_id');
 
       const target = ROLES.find((r) => r.id === data.user.role)?.route || '/dashboard/manajemen';
-      router.push(target);
+      navigateAfterTransition(() => router.push(target));
     } catch (err) {
       const text = 'Could not connect to the server.';
       setErrorMsg(text);
@@ -62,6 +82,26 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-[100dvh] w-full max-w-full overflow-x-hidden bg-canvas flex items-center justify-center p-3 sm:p-8 anim-fade">
+      {transition === 'exit' && (
+        <div
+          aria-hidden="true"
+          className="login-overlay fixed inset-0 z-[120] flex flex-col items-center justify-center bg-[radial-gradient(120%_90%_at_50%_40%,#fff8f1_0%,#ffe7d9_55%,#fd6925_140%)]"
+        >
+          <div className="login-overlay-mark flex items-center gap-3">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 shadow-glow">
+              <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round">
+                <path d="M4 19c5 0 6-14 16-14" />
+                <path d="M4 19h16" strokeOpacity="0.55" />
+              </svg>
+            </span>
+            <span className="text-2xl font-semibold tracking-tight text-navy-800">CurveUp</span>
+          </div>
+          <svg viewBox="0 0 240 70" className="mt-6 h-16 w-60" fill="none" strokeLinecap="round">
+            <path d="M6 64h228" stroke="#fd6925" strokeOpacity="0.2" strokeWidth="2" />
+            <path className="login-curve" pathLength="1" d="M6 64C70 64 82 58 110 36S170 6 234 6" stroke="#fd6925" strokeWidth="4" />
+          </svg>
+        </div>
+      )}
       {toast && (
         <ActionToast
           title={toast.title}
@@ -72,7 +112,11 @@ export default function LoginPage() {
       )}
       <div className="w-full max-w-6xl rounded-2xl sm:rounded-[28px] bg-white/90 backdrop-blur-xl shadow-shell overflow-hidden grid grid-cols-1 md:grid-cols-[0.95fr_1.05fr] border border-white ring-1 ring-brand-900/5 anim-shell">
         <div className="flex flex-col justify-center px-6 py-10 sm:px-12 sm:py-14 xl:px-16">
-          <div className="mx-auto w-full max-w-sm">
+          <div
+            className={`mx-auto w-full max-w-sm transition duration-300 ease-out ${
+              transition === 'exit' ? '-translate-x-4 opacity-0' : ''
+            }`}
+          >
             <div className="mb-10 flex items-center gap-2.5 anim-up">
               <span aria-hidden="true" className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 shadow-glow">
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round">
@@ -156,10 +200,14 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                disabled={loading}
-                className="btn-primary btn-press w-full py-3.5 text-sm"
+                disabled={loading || transition !== 'idle'}
+                className="btn-primary btn-press w-full py-3.5 text-sm disabled:!opacity-100"
               >
-                {loading ? (
+                {transition !== 'idle' ? (
+                  <span className="login-check inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/25">
+                    <Check className="h-4 w-4" strokeWidth={3} aria-label="Signed in" />
+                  </span>
+                ) : loading ? (
                   <>
                     <span className="spinner" />
                     Signing in...
@@ -175,10 +223,8 @@ export default function LoginPage() {
         <div className="relative hidden min-h-[620px] overflow-hidden bg-navy-950 md:flex">
           <LoginVisual />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-navy-950/50 via-transparent to-navy-950/85" />
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-1 accent-bar" />
           <div className="pointer-events-none relative z-10 flex w-full flex-col justify-between p-8 xl:p-10">
             <div className="flex items-center gap-3 text-white">
-              <span className="h-px w-8 bg-brand-400" />
               <p className="text-xs font-semibold uppercase tracking-[0.12em]">Project delivery</p>
             </div>
             <div className="max-w-md pb-2 anim-up-3">

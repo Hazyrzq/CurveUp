@@ -355,30 +355,30 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
         <form noValidate onSubmit={addProject} role="dialog" aria-modal="true" aria-labelledby="add-project-title" className="modal-panel flex flex-col w-full h-full sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:max-w-lg rounded-none sm:rounded-2xl border-0 sm:border border-navy-200 bg-white shadow-none sm:shadow-2xl overflow-hidden">
           <div className="shrink-0 flex items-center justify-between border-b border-navy-100 px-4 py-3.5 sm:px-6 sm:py-4 bg-white">
             <div>
-              <h2 id="add-project-title" className="text-base sm:text-lg font-semibold text-navy-900">Add project</h2>
+              <h2 id="add-project-title" className="text-base sm:text-lg font-semibold text-navy-800">Add project</h2>
               <p className="mt-0.5 text-xs text-navy-500">Enter project details and attach Cost Estimate file.</p>
             </div>
-            <button type="button" onClick={() => setAdding(false)} disabled={saving} aria-label="Close add project dialog" className="rounded-lg p-2 text-navy-400 hover:bg-navy-100 hover:text-navy-700 disabled:opacity-50">
+            <button type="button" onClick={() => setAdding(false)} disabled={saving} aria-label="Close add project dialog" className="btn-icon p-2">
               <X className="h-5 w-5 sm:h-4 sm:w-4" />
             </button>
           </div>
           <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-4 px-4 py-4 sm:px-6 sm:py-5 pb-8 sm:pb-5">
             <label className="block">
               <span className="mb-1.5 block text-xs font-medium text-navy-600">Project name</span>
-              <input required autoFocus value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Project name" className="w-full rounded-lg border border-navy-200 px-3 py-2.5 text-base sm:text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />
+              <input required autoFocus value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Project name" className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 text-base text-navy-800 sm:text-sm hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />
             </label>
             <label className="block">
               <span className="mb-1.5 block text-xs font-medium text-navy-600">Location <span className="font-normal text-navy-400">(optional)</span></span>
-              <input value={lokasi} onChange={(e) => setLokasi(e.target.value)} placeholder="City or site address" className="w-full rounded-lg border border-navy-200 px-3 py-2.5 text-base sm:text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />
+              <input value={lokasi} onChange={(e) => setLokasi(e.target.value)} placeholder="City or site address" className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 text-base text-navy-800 sm:text-sm hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />
             </label>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <label className="block">
                 <span className="mb-1.5 block text-xs font-medium text-navy-600">Start date <span className="font-normal text-navy-400">(optional)</span></span>
-                <input type="date" value={tglMulai} onChange={(event) => setTglMulai(event.target.value)} className="w-full rounded-lg border border-navy-200 px-3 py-2.5 text-base sm:text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />
+                <input type="date" value={tglMulai} onChange={(event) => setTglMulai(event.target.value)} className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 text-base text-navy-800 sm:text-sm hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />
               </label>
               <label className="block">
                 <span className="mb-1.5 block text-xs font-medium text-navy-600">End date <span className="font-normal text-navy-400">(optional)</span></span>
-                <input type="date" value={tglSelesai} onChange={(event) => setTglSelesai(event.target.value)} className="w-full rounded-lg border border-navy-200 px-3 py-2.5 text-base sm:text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />
+                <input type="date" value={tglSelesai} onChange={(event) => setTglSelesai(event.target.value)} className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 text-base text-navy-800 sm:text-sm hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100" />
               </label>
             </div>
             <div className="block">
@@ -387,13 +387,13 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
                 <button
                   type="button"
                   onClick={downloadTemplate}
-                  className="inline-flex items-center gap-1.5 text-[11px] font-medium text-navy-400 hover:text-navy-900 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-[11px] font-medium text-navy-400 hover:text-navy-800 transition-colors"
                 >
                   <Download className="h-3.5 w-3.5" />
                   Download template
                 </button>
               </div>
-              <label className="flex items-center gap-3 rounded-lg border border-navy-200 px-3 py-3 text-sm text-navy-600 transition hover:border-navy-400">
+              <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-navy-300 bg-white px-3 py-3 text-sm text-navy-600 transition hover:border-brand-300 hover:bg-brand-50/40 focus-within:border-brand-500 focus-within:ring-4 focus-within:ring-brand-100">
                 <UploadCloud className="h-5 w-5 shrink-0 text-navy-400" />
                 <span className="min-w-0 flex-1 truncate">{rabFile?.name || 'Choose an Excel or CSV file'}</span>
                 <input
@@ -408,8 +408,8 @@ export default function Sidebar({ role, mobileOpen = false, onMobileClose = () =
             </div>
             {err && <p role="alert" className="text-sm text-rose-600">{err}</p>}
           </div>
-          <div className="shrink-0 flex flex-col-reverse gap-2 border-t border-navy-100 bg-navy-50/90 px-4 py-3 sm:flex-row sm:justify-end sm:px-6 sm:py-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-            <button type="button" onClick={() => setAdding(false)} disabled={saving} className="rounded-lg px-4 py-2.5 text-sm font-medium text-navy-600 hover:bg-navy-100 disabled:opacity-50">Cancel</button>
+          <div className="shrink-0 flex flex-col-reverse gap-2 border-t border-navy-100 bg-cream/80 px-4 py-3 sm:flex-row sm:justify-end sm:px-6 sm:py-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+            <button type="button" onClick={() => setAdding(false)} disabled={saving} className="btn-secondary px-4 py-2.5 text-sm">Cancel</button>
             <button type="submit" disabled={saving} className="btn-primary px-4 py-2.5 text-sm">
               {saving && <span className="spinner" />}
               {saving ? 'Creating project and saving Cost Estimate...' : 'Create project & upload Cost Estimate'}

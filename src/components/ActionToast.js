@@ -37,7 +37,7 @@ export default function ActionToast({
       <div
         role="status"
         aria-live="polite"
-        className="pointer-events-auto relative flex w-full max-w-md items-start gap-3.5 overflow-hidden rounded-2xl border border-white/70 bg-white/90 p-4 shadow-lift ring-1 ring-navy-900/5 backdrop-blur-xl anim-content-enter transition duration-200"
+        className="pointer-events-auto relative flex w-full max-w-md items-start gap-3.5 overflow-hidden rounded-2xl border border-navy-200/70 bg-white/95 p-4 shadow-lift backdrop-blur-xl anim-content-enter transition duration-200"
       >
         <span
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ring-1 ${
@@ -49,14 +49,14 @@ export default function ActionToast({
           {isError ? <AlertTriangle className="h-5 w-5" /> : <CheckCircle className="h-5 w-5" />}
         </span>
         <div className="min-w-0 flex-1 pt-0.5">
-          <p className="text-sm font-semibold text-navy-900">{title}</p>
+          <p className="text-sm font-semibold text-navy-800">{title}</p>
           <p className="mt-0.5 text-xs leading-5 text-navy-600">{message}</p>
         </div>
         <button
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss message"
-          className="rounded-lg p-1.5 text-navy-400 transition hover:bg-navy-100 hover:text-navy-700 active:scale-95"
+          className="btn-icon p-1.5 active:scale-95"
         >
           <X className="h-4 w-4" />
         </button>

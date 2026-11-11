@@ -20,6 +20,25 @@
   .btn-secondary:hover:not(:disabled) { @apply border-brand-200 bg-brand-50/60 text-navy-800; }
   .btn-secondary:disabled { @apply opacity-50; }
 
+  /* Destructive actions — red */
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 font-semibold text-white shadow-sm;
+  }
+  .btn-danger:hover:not(:disabled) { @apply bg-rose-700; }
+  .btn-danger:disabled { @apply opacity-60; }
+  .btn-danger-outline {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-white font-medium text-rose-600 shadow-sm;
+  }
+  .btn-danger-outline:hover:not(:disabled) { @apply border-rose-300 bg-rose-50 text-rose-700; }
+  .btn-danger-outline:disabled { @apply opacity-50; }
+
+  /* Small square icon button (close, dismiss) */
+  .btn-icon {
+    @apply inline-flex items-center justify-center rounded-lg text-navy-400;
+  }
+  .btn-icon:hover:not(:disabled) { @apply bg-navy-100 text-navy-700; }
+  .btn-icon:disabled { @apply opacity-50; }
+
   /* Segmented / pill tabs */
   .seg {
     @apply inline-flex gap-1 rounded-full border border-navy-200/80 bg-white/90 p-1 shadow-soft;
@@ -65,10 +84,6 @@
     backdrop-filter: saturate(160%) blur(14px);
   }
 
-  /* Thin SDG accent stripe used on headers / hero cards */
-  .accent-bar {
-    background-image: linear-gradient(90deg, #fd6925 0%, #fe8547 45%, rgba(253, 105, 37, 0) 100%);
-  }
 
   .text-gradient-brand {
     background-image: linear-gradient(90deg, #e2541a, #fd6925 60%, #fe8547);
@@ -225,6 +240,17 @@ button {
   transform-origin: bottom;
   animation: bar-grow 0.9s var(--motion-enter) 0.35s both;
 }
+
+/* Login success transition */
+.login-check { animation: fade-in-scale 0.24s var(--motion-enter) both; }
+.login-overlay { animation: fade-in 0.28s var(--motion-settle) both; }
+.login-overlay-mark { animation: fade-up 0.4s var(--motion-enter) 0.08s both; }
+.login-curve {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw-curve 0.62s cubic-bezier(0.65, 0, 0.35, 1) 0.16s forwards;
+}
+@keyframes draw-curve { to { stroke-dashoffset: 0; } }
 
 .btn-press:active:not(:disabled) {
   transform: translateY(1px) scale(0.97);

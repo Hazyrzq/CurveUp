@@ -163,16 +163,16 @@ export default function PengawasDashboard() {
 
       {!selectedId ? (
         <div className="space-y-4 sm:space-y-5">
-          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3 stagger-grid">
-            <StatCard icon={<ClipboardList className="w-4 h-4" />} label="Total Reports" value={loading ? '—' : reports.length} />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 stagger-grid">
+            <StatCard icon={<ClipboardList className="w-4 h-4" />} tone="orange" label="Total Reports" value={loading ? '—' : reports.length} />
             <StatCard icon={<Clock className="w-4 h-4" />} label="Awaiting Review" value={loading ? '—' : pendingCount} tone="amber" />
             <StatCard icon={<CheckCircle className="w-4 h-4" />} label="Approved" value={loading ? '—' : approvedCount} tone="emerald" />
-            <StatCard icon={<XCircle className="w-4 h-4" />} label="Rejected" value={loading ? '—' : rejectedCount} />
+            <StatCard icon={<XCircle className="w-4 h-4" />} label="Rejected" value={loading ? '—' : rejectedCount} tone="rose" />
           </div>
 
-          <section className="anim-content-enter overflow-hidden rounded-2xl border border-navy-100 bg-white/90 shadow-soft">
+          <section className="anim-content-enter overflow-hidden surface">
           <div className="flex flex-col gap-1 border-b border-navy-100 p-4 sm:p-5">
-            <h3 className="text-sm font-semibold text-navy-900">Projects</h3>
+            <h3 className="text-sm font-semibold text-navy-800">Projects</h3>
             <p className="text-xs text-navy-500">Choose a project to open its report review workspace.</p>
           </div>
           <div className="p-3 sm:p-5">
@@ -183,15 +183,15 @@ export default function PengawasDashboard() {
                 ))}
               </div>
             ) : projects.length ? (
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 stagger-grid">
                 {projects.map((project) => (
-                  <article key={project.id} className="card-hover group flex min-w-0 flex-col rounded-2xl border border-navy-100 bg-white p-4 shadow-soft">
+                  <article key={project.id} className="card-hover group flex min-w-0 flex-col rounded-2xl border border-navy-200/70 bg-white p-5 shadow-sm">
                     <div className="flex items-start gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-navy-100 text-navy-600">
+                      <span className="chip-orange flex h-11 w-11 shrink-0 items-center justify-center rounded-xl">
                         <FolderOpen className="h-5 w-5" />
                       </span>
                       <div className="min-w-0">
-                        <h4 className="break-words text-sm font-semibold leading-5 text-navy-900">
+                        <h4 className="break-words text-sm font-semibold leading-5 text-navy-800">
                           {project.nama_proyek}
                         </h4>
                         <p className="mt-1 flex items-start gap-1.5 break-words text-xs text-navy-500">
@@ -200,14 +200,14 @@ export default function PengawasDashboard() {
                         </p>
                       </div>
                     </div>
-                    <div className="mt-4 flex items-center justify-between gap-3 rounded-lg bg-navy-50 px-3 py-2.5">
+                    <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-navy-100 bg-navy-50/70 px-3.5 py-3">
                       <span className="text-xs text-navy-500">
                         {Number(project.rab_count || 0)} Cost Estimate items · Started {formatDate(project.tgl_mulai)}
                       </span>
                       <button
                         type="button"
                         onClick={() => selectProject(project.id)}
-                        className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-navy-900 px-3 py-2 text-xs font-medium text-white transition hover:bg-navy-700"
+                        className="btn-primary shrink-0 rounded-lg px-3 py-2 text-xs"
                       >
                         Open
                         <ChevronRight className="h-3.5 w-3.5" />
@@ -218,7 +218,7 @@ export default function PengawasDashboard() {
               </div>
             ) : (
               <div className="px-4 py-12 text-center">
-                <FolderOpen className="mx-auto h-8 w-8 text-navy-300" />
+                <FolderOpen className="mx-auto h-8 w-8 text-brand-300" />
                 <p className="mt-3 text-sm font-medium text-navy-700">No projects available</p>
                 <p className="mt-1 text-xs text-navy-500">Ask Management to create a project and upload its Cost Estimate.</p>
               </div>
@@ -231,25 +231,25 @@ export default function PengawasDashboard() {
       <button
         type="button"
         onClick={() => selectProject(null)}
-        className="inline-flex items-center gap-2 rounded-lg border border-navy-200 bg-white px-3 py-2 text-xs font-medium text-navy-600 transition hover:bg-navy-50"
+        className="btn-secondary rounded-full px-3.5 py-1.5 text-xs"
       >
         <ChevronRight className="h-3.5 w-3.5 rotate-180" />
         Back to Dashboard
       </button>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3 stagger-grid">
-        <StatCard icon={<ClipboardList className="w-4 h-4" />} label="Total Reports" value={loading ? '-' : reports.length} />
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 stagger-grid">
+        <StatCard icon={<ClipboardList className="w-4 h-4" />} tone="orange" label="Total Reports" value={loading ? '-' : reports.length} />
         <StatCard icon={<Clock className="w-4 h-4" />} label="Awaiting Review" value={loading ? '-' : pendingCount} tone="amber" />
         <StatCard icon={<CheckCircle className="w-4 h-4" />} label="Approved" value={loading ? '-' : approvedCount} tone="emerald" />
-        <StatCard icon={<XCircle className="w-4 h-4" />} label="Rejected" value={loading ? '-' : rejectedCount} />
+        <StatCard icon={<XCircle className="w-4 h-4" />} label="Rejected" value={loading ? '-' : rejectedCount} tone="rose" />
       </div>
 
       {/* Feedback message */}
       {msg && msg.type === 'error' && (
         <p
           role="status"
-          className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700"
+          className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700"
         >
           {msg.text}
         </p>
@@ -261,14 +261,14 @@ export default function PengawasDashboard() {
         className="grid min-w-0 grid-cols-1 gap-4 sm:gap-5 xl:grid-cols-[minmax(0,1fr)_300px]"
       >
         {/* ── Left: Reports table ── */}
-        <section className="overflow-hidden rounded-2xl border border-navy-100 bg-white/90 shadow-soft">
+        <section className="overflow-hidden surface">
           <div className="flex min-w-0 flex-col gap-3 border-b border-navy-100 p-3.5 sm:flex-row sm:items-center sm:justify-between sm:p-4">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">Review Queue</p>
-              <h3 className="mt-1 text-sm font-semibold text-navy-900">Weekly Progress Reports</h3>
+              <h3 className="mt-1 text-sm font-semibold text-navy-800">Weekly Progress Reports</h3>
               <p className="mt-0.5 text-xs text-navy-500">Approve valid reports or reject them for correction.</p>
             </div>
-            <div role="group" aria-label="Filter reports" className="flex max-w-full gap-1 overflow-x-auto rounded-lg bg-navy-100 p-1 sm:w-fit sm:flex-wrap sm:overflow-visible">
+            <div role="group" aria-label="Filter reports" className="seg max-w-full overflow-x-auto sm:w-fit sm:flex-wrap sm:overflow-visible">
               {[
                 { value: 'pending',  label: 'Pending',   count: pendingCount },
                 { value: 'approved', label: 'Approved', count: approvedCount },
@@ -280,14 +280,10 @@ export default function PengawasDashboard() {
                   type="button"
                   aria-pressed={reportFilter === f.value}
                   onClick={() => setReportFilter(f.value)}
-                  className={`shrink-0 rounded-md px-2.5 py-1.5 text-xs font-medium transition ${
-                    reportFilter === f.value
-                      ? 'bg-white text-navy-900 shadow-sm'
-                      : 'text-navy-500 hover:text-navy-800'
-                  }`}
+                  className={`seg-item shrink-0 px-3 py-1.5 !text-xs ${reportFilter === f.value ? 'seg-active' : ''}`}
                 >
                   {f.label}
-                  <span className="ml-1 text-[10px] opacity-60">{f.count}</span>
+                  <span className={`rounded-full px-1.5 text-[10px] font-semibold ${reportFilter === f.value ? 'bg-white/25 text-white' : 'bg-navy-100 text-navy-500'}`}>{f.count}</span>
                 </button>
               ))}
             </div>
@@ -307,8 +303,8 @@ export default function PengawasDashboard() {
           ) : (
               <>
               <div key={`desktop-report-list-${reportFilter}`} className="hidden overflow-auto anim-content-enter md:block">
-              <table className="w-full min-w-[560px] text-left text-sm">
-                <thead className="sticky top-0 bg-navy-50 text-xs text-navy-500">
+              <table className="table-soft w-full min-w-[560px] text-left text-sm">
+                <thead className="sticky top-0 z-[1] bg-navy-50 text-xs text-navy-500 shadow-[inset_0_-1px_0_rgba(226,232,240,1)]">
                   <tr>
                     <th className="px-4 py-3 font-medium">Work Item</th>
                     <th className="px-4 py-3 font-medium">Submitted By</th>
@@ -318,9 +314,9 @@ export default function PengawasDashboard() {
                 </thead>
                 <tbody className="divide-y divide-navy-100">
                   {visibleReports.map((r) => (
-                    <tr key={r.id} className="transition hover:bg-navy-50">
+                    <tr key={r.id}>
                       <td className="px-4 py-3">
-                        <p className="max-w-[220px] truncate font-medium text-navy-900">{r.nama_pekerjaan}</p>
+                        <p className="max-w-[220px] truncate font-medium text-navy-800">{r.nama_pekerjaan}</p>
                         <p className="mt-0.5 text-xs text-navy-400">{r.kode_pekerjaan} · Week {r.minggu_ke}</p>
                       </td>
                       <td className="px-4 py-3">
@@ -334,10 +330,8 @@ export default function PengawasDashboard() {
                         <button
                           type="button"
                           onClick={() => { setSelectedReport(r); setCatatan(r.catatan_pengawas || ''); }}
-                          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-                            r.status_verifikasi === 'pending'
-                              ? 'bg-brand-700 text-white shadow-soft hover:bg-brand-800 hover:shadow-glow'
-                              : 'bg-navy-100 text-navy-600 hover:bg-navy-200'
+                          className={`rounded-lg px-3 py-1.5 text-xs ${
+                            r.status_verifikasi === 'pending' ? 'btn-primary' : 'btn-secondary'
                           }`}
                         >
                           {r.status_verifikasi === 'pending' ? 'Review' : 'View'}
@@ -350,10 +344,10 @@ export default function PengawasDashboard() {
             </div>
             <div key={`mobile-report-list-${reportFilter}`} className="divide-y divide-navy-100 anim-content-enter md:hidden">
               {visibleReports.map((report) => (
-                <article key={report.id} className="space-y-3 p-4 transition-colors active:bg-navy-50">
+                <article key={report.id} className="space-y-3 p-4 transition-colors odd:bg-white even:bg-navy-50/60 active:bg-brand-50">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <h4 className="break-words text-sm font-semibold leading-5 text-navy-900">
+                      <h4 className="break-words text-sm font-semibold leading-5 text-navy-800">
                         {report.nama_pekerjaan}
                       </h4>
                       <p className="mt-1 text-xs text-navy-500">
@@ -368,7 +362,7 @@ export default function PengawasDashboard() {
                   </div>
                   <div className="flex items-center justify-between border-t border-navy-100 pt-3">
                     <span className="text-xs text-navy-500">Actual progress</span>
-                    <span className="text-sm font-semibold tabular-nums text-navy-900">
+                    <span className="text-sm font-semibold tabular-nums text-navy-800">
                       {report.realisasi_bobot}%
                     </span>
                   </div>
@@ -378,10 +372,8 @@ export default function PengawasDashboard() {
                       setSelectedReport(report);
                       setCatatan(report.catatan_pengawas || '');
                     }}
-                    className={`min-h-11 w-full rounded-lg px-4 py-2.5 text-sm font-medium transition ${
-                      report.status_verifikasi === 'pending'
-                        ? 'bg-navy-900 text-white hover:bg-navy-700'
-                        : 'border border-navy-200 bg-white text-navy-700 hover:bg-navy-50'
+                    className={`min-h-11 w-full px-4 py-2.5 text-sm ${
+                      report.status_verifikasi === 'pending' ? 'btn-primary' : 'btn-secondary'
                     }`}
                   >
                     {report.status_verifikasi === 'pending' ? 'Review report' : 'View report'}
@@ -396,22 +388,22 @@ export default function PengawasDashboard() {
         {/* ── Right: Project Info + RAB Summary ── */}
         <aside className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-1">
           {/* Project Info */}
-          <div className="overflow-hidden rounded-2xl border border-navy-100 bg-white/90 shadow-soft">
+          <div className="overflow-hidden surface">
             <div className="border-b border-navy-100 px-4 py-3">
               <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">Project Info</p>
             </div>
             {selected ? (
               <dl className="divide-y divide-navy-100 text-sm">
                 <div className="flex items-start gap-3 px-4 py-3">
-                  <FolderOpen className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" />
+                  <span className="chip-orange flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"><FolderOpen className="h-4 w-4" /></span>
                   <div className="min-w-0">
                     <dt className="text-xs text-navy-500">Project Name</dt>
-                    <dd className="mt-0.5 break-words font-medium text-navy-900">{selected.nama_proyek}</dd>
+                    <dd className="mt-0.5 break-words font-medium text-navy-800">{selected.nama_proyek}</dd>
                   </div>
                 </div>
                 {selected.lokasi && (
                   <div className="flex items-start gap-3 px-4 py-3">
-                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-navy-400" />
+                    <span className="chip-orange flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"><MapPin className="h-4 w-4" /></span>
                     <div className="min-w-0">
                       <dt className="text-xs text-navy-500">Location</dt>
                       <dd className="mt-0.5 break-words text-navy-700">{selected.lokasi}</dd>
@@ -420,7 +412,7 @@ export default function PengawasDashboard() {
                 )}
                 {selected.tgl_mulai && (
                   <div className="flex items-start gap-3 px-4 py-3">
-                    <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-navy-400" />
+                    <span className="chip-orange flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"><Calendar className="h-4 w-4" /></span>
                     <div>
                       <dt className="text-xs text-navy-500">Start Date</dt>
                       <dd className="mt-0.5 text-navy-700">{formatDate(selected.tgl_mulai)}</dd>
@@ -428,10 +420,10 @@ export default function PengawasDashboard() {
                   </div>
                 )}
                 <div className="flex items-start gap-3 px-4 py-3">
-                  <FileText className="mt-0.5 h-4 w-4 shrink-0 text-navy-400" />
+                  <span className="chip-orange flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"><FileText className="h-4 w-4" /></span>
                   <div>
                     <dt className="text-xs text-navy-500">Cost Estimate Items</dt>
-                    <dd className="mt-0.5 font-medium text-navy-900">{loading ? '—' : rabItems.length} item</dd>
+                    <dd className="mt-0.5 font-medium text-navy-800">{loading ? '—' : rabItems.length} item</dd>
                   </div>
                 </div>
               </dl>
@@ -445,13 +437,13 @@ export default function PengawasDashboard() {
 
           {/* Cost Estimate items mini-list */}
           {rabItems.length > 0 && (
-            <div className="overflow-hidden rounded-2xl border border-navy-100 bg-white/90 shadow-soft">
+            <div className="overflow-hidden surface">
               <div className="border-b border-navy-100 px-4 py-3">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">Cost Estimate Work Items</p>
               </div>
               <ul className="max-h-[300px] divide-y divide-navy-100 overflow-auto overscroll-contain text-sm">
                 {rabItems.map((item) => (
-                  <li key={item.id} className="flex items-center justify-between gap-2 px-4 py-2.5">
+                  <li key={item.id} className="flex items-center justify-between gap-2 px-4 py-2.5 transition-colors even:bg-navy-50/60 hover:bg-brand-50/70">
                     <div className="min-w-0">
                       <p className="truncate text-xs font-medium text-navy-800">{item.nama_pekerjaan}</p>
                       <p className="text-[10px] text-navy-400">{item.kode_pekerjaan}</p>
@@ -472,7 +464,7 @@ export default function PengawasDashboard() {
       {/* ── Review Modal ── */}
       {selectedReport && createPortal(
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center min-h-screen p-3 sm:p-4 bg-navy-950/50 modal-backdrop"
+          className="fixed inset-0 z-[100] flex items-center justify-center min-h-screen p-3 sm:p-4 bg-navy-900/30 modal-backdrop"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget && !saving) setSelectedReport(null);
           }}
@@ -481,12 +473,12 @@ export default function PengawasDashboard() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="review-dialog-title"
-            className="modal-panel flex flex-col max-h-[calc(100dvh-1.5rem)] w-full max-w-lg overflow-hidden rounded-2xl border border-white/70 bg-white shadow-lift ring-1 ring-navy-900/5"
+            className="modal-panel flex flex-col max-h-[calc(100dvh-1.5rem)] w-full max-w-lg overflow-hidden rounded-2xl border border-navy-200/70 bg-white shadow-lift"
           >
             <div className="shrink-0 flex items-start justify-between border-b border-navy-100 px-5 py-4 sm:px-6">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-brand-700">Progress Report</p>
-                <h3 id="review-dialog-title" className="mt-1 text-lg font-semibold text-navy-900">
+                <h3 id="review-dialog-title" className="mt-1 text-lg font-semibold text-navy-800">
                   {selectedReport.status_verifikasi === 'pending' ? 'Review Report' : 'Report Details'}
                 </h3>
               </div>
@@ -495,7 +487,7 @@ export default function PengawasDashboard() {
                 onClick={() => setSelectedReport(null)}
                 disabled={saving}
                 aria-label="Close review dialog"
-                className="rounded-lg p-2 text-navy-400 hover:bg-navy-100 hover:text-navy-700 disabled:opacity-50"
+                className="btn-icon p-2"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -504,7 +496,7 @@ export default function PengawasDashboard() {
             <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-4 px-4 py-4 sm:space-y-5 sm:px-6 sm:py-5">
               <div>
                 <p className="text-xs text-navy-500">Work Item</p>
-                <p className="mt-1 text-sm font-medium text-navy-900">
+                <p className="mt-1 text-sm font-medium text-navy-800">
                   [{selectedReport.kode_pekerjaan}] {selectedReport.nama_pekerjaan}
                 </p>
               </div>
@@ -544,14 +536,14 @@ export default function PengawasDashboard() {
                       alt: `Week ${selectedReport.minggu_ke} · ${selectedReport.nama_pekerjaan}`,
                       subtitle: `Submitted by ${selectedReport.mandor_nama || 'Foreman'} on ${formatDate(selectedReport.tgl_laporan)}`
                     })}
-                    className="group relative block w-full overflow-hidden rounded-xl border border-navy-200 bg-navy-900/5 transition hover:border-brand-500 focus:outline-none"
+                    className="group relative block w-full overflow-hidden rounded-xl border border-navy-200 bg-navy-50 transition hover:border-brand-400 hover:shadow-soft focus:outline-none"
                   >
                     <img
                       src={selectedReport.foto_bukti}
                       alt={`Progress evidence for week ${selectedReport.minggu_ke}`}
                       className="max-h-[35vh] w-full rounded-xl object-contain sm:max-h-72 transition duration-200 group-hover:scale-[1.02]"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-navy-900/30 opacity-0 group-hover:opacity-100 transition duration-200">
+                    <div className="absolute inset-0 flex items-center justify-center bg-navy-900/20 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition duration-200">
                       <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/90 px-3 py-1.5 text-xs font-semibold text-navy-800 shadow-lg backdrop-blur-sm">
                         Click to zoom
                       </span>
@@ -573,11 +565,11 @@ export default function PengawasDashboard() {
                     value={catatan}
                     onChange={(e) => setCatatan(e.target.value)}
                     placeholder="Add a note for the foreman..."
-                    className="w-full resize-y rounded-lg border border-navy-200 p-3 text-sm focus:border-brand-500 focus:ring-4 focus:ring-brand-100 outline-none"
+                    className="w-full resize-y rounded-xl border border-navy-200 bg-white p-3 text-sm text-navy-800 placeholder:text-navy-400 hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 outline-none"
                   />
                 </label>
               ) : (
-                <div className="rounded-xl border border-navy-100 bg-navy-50 p-3.5">
+                <div className="rounded-xl border border-brand-100 bg-cream p-3.5">
                   <p className="text-xs font-medium text-navy-500">Supervisor Review Notes</p>
                   <p className="mt-1 whitespace-pre-wrap break-words text-sm text-navy-800">
                     {selectedReport.catatan_pengawas || 'No review notes recorded.'}
@@ -591,7 +583,7 @@ export default function PengawasDashboard() {
                 type="button"
                 onClick={() => setSelectedReport(null)}
                 disabled={saving}
-                className="rounded-lg px-4 py-2.5 text-sm font-medium text-navy-600 hover:bg-navy-100 disabled:opacity-50"
+                className="btn-secondary px-4 py-2.5 text-sm"
               >
                 {selectedReport.status_verifikasi === 'pending' ? 'Cancel' : 'Close'}
               </button>
@@ -601,7 +593,7 @@ export default function PengawasDashboard() {
                     type="button"
                     onClick={() => handleVerify('rejected')}
                     disabled={saving}
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-rose-200 bg-white px-3 py-2.5 text-sm font-medium text-rose-700 hover:bg-rose-50 disabled:opacity-50 sm:flex-none"
+                    className="btn-danger-outline flex-1 px-4 py-2.5 text-sm sm:flex-none"
                   >
                     <Ban className="h-4 w-4" />
                     Reject
@@ -610,7 +602,7 @@ export default function PengawasDashboard() {
                     type="button"
                     onClick={() => handleVerify('approved')}
                     disabled={saving}
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-emerald-700 px-3 py-2.5 text-sm font-medium text-white shadow-soft hover:bg-emerald-800 hover:shadow-lift disabled:opacity-60 sm:flex-none"
+                    className="btn-primary flex-1 px-4 py-2.5 text-sm sm:flex-none"
                   >
                     {saving ? <span className="spinner" /> : <Check className="h-4 w-4" />}
                     {saving ? 'Saving...' : 'Approve'}

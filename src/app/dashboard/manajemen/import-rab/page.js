@@ -172,13 +172,13 @@ export default function ImportRABPage() {
             onChange={(e) => {
               if (e.target.files?.[0]) setFile(e.target.files[0]);
             }}
-            className="block w-full text-sm text-navy-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-navy-900 file:text-white"
+            className="block w-full text-sm text-navy-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 file:cursor-pointer"
           />
           {file && <p className="text-sm text-navy-700">{file.name}</p>}
           <button
             type="submit"
             disabled={loading || !file}
-            className="w-full py-3 bg-navy-900 disabled:bg-navy-200 text-white text-sm rounded-xl"
+            className="btn-primary w-full py-3 text-sm"
           >
             {loading ? 'Processing...' : 'Preview file'}
           </button>
@@ -201,7 +201,7 @@ export default function ImportRABPage() {
             <button
               onClick={handleSaveToDB}
               disabled={saving}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-navy-900 text-white text-sm rounded-xl disabled:opacity-60"
+              className="btn-primary px-4 py-2 text-sm"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Saving...' : 'Save Cost Estimate'}
