@@ -1,11 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { mkdir, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { query } from '@/lib/db';
 
 const PHOTO_DIRECTORY = path.join(process.cwd(), 'public', 'uploads', 'progress-reports');
 const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
-let ensuredLongTextColumn = false;
 
 const PHOTO_TYPES = {
   'image/jpeg': {
@@ -48,16 +46,11 @@ export async function saveProgressPhoto(file) {
     const filename = `${randomUUID()}.${photoType.extension}`;
     await writeFile(path.join(PHOTO_DIRECTORY, filename), buffer, { flag: 'wx' });
     return `/uploads/progress-reports/${filename}`;
-  } catch (fsError) {
-    // Fallback for serverless read-only filesystems (e.g., Vercel)
-    if (!ensuredLongTextColumn) {
-      try {
-        await query('ALTER TABLE progress_reports MODIFY COLUMN evidence_photo LONGTEXT DEFAULT NULL');
-      } catch {
-        // Ignore if already LONGTEXT or insufficient DDL privilege
-      }
-      ensuredLongTextColumn = true;
-    }
+  } catch {
+    // Serverless platforms such as Vercel have a read-only filesystem, so the
+    // photo is stored as a Base64 data URI in the LONGTEXT evidence_photo column.
+    // No DDL is executed here: running ALTER TABLE while the report transaction
+    // holds locks on progress_reports blocks the request indefinitely.
     return `data:${file.type};base64,${buffer.toString('base64')}`;
   }
 }
