@@ -117,68 +117,67 @@ export default function ImportRABPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-medium text-navy-900">Upload Cost Estimate</h2>
-        <button onClick={downloadTemplate} className="inline-flex items-center gap-2 text-sm text-navy-500 hover:text-navy-900">
+        <h2 className="text-section text-ink">Upload Cost Estimate</h2>
+        <button onClick={downloadTemplate} className="btn-secondary">
           <Download className="w-4 h-4" />
           Download Cost Estimate template
         </button>
       </div>
 
-      <p className="text-sm text-navy-500">
-        This Cost Estimate will be saved to the project selected in the sidebar.
-        {!selectedId ? ' Select or add a project before saving.' : ` Active project: ${selected?.nama_proyek || '-'}.`}
+      <p className="text-sm text-ink-secondary">
+        {!selectedId ? 'Select or add a project before saving.' : `Active project: ${selected?.nama_proyek || '-'}`}
       </p>
 
-      <div className="rounded-2xl border border-navy-100 p-5 grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="surface grid grid-cols-1 gap-3 p-5 lg:grid-cols-2">
         <input
           type="text"
           placeholder="Project name"
           value={proyek.nama_proyek}
           onChange={(e) => setProyek({ ...proyek, nama_proyek: e.target.value })}
-          className="p-3 border border-navy-200 rounded-xl text-sm"
+          className="field"
         />
         <input
           type="text"
           placeholder="Location"
           value={proyek.lokasi}
           onChange={(e) => setProyek({ ...proyek, lokasi: e.target.value })}
-          className="p-3 border border-navy-200 rounded-xl text-sm"
+          className="field"
         />
         <input
           type="date"
           aria-label="Project start date"
           value={proyek.tgl_mulai}
           onChange={(e) => setProyek({ ...proyek, tgl_mulai: e.target.value })}
-          className="p-3 border border-navy-200 rounded-xl text-sm"
+          className="field"
         />
         <input
           type="date"
           aria-label="Project end date"
           value={proyek.tgl_selesai}
           onChange={(e) => setProyek({ ...proyek, tgl_selesai: e.target.value })}
-          className="p-3 border border-navy-200 rounded-xl text-sm"
+          className="field"
         />
       </div>
 
-      <div className="rounded-2xl border border-dashed border-navy-200 p-8 text-center">
+      <div className="rounded-card border border-dashed border-line bg-surface p-8 text-center">
         <form onSubmit={handleUpload} className="space-y-4 max-w-md mx-auto">
-          <div className="mx-auto w-11 h-11 rounded-full bg-navy-100 text-navy-700 flex items-center justify-center">
+          <div className="chip-orange mx-auto flex h-11 w-11 items-center justify-center rounded-xl">
             <UploadCloud className="w-5 h-5" />
           </div>
-          <p className="text-sm text-navy-600">Excel or CSV file (.xlsx, .xls, .csv)</p>
+          <p className="text-sm text-ink-secondary">Excel or CSV file (.xlsx, .xls, .csv)</p>
           <input
             type="file"
             accept=".xlsx, .xls, .csv"
             onChange={(e) => {
               if (e.target.files?.[0]) setFile(e.target.files[0]);
             }}
-            className="block w-full text-sm text-navy-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 file:cursor-pointer"
+            className="block w-full text-sm text-ink-secondary file:mr-4 file:h-10 file:rounded-xl file:border-0 file:bg-navy-800 file:px-4 file:text-sm file:font-semibold file:text-white hover:file:bg-navy-900 file:cursor-pointer"
           />
-          {file && <p className="text-sm text-navy-700">{file.name}</p>}
+          {file && <p className="text-sm text-ink">{file.name}</p>}
           <button
             type="submit"
             disabled={loading || !file}
-            className="btn-primary w-full py-3 text-sm"
+            className="btn-primary w-full"
           >
             {loading ? 'Processing...' : 'Preview file'}
           </button>
@@ -186,30 +185,30 @@ export default function ImportRABPage() {
       </div>
 
       {msg && (
-        <p className={`text-sm flex items-center gap-2 ${msg.type === 'success' ? 'text-brand-700' : 'text-red-600'}`}>
+        <p className={`text-sm flex items-center gap-2 ${msg.type === 'success' ? 'text-orange-700' : 'text-danger'}`}>
           {msg.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
           {msg.text}
         </p>
       )}
 
       {parsedData && (
-        <div className="rounded-2xl border border-navy-100 p-5 space-y-4">
+        <div className="surface space-y-4 p-5">
           <div className="flex items-center justify-between">
-            <p className="text-sm text-navy-700">
+            <p className="text-sm text-ink">
               {parsedData.items_count} items · total weight {Number(parsedData.total_bobot || parsedData.total_anggaran).toFixed(2)}%
             </p>
             <button
               onClick={handleSaveToDB}
               disabled={saving}
-              className="btn-primary px-4 py-2 text-sm"
+              className="btn-primary px-4"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Saving...' : 'Save Cost Estimate'}
             </button>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="text-xs text-navy-400">
+            <table className="table-soft w-full text-left text-sm">
+              <thead className="text-xs text-ink-secondary">
                 <tr>
                   <th className="pb-3 font-medium">Code</th>
                   <th className="pb-3 font-medium">Work item</th>
@@ -219,15 +218,15 @@ export default function ImportRABPage() {
                   <th className="pb-3 font-medium text-right">Weight</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-navy-50">
+              <tbody className="divide-y divide-line">
                 {parsedData.items.map((item, idx) => (
                   <tr key={idx}>
-                    <td className="py-3 text-navy-500">{item.kode_pekerjaan}</td>
+                    <td className="py-3 text-ink-secondary">{item.kode_pekerjaan}</td>
                     <td className="py-3">{item.nama_pekerjaan}</td>
-                    <td className="py-3 text-right tabular-nums text-navy-500 whitespace-nowrap">{item.volume ? `${item.volume} ${item.satuan || ''}` : '—'}</td>
-                    <td className="py-3 text-right tabular-nums text-navy-500 whitespace-nowrap">{item.harga_satuan ? `IDR ${Number(item.harga_satuan).toLocaleString('en-US')}` : '—'}</td>
+                    <td className="py-3 text-right tabular-nums text-ink-secondary whitespace-nowrap">{item.volume ? `${item.volume} ${item.satuan || ''}` : '—'}</td>
+                    <td className="py-3 text-right tabular-nums text-ink-secondary whitespace-nowrap">{item.harga_satuan ? `IDR ${Number(item.harga_satuan).toLocaleString('en-US')}` : '—'}</td>
                     <td className="py-3 text-right tabular-nums whitespace-nowrap">{item.total_harga ? `IDR ${Number(item.total_harga).toLocaleString('en-US')}` : '—'}</td>
-                    <td className="py-3 text-right">{item.bobot_persen}%</td>
+                    <td className="py-3 text-right"><span className="badge badge-weight tabular-nums">{item.bobot_persen}%</span></td>
                   </tr>
                 ))}
               </tbody>

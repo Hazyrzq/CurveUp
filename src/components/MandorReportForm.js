@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { CalendarDays, Send, ArrowLeft } from 'lucide-react';
+import { CalendarDays, Send, ArrowLeft, Info } from 'lucide-react';
 import { useProject } from '@/components/ProjectContext';
 import ActionToast from '@/components/ActionToast';
 
@@ -290,63 +290,61 @@ export default function MandorReportForm({ initialItemId }) {
         />,
         document.body
       )}
-      <div className="border-b border-navy-100 p-4 sm:p-5">
-        <h3 className="text-base font-semibold text-navy-800">
+      <div className="border-b border-line p-4 sm:p-5">
+        <h3 className="flex items-center gap-1.5 text-section text-ink">
           {editingReport ? 'Edit Progress Report' : 'Submit Progress Report'}
+          <span tabIndex={0} role="img" aria-label="Submit one report per work item each week. You may resubmit after the supervisor rejects the previous report." title="Submit one report per work item each week. You may resubmit after the supervisor rejects the previous report." className="inline-flex cursor-help rounded-full text-ink-muted hover:text-orange-500">
+            <Info className="h-4 w-4" />
+          </span>
         </h3>
-        <p className="mt-1 text-xs text-navy-500">
-          Submit one report per work item each week. You may resubmit after the supervisor rejects the previous report.
-        </p>
-        <p className="mt-0.5 text-xs text-navy-500">
+        <p className="mt-0.5 text-xs text-ink-secondary">
           {selected ? `Project: ${selected.nama_proyek}` : 'Select a project from the dashboard first.'}
         </p>
       </div>
 
       <div className="p-4 sm:p-5">
         {loadingReport ? (
-          <p className="py-8 text-center text-sm text-navy-500">Loading report...</p>
+          <p className="py-8 text-center text-sm text-ink-secondary">Loading report...</p>
         ) : reportId && !editingReport ? (
-          <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+          <p role="alert" className="rounded-xl border border-danger/30 bg-danger-soft p-4 text-sm text-danger">
             {msg?.text || 'This report is not available for editing.'}
           </p>
         ) : !activeProyekId ? (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-center text-xs text-amber-800">
+          <div className="rounded-xl border border-warning/30 bg-warning-soft p-6 text-center text-xs text-warning-text">
             <p className="font-medium">No project selected.</p>
-            <p className="mt-1 text-navy-500">Return to the dashboard to select a project.</p>
             <button
               type="button"
               onClick={() => router.push('/dashboard/mandor')}
-              className="btn-primary mt-3 rounded-lg px-3 py-1.5 text-xs"
+              className="btn-primary mt-3 px-3"
             >
               <ArrowLeft className="h-3 w-3" />
               Back to Dashboard
             </button>
           </div>
         ) : itemOptions.length === 0 ? (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-center text-xs text-amber-800">
+          <div className="rounded-xl border border-warning/30 bg-warning-soft p-6 text-center text-xs text-warning-text">
             <p className="font-medium">No work items are available for this project.</p>
-            <p className="mt-1 text-navy-500">Management must upload a Cost Estimate file first.</p>
           </div>
         ) : (
           <div className="space-y-5">
             {/* Selected Work Item Info Box */}
             {selectedItem && (
-              <div className="rounded-xl border border-brand-100 bg-cream p-4">
+              <div className="rounded-xl border border-line bg-canvas p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <span className="font-mono text-xs font-medium text-navy-500">
+                    <span className="font-mono text-xs font-medium text-ink-secondary">
                       [{selectedItem.kode_pekerjaan}]
                     </span>
-                    <h4 className="mt-1 text-sm font-semibold text-navy-800">
+                    <h4 className="mt-1 text-sm font-semibold text-ink">
                       {selectedItem.nama_pekerjaan}
                     </h4>
                   </div>
                   <div className="text-right">
-                    <span className="text-[11px] text-navy-400">Weight</span>
-                    <p className="text-sm font-semibold text-navy-800">{Number(selectedItem.bobot_persen)}%</p>
+                    <span className="text-[11px] text-ink-secondary">Weight</span>
+                    <p className="text-sm font-semibold text-ink">{Number(selectedItem.bobot_persen)}%</p>
                   </div>
                 </div>
-                <div className="mt-2 flex items-center gap-3 border-t border-navy-200/60 pt-2 text-xs text-navy-500">
+                <div className="mt-2 flex items-center gap-3 border-t border-line/60 pt-2 text-xs text-ink-secondary">
                   <span>Volume: {Number(selectedItem.volume)} {selectedItem.satuan || ''}</span>
                   <span>·</span>
                   <span>Maximum weight: {Number(selectedItem.bobot_persen)}%</span>
@@ -356,13 +354,13 @@ export default function MandorReportForm({ initialItemId }) {
 
             <form noValidate onSubmit={handleSubmit} className="space-y-4">
               <label className="block">
-                <span className="mb-1.5 block text-xs font-medium text-navy-700">
+                <span className="field-label">
                   Cost Estimate Work Item
                 </span>
                 <select
                   value={form.item_pekerjaan_id}
                   onChange={(event) => setForm({ ...form, item_pekerjaan_id: event.target.value })}
-                  className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 text-sm text-navy-800 outline-none hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
+                  className="field"
                 >
                   {itemOptions.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -374,7 +372,7 @@ export default function MandorReportForm({ initialItemId }) {
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <label className="block">
-                  <span className="mb-1.5 block text-xs font-medium text-navy-700">Week Number</span>
+                  <span className="field-label">Week Number</span>
                   <input
                     type="number"
                     min="1"
@@ -384,12 +382,12 @@ export default function MandorReportForm({ initialItemId }) {
                     onChange={(event) =>
                       setForm({ ...form, minggu_ke: event.target.value.replace(/[^\d]/g, '') })
                     }
-                    className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 text-sm text-navy-800 outline-none hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
+                    className="field"
                   />
                 </label>
 
                 <label className="block">
-                  <span className="mb-1.5 block text-xs font-medium text-navy-700">
+                  <span className="field-label">
                     Actual Progress (%)
                   </span>
                   <div className="relative">
@@ -408,9 +406,9 @@ export default function MandorReportForm({ initialItemId }) {
                           realisasi_persen: event.target.value.replace(',', '.'),
                         })
                       }
-                      className="w-full rounded-xl border border-navy-200 bg-white px-3 py-2.5 pr-8 text-sm text-navy-800 outline-none hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
+                      className="field pr-8"
                     />
-                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-navy-400">
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-ink-secondary">
                       %
                     </span>
                   </div>
@@ -418,21 +416,21 @@ export default function MandorReportForm({ initialItemId }) {
               </div>
 
               <label className="block">
-                <span className="mb-1.5 block text-xs font-medium text-navy-700">Report Date</span>
+                <span className="field-label">Report Date</span>
                 <div className="relative">
-                  <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-400" />
+                  <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-secondary" />
                   <input
                     type="date"
                     required
                     value={form.tgl_laporan}
                     onChange={(event) => setForm({ ...form, tgl_laporan: event.target.value })}
-                    className="w-full rounded-xl border border-navy-200 bg-white py-2.5 pl-9 pr-3 text-sm text-navy-800 outline-none hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
+                    className="field pl-9"
                   />
                 </div>
               </label>
 
               <label className="block">
-                <span className="mb-1.5 block text-xs font-medium text-navy-700">
+                <span className="field-label">
                   Progress Photo {editingReport?.foto_bukti ? '(optional replacement)' : '(required)'}
                 </span>
                 {editingReport?.foto_bukti && (
@@ -440,7 +438,7 @@ export default function MandorReportForm({ initialItemId }) {
                     href={editingReport.foto_bukti}
                     target="_blank"
                     rel="noreferrer"
-                    className="mb-2 inline-flex items-center gap-2 text-xs font-medium text-brand-700 underline decoration-brand-300 underline-offset-2 hover:text-brand-800"
+                    className="mb-2 inline-flex items-center gap-2 text-xs font-semibold text-orange-700 underline decoration-orange-100 underline-offset-2 hover:text-orange-600"
                   >
                     View current photo
                   </a>
@@ -451,26 +449,22 @@ export default function MandorReportForm({ initialItemId }) {
                   accept="image/jpeg,image/png,image/webp"
                   required={!editingReport?.foto_bukti}
                   onChange={handlePhotoChange}
-                  className="block w-full rounded-xl border border-dashed border-navy-300 bg-white px-3 py-2 text-sm text-navy-700 hover:border-brand-300 file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-brand-50 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-brand-700 hover:file:bg-brand-100"
+                  className="block w-full rounded-xl border border-dashed border-line bg-surface px-3 py-2 text-sm text-ink hover:border-navy-300 file:mr-3 file:h-8 file:cursor-pointer file:rounded-lg file:border-0 file:bg-navy-800 file:px-3 file:text-xs file:font-semibold file:text-white hover:file:bg-navy-900"
                 />
-                <span className="mt-1 block text-xs text-navy-400">JPEG, PNG, or WebP, up to 5 MB.</span>
+                <span className="mt-1 block text-xs text-ink-secondary">JPEG, PNG, or WebP, up to 5 MB.</span>
               </label>
 
               {msg && (
                 <div
                   role="alert"
-                  className={`rounded-xl border px-3 py-2.5 text-xs flex items-center justify-between gap-2 ${
-                    msg.type === 'success'
-                      ? 'border-brand-200 bg-brand-50 text-navy-800'
-                      : 'border-rose-200 bg-rose-50 text-rose-800'
-                  }`}
+                  className={`rounded-xl border px-3 py-2.5 text-xs flex items-center justify-between gap-2 ${ msg.type === 'success' ? 'border-orange-100 bg-orange-50 text-ink' : 'border-danger/30 bg-danger-soft text-danger' }`}
                 >
                   <span>{msg.text}</span>
                   {msg.type === 'success' && (
                     <button
                       type="button"
                       onClick={() => router.push('/dashboard/mandor')}
-                      className="shrink-0 rounded-lg border border-brand-300 bg-white px-2.5 py-1 text-xs font-medium text-brand-700 hover:bg-brand-100"
+                      className="shrink-0 rounded-lg border border-orange-100 bg-surface px-2.5 py-1 text-xs font-semibold text-orange-700 hover:bg-orange-50"
                     >
                       Back to Reports
                     </button>
@@ -478,18 +472,18 @@ export default function MandorReportForm({ initialItemId }) {
                 </div>
               )}
 
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-navy-100">
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-line">
                 <button
                   type="button"
                   onClick={() => router.push('/dashboard/mandor')}
-                  className="btn-secondary rounded-lg px-3 py-2 text-xs"
+                  className="btn-secondary px-3"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn-primary rounded-lg px-4 py-2 text-xs"
+                  className="btn-primary px-4"
                 >
                   <Send className="h-3.5 w-3.5" />
                   {loading ? 'Saving...' : editingReport ? 'Save Changes' : 'Submit Report'}

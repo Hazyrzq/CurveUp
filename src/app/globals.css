@@ -2,71 +2,81 @@
 @tailwind components;
 
 @layer components {
-  /* Primary action — SDG 9 orange */
-  .btn-primary {
+  /* ── Login page only (design frozen) ── */
+  .login-btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-brand-500 to-brand-600 font-semibold text-white;
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 8px 18px -8px rgba(253, 105, 37, 0.7);
   }
-  .btn-primary:hover:not(:disabled) {
+  .login-btn-primary:hover:not(:disabled) {
     @apply from-brand-400 to-brand-500 -translate-y-px;
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 12px 24px -8px rgba(253, 105, 37, 0.75);
   }
-  .btn-primary:disabled { @apply opacity-60; }
+  .login-btn-primary:disabled { @apply opacity-60; }
 
-  /* Secondary action — white with soft border, orange tint on hover */
+  /* ── Dashboard design system (v5). Tokens only, no gradients. ── */
+
+  /* Buttons — 40px, radius 12px, 14px semibold */
+  .btn-primary {
+    @apply inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-orange-500 px-4 text-sm font-semibold text-white shadow-sm;
+  }
+  .btn-primary:hover:not(:disabled) { @apply bg-orange-600; }
+  .btn-primary:disabled { @apply cursor-not-allowed opacity-60; }
+
+  /* Secondary — deep navy (same as the sidebar / login panel) to balance the orange primary */
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-1.5 rounded-xl border border-navy-200 bg-white font-medium text-navy-700 shadow-sm;
+    @apply inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-navy-800 px-4 text-sm font-semibold text-white shadow-sm;
   }
-  .btn-secondary:hover:not(:disabled) { @apply border-brand-200 bg-brand-50/60 text-navy-800; }
-  .btn-secondary:disabled { @apply opacity-50; }
+  .btn-secondary:hover:not(:disabled) { @apply bg-navy-900; }
+  .btn-secondary:disabled { @apply cursor-not-allowed opacity-50; }
 
-  /* Destructive actions — red */
+  /* Solid red — only inside the delete confirmation dialog */
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 font-semibold text-white shadow-sm;
+    @apply inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-danger px-4 text-sm font-semibold text-white shadow-sm;
   }
-  .btn-danger:hover:not(:disabled) { @apply bg-rose-700; }
-  .btn-danger:disabled { @apply opacity-60; }
-  .btn-danger-outline {
-    @apply inline-flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-white font-medium text-rose-600 shadow-sm;
-  }
-  .btn-danger-outline:hover:not(:disabled) { @apply border-rose-300 bg-rose-50 text-rose-700; }
-  .btn-danger-outline:disabled { @apply opacity-50; }
+  .btn-danger:hover:not(:disabled) { @apply bg-danger/90; }
+  .btn-danger:disabled { @apply cursor-not-allowed opacity-60; }
 
-  /* Small square icon button (close, dismiss) */
-  .btn-icon {
-    @apply inline-flex items-center justify-center rounded-lg text-navy-400;
+  /* Reject / Delete */
+  .btn-danger-outline {
+    @apply inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-danger/40 bg-surface px-4 text-sm font-semibold text-danger;
   }
-  .btn-icon:hover:not(:disabled) { @apply bg-navy-100 text-navy-700; }
+  .btn-danger-outline:hover:not(:disabled) { @apply border-danger/60 bg-danger-soft; }
+  .btn-danger-outline:disabled { @apply cursor-not-allowed opacity-50; }
+
+  .btn-icon { @apply inline-flex items-center justify-center rounded-lg text-ink-secondary; }
+  .btn-icon:hover:not(:disabled) { @apply bg-canvas text-ink; }
   .btn-icon:disabled { @apply opacity-50; }
 
-  /* Segmented / pill tabs */
-  .seg {
-    @apply inline-flex gap-1 rounded-full border border-navy-200/80 bg-white/90 p-1 shadow-soft;
-  }
+  /* Tabs / filters — segmented control on canvas; active = white pill, orange text */
+  .seg { @apply inline-flex gap-1 rounded-xl bg-canvas p-1 ring-1 ring-inset ring-line; }
   .seg-item {
-    @apply inline-flex min-w-0 items-center justify-center gap-2 rounded-full px-3 py-2 text-xs font-medium text-navy-500 sm:text-sm;
+    @apply relative inline-flex min-w-0 items-center justify-center gap-2 rounded-lg px-3 py-2 text-[13px] font-semibold text-ink-secondary;
   }
-  .seg-item:hover:not(:disabled):not(.seg-active) { @apply bg-brand-50 text-navy-800; }
-  .seg-active {
-    @apply bg-gradient-to-b from-brand-500 to-brand-600 text-white;
-    box-shadow: 0 6px 14px -6px rgba(253, 105, 37, 0.7);
-  }
+  .seg-item:hover:not(:disabled):not(.seg-active) { @apply text-ink; }
+  .seg-active { @apply bg-surface text-orange-700 shadow-pill; }
 
-  /* Base surface for cards / panels */
-  .surface {
-    @apply rounded-2xl border border-navy-200/70 bg-white shadow-soft;
-  }
+  /* Cards */
+  .surface { @apply rounded-card border border-line bg-surface shadow-card; }
 
-  /* Soft tinted icon chips */
-  .chip-orange { @apply bg-brand-50 text-brand-600 ring-1 ring-brand-200/70; }
-  .chip-sky    { @apply bg-sky-50 text-sky-600 ring-1 ring-sky-200/70; }
-  .chip-teal   { @apply bg-teal-50 text-teal-600 ring-1 ring-teal-200/70; }
-  .chip-violet { @apply bg-violet-50 text-violet-600 ring-1 ring-violet-200/70; }
+  /* Stat / icon chips — neutral metrics in orange tint */
+  .chip-orange,
+  .chip-navy { @apply bg-orange-50 text-orange-500; }
 
-  /* Tables: zebra rows + soft hover */
-  .table-soft tbody tr:nth-child(even) { @apply bg-navy-50/60; }
+  /* Badges */
+  .badge { @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold; }
+  .badge-weight { @apply bg-orange-50 text-orange-700; }
+
+  /* Tables */
+  .table-soft thead { @apply bg-canvas text-xs text-ink-secondary; }
+  .table-soft tbody td { @apply h-[52px]; }
   .table-soft tbody tr { @apply transition-colors; }
-  .table-soft tbody tr:hover { @apply bg-brand-50/70; }
+  .table-soft tbody tr:hover { @apply bg-cream; }
+
+  /* Forms — 44px inputs, radius 12px */
+  .field {
+    @apply h-11 w-full rounded-xl border border-line bg-surface px-3 text-sm text-ink outline-none placeholder:text-ink-muted hover:border-navy-300 focus:border-orange-500 focus:ring-4 focus:ring-orange-100;
+  }
+  .field-label { @apply mb-1.5 block text-[13px] font-semibold text-ink; }
 }
 @tailwind utilities;
 
@@ -84,6 +94,12 @@
     backdrop-filter: saturate(160%) blur(14px);
   }
 
+
+  /* Login 3D panel placeholder — same colors as the scene background (login only) */
+  .scene-navy {
+    background-color: #0b1324;
+    background-image: radial-gradient(120% 90% at 70% 30%, #1f2a40 0%, #0b1324 70%);
+  }
 
   .text-gradient-brand {
     background-image: linear-gradient(90deg, #e2541a, #fd6925 60%, #fe8547);
@@ -256,14 +272,15 @@ button {
   transform: translateY(1px) scale(0.97);
 }
 
+/* Clickable cards: slightly larger shadow, orange-100 border on all sides, lift 2px */
 .card-hover {
-  transition: transform 0.32s var(--motion-enter), box-shadow 0.32s var(--motion-settle), border-color 0.32s var(--motion-settle);
+  transition: transform 0.24s var(--motion-enter), box-shadow 0.24s var(--motion-settle), border-color 0.24s var(--motion-settle);
 }
 
 .card-hover:hover {
-  transform: translateY(-3px);
-  border-color: rgba(253, 105, 37, 0.35);
-  box-shadow: 0 4px 8px -2px rgba(30, 41, 59, 0.05), 0 22px 44px -14px rgba(120, 72, 40, 0.2);
+  transform: translateY(-2px);
+  border-color: #ffe7d9;
+  box-shadow: 0 2px 4px rgba(19, 28, 46, 0.05), 0 14px 32px -14px rgba(19, 28, 46, 0.14);
 }
 
 .anim-scale {
@@ -305,7 +322,7 @@ body.scroll-locked {
 .shimmer {
   position: relative;
   overflow: hidden;
-  background-color: #f1f5f9;
+  background-color: #f1ece6;
 }
 
 .shimmer::after {
@@ -364,4 +381,10 @@ body.scroll-locked {
     box-shadow: none !important;
     border: 1px solid #cbd5e1 !important;
   }
+}
+
+/* Login visual: while the 3D decision is pending, hide the fallback image on screens that will
+   get the 3D scene (>= 768px, where the login panel is visible) so the navy placeholder shows instead. */
+@media (min-width: 768px) {
+  .scene-fallback-pending { display: none; }
 }

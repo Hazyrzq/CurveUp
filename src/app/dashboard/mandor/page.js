@@ -18,6 +18,8 @@ import {
   X,
 } from 'lucide-react';
 import DashboardHeader from '@/components/DashboardHeader';
+import { motion } from 'framer-motion';
+import { listVariants, TabPill } from '@/components/motion';
 import StatCard from '@/components/StatCard';
 import StatusBadge from '@/components/StatusBadge';
 import ActionToast from '@/components/ActionToast';
@@ -401,24 +403,15 @@ export default function MandorDashboard() {
         title={selected ? (proyekDetail?.nama_proyek || selected.nama_proyek) : 'My work'}
         subtitle={
           selected
-            ? (
-              <>
-                {selected.lokasi || 'Active project'}
-                <span className="hidden sm:inline"> · Select a task below to send a progress update.</span>
-              </>
-            )
-            : 'Choose a project to view its work items and send progress reports.'
+            ? (selected.lokasi || 'Active project')
+            : `${projects.length} projects`
         }
       />
 
       {actionMsg && (
         <div
           role="status"
-          className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm shadow-sm ${
-            actionMsg.type === 'success'
-              ? 'border-brand-200 bg-brand-50 text-navy-800'
-              : 'border-rose-200 bg-rose-50 text-rose-700'
-          }`}
+          className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm shadow-sm ${ actionMsg.type === 'success' ? 'border-orange-100 bg-orange-50 text-ink' : 'border-danger/30 bg-danger-soft text-danger' }`}
         >
           <span>{actionMsg.text}</span>
           <button
@@ -458,10 +451,9 @@ export default function MandorDashboard() {
               role="tab"
               aria-selected={homeTab === 'projects'}
               onClick={() => setHomeTab('projects')}
-              className={`seg-item min-h-11 px-4 py-2 ${
-                homeTab === 'projects' ? 'seg-active' : ''
-              }`}
+              className={`seg-item isolate whitespace-nowrap px-4 ${ homeTab === 'projects' ? 'text-orange-700' : '' }`}
             >
+              {homeTab === 'projects' && <TabPill layoutId="foreman-homeTab" />}
               Projects ({projects.length})
             </button>
             <button
@@ -469,17 +461,16 @@ export default function MandorDashboard() {
               role="tab"
               aria-selected={homeTab === 'reports'}
               onClick={() => setHomeTab('reports')}
-              className={`seg-item min-h-11 px-4 py-2 ${
-                homeTab === 'reports' ? 'seg-active' : ''
-              }`}
+              className={`seg-item isolate whitespace-nowrap px-4 ${ homeTab === 'reports' ? 'text-orange-700' : '' }`}
             >
+              {homeTab === 'reports' && <TabPill layoutId="foreman-homeTab" />}
               My reports ({history.length})
             </button>
           </div>
 
           {homeTab === 'projects' && (
             <>
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4 stagger-grid">
+          <motion.div variants={listVariants} initial="hidden" animate="show" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
             <StatCard
               icon={<ClipboardList className="w-4 h-4" />}
               tone="orange"
@@ -504,34 +495,29 @@ export default function MandorDashboard() {
               value={rejectedCount}
               tone="rose"
             />
-          </div>
+          </motion.div>
 
           {/* Section: Select a project */}
           <section className="anim-content-enter overflow-hidden surface">
-            <div className="flex flex-col gap-3 border-b border-navy-100 p-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h3 className="text-base font-semibold text-navy-800">Choose a project</h3>
-                <p className="mt-0.5 text-xs text-navy-500">
-                  Open the project you are currently working on.
-                </p>
-              </div>
+            <div className="flex flex-col gap-3 border-b border-line p-4 sm:flex-row sm:items-center sm:justify-between">
+              <h3 className="text-section text-ink">Choose a project</h3>
 
-              <label className="flex items-center gap-2 rounded-full border border-navy-200 bg-white px-3.5 py-2 shadow-sm transition focus-within:border-brand-400 focus-within:ring-2 focus-within:ring-brand-100 sm:w-64">
-                <Search className="h-3.5 w-3.5 text-navy-400" />
+              <label className="flex items-center gap-2 rounded-full border border-line bg-white px-3.5 py-2 shadow-sm transition focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-100 sm:w-64">
+                <Search className="h-3.5 w-3.5 text-ink-secondary" />
                 <input
                   type="search"
                   value={projectSearch}
                   onChange={(e) => setProjectSearch(e.target.value)}
                   placeholder="Search projects..."
-                  className="w-full bg-transparent text-xs text-navy-700 outline-none placeholder:text-navy-400"
+                  className="w-full bg-transparent text-xs text-ink outline-none placeholder:text-ink-secondary"
                 />
               </label>
             </div>
 
             <div className="sm:max-h-[500px] sm:overflow-auto">
-              <div className="hidden overflow-x-auto sm:block">
+              <div className="hidden overflow-x-auto lg:block">
               <table className="table-soft w-full min-w-[640px] text-left text-sm">
-                <thead className="sticky top-0 z-[1] bg-navy-50 text-xs text-navy-500 shadow-[inset_0_-1px_0_rgba(226,232,240,1)]">
+                <thead className="sticky top-0 z-[1] bg-canvas text-xs text-ink-secondary shadow-[inset_0_-1px_0_theme(colors.line)]">
                   <tr>
                     <th className="px-4 py-3 font-medium">Project Name</th>
                     <th className="px-4 py-3 font-medium">Location</th>
@@ -540,22 +526,22 @@ export default function MandorDashboard() {
                     <th className="px-4 py-3 text-right font-medium">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-navy-100">
+                <tbody className="divide-y divide-line">
                   {filteredProjects.map((p) => (
                     <tr key={p.id}>
                       <td className="px-4 py-3">
-                        <span className="font-medium text-navy-800">{p.nama_proyek}</span>
+                        <span className="font-medium text-ink">{p.nama_proyek}</span>
                       </td>
-                      <td className="px-4 py-3 text-xs text-navy-500">{p.lokasi || '—'}</td>
-                      <td className="px-4 py-3 text-right text-xs tabular-nums text-navy-700">
+                      <td className="px-4 py-3 text-xs text-ink-secondary">{p.lokasi || '—'}</td>
+                      <td className="px-4 py-3 text-right text-xs tabular-nums text-ink">
                         {p.rab_count != null ? p.rab_count : '—'}
                       </td>
-                      <td className="px-4 py-3 text-xs text-navy-500">{formatDate(p.tgl_mulai)}</td>
+                      <td className="px-4 py-3 text-xs text-ink-secondary">{formatDate(p.tgl_mulai)}</td>
                       <td className="px-4 py-3 text-right">
                         <button
                           type="button"
                           onClick={() => selectProject(p.id)}
-                          className="btn-primary rounded-lg px-3 py-1.5 text-xs"
+                          className="btn-primary px-3"
                         >
                           Open Project
                         </button>
@@ -566,26 +552,26 @@ export default function MandorDashboard() {
               </table>
               </div>
 
-              <div className="divide-y divide-navy-100 sm:hidden">
+              <div className="divide-y divide-line lg:hidden">
                 {filteredProjects.map((project) => (
-                  <div key={project.id} className="space-y-3 p-4 even:bg-navy-50/60">
+                  <div key={project.id} className="space-y-3 p-4 even:bg-canvas">
                     <div>
                       <h4
                         title={project.nama_proyek}
-                        className="line-clamp-2 break-words text-sm font-semibold leading-5 text-navy-800"
+                        className="line-clamp-2 break-words text-sm font-semibold leading-5 text-ink"
                       >
                         {project.nama_proyek}
                       </h4>
-                      <p className="mt-1 text-xs text-navy-500">{project.lokasi || 'Location not set'}</p>
+                      <p className="mt-1 text-xs text-ink-secondary">{project.lokasi || 'Location not set'}</p>
                     </div>
-                    <div className="flex items-center justify-between gap-3 text-xs text-navy-500">
+                    <div className="flex items-center justify-between gap-3 text-xs text-ink-secondary">
                       <span>{project.rab_count ?? '—'} work items</span>
                       <span>Started {formatDate(project.tgl_mulai)}</span>
                     </div>
                     <button
                       type="button"
                       onClick={() => selectProject(project.id)}
-                      className="btn-primary min-h-10 w-full rounded-lg px-3 py-2 text-sm"
+                      className="btn-primary w-full px-3"
                     >
                       View project
                     </button>
@@ -594,7 +580,7 @@ export default function MandorDashboard() {
               </div>
 
               {filteredProjects.length === 0 && (
-                <p className="px-4 py-12 text-center text-xs text-navy-400">
+                <p className="px-4 py-12 text-center text-xs text-ink-secondary">
                   {projects.length ? 'No projects match your search.' : 'No projects yet.'}
                 </p>
               )}
@@ -605,10 +591,9 @@ export default function MandorDashboard() {
 
           {/* Section: All foreman reports */}
           {homeTab === 'reports' && <section key="all-reports" className="anim-content-enter overflow-hidden surface">
-            <div className="flex flex-col gap-3 border-b border-navy-100 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-3 border-b border-line p-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h3 className="text-sm font-semibold text-navy-800">Report History</h3>
-                <p className="mt-0.5 text-xs text-navy-500">All reports you have submitted</p>
+                <h3 className="text-section text-ink">Report History</h3>
               </div>
 
               <div role="group" aria-label="Filter report status" className="seg max-w-full overflow-x-auto">
@@ -622,12 +607,9 @@ export default function MandorDashboard() {
                     key={filter.value}
                     type="button"
                     onClick={() => setHistoryFilter(filter.value)}
-                    className={`seg-item shrink-0 px-3 py-1.5 !text-xs ${
-                      historyFilter === filter.value
-                        ? 'seg-active'
-                        : ''
-                    }`}
+                    className={`seg-item isolate whitespace-nowrap shrink-0 px-3 ${ historyFilter === filter.value ? 'text-orange-700' : '' }`}
                   >
+                    {historyFilter === filter.value && <TabPill layoutId="foreman-historyFilter" />}
                     {filter.label}
                   </button>
                 ))}
@@ -637,19 +619,14 @@ export default function MandorDashboard() {
             <div className="sm:max-h-[460px] sm:overflow-auto">
               {visibleHistory.length === 0 ? (
                 <div className="px-4 py-10 text-center">
-                  <p className="text-sm font-medium text-navy-700">
+                  <p className="text-sm font-medium text-ink">
                     {history.length ? 'No reports with this status.' : 'No reports submitted yet.'}
                   </p>
-                  {!history.length && (
-                    <p className="mt-1 text-xs text-navy-500">
-                      Choose a project to send your first progress update.
-                    </p>
-                  )}
                 </div>
               ) : (
-                <div className="hidden overflow-x-auto sm:block">
+                <div className="hidden overflow-x-auto lg:block">
                 <table className="table-soft w-full min-w-[640px] text-left text-sm">
-                  <thead className="sticky top-0 z-[1] bg-navy-50 text-xs text-navy-500 shadow-[inset_0_-1px_0_rgba(226,232,240,1)]">
+                  <thead className="sticky top-0 z-[1] bg-canvas text-xs text-ink-secondary shadow-[inset_0_-1px_0_theme(colors.line)]">
                     <tr>
                       <th className="px-4 py-3 font-medium">Work Item</th>
                       <th className="px-4 py-3 font-medium">Week</th>
@@ -659,16 +636,16 @@ export default function MandorDashboard() {
                       <th className="px-4 py-3 text-right font-medium">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-navy-100">
+                  <tbody className="divide-y divide-line">
                     {visibleHistory.map((report) => (
                       <tr key={report.id}>
                         <td className="px-4 py-3">
-                          <p className="font-medium text-navy-800">{report.nama_pekerjaan}</p>
-                          <p className="text-xs text-navy-400">
+                          <p className="font-medium text-ink">{report.nama_pekerjaan}</p>
+                          <p className="text-xs text-ink-secondary">
                             {report.nama_proyek ? `${report.nama_proyek} · ` : ''}[{report.kode_pekerjaan}] · Weight: {report.bobot_persen}%
                           </p>
                           {report.catatan_pengawas && (
-                            <p className="mt-1 text-xs text-amber-700 bg-amber-50 rounded-lg px-2 py-1 ring-1 ring-amber-200/60">
+                            <p className="mt-1 text-xs text-warning-text bg-warning-soft rounded-lg px-2 py-1 ring-1 ring-warning/30">
                               Supervisor Note: {report.catatan_pengawas}
                             </p>
                           )}
@@ -680,7 +657,7 @@ export default function MandorDashboard() {
                                 alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
                                 subtitle: `Submitted on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
                               })}
-                              className="group relative mt-2 block overflow-hidden rounded-md border border-navy-200 transition hover:border-brand-400 hover:shadow-soft focus:outline-none"
+                              className="group relative mt-2 block overflow-hidden rounded-md border border-line transition hover:border-orange-500 hover:shadow-card focus:outline-none"
                             >
                               <img
                                 src={report.foto_bukti}
@@ -690,9 +667,9 @@ export default function MandorDashboard() {
                             </button>
                           )}
                         </td>
-                        <td className="px-4 py-3 text-xs text-navy-600">Week {report.minggu_ke}</td>
-                        <td className="px-4 py-3 text-xs text-navy-500">{formatDate(report.tgl_laporan)}</td>
-                        <td className="px-4 py-3 text-right text-xs font-semibold tabular-nums text-navy-800">
+                        <td className="px-4 py-3 text-xs text-ink-secondary">Week {report.minggu_ke}</td>
+                        <td className="px-4 py-3 text-xs text-ink-secondary">{formatDate(report.tgl_laporan)}</td>
+                        <td className="px-4 py-3 text-right text-xs font-semibold tabular-nums text-ink">
                           {Number(report.realisasi_bobot)}%
                         </td>
                         <td className="px-4 py-3 text-right">
@@ -704,20 +681,20 @@ export default function MandorDashboard() {
                               <button
                                 type="button"
                                 onClick={() => handleEditReport(report)}
-                                className="btn-secondary rounded-lg px-2.5 py-1 text-xs"
+                                className="btn-secondary px-2.5"
                               >
                                 Edit
                               </button>
                               <button
                                 type="button"
                                 onClick={() => setReportToDelete(report)}
-                                className="btn-danger-outline rounded-lg px-2.5 py-1 text-xs"
+                                className="btn-danger-outline px-2.5"
                               >
                                 Delete
                               </button>
                             </div>
                           ) : report.status_verifikasi === 'approved' ? (
-                            <span className="text-xs text-navy-400">Locked</span>
+                            <span className="text-xs text-ink-secondary">Locked</span>
                           ) : null}
                         </td>
                       </tr>
@@ -727,24 +704,24 @@ export default function MandorDashboard() {
                 </div>
               )}
               {visibleHistory.length > 0 && (
-                <div className="divide-y divide-navy-100 sm:hidden">
+                <div className="divide-y divide-line lg:hidden">
                   {visibleHistory.map((report) => (
-                    <article key={report.id} className="space-y-3 p-4 even:bg-navy-50/60">
+                    <article key={report.id} className="space-y-3 p-4 even:bg-canvas">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <h4 className="text-sm font-semibold leading-5 text-navy-800">{report.nama_pekerjaan}</h4>
-                          <p className="mt-1 text-xs text-navy-500">
+                          <h4 className="text-sm font-semibold leading-5 text-ink">{report.nama_pekerjaan}</h4>
+                          <p className="mt-1 text-xs text-ink-secondary">
                             {report.nama_proyek ? `${report.nama_proyek} · ` : ''}[{report.kode_pekerjaan}] · Week {report.minggu_ke}
                           </p>
                         </div>
                         <StatusBadge status={report.status_verifikasi} />
                       </div>
-                      <div className="flex items-center justify-between gap-3 text-xs text-navy-500">
+                      <div className="flex items-center justify-between gap-3 text-xs text-ink-secondary">
                         <span>{formatDate(report.tgl_laporan)}</span>
-                        <span className="font-semibold text-navy-800">{Number(report.realisasi_bobot)}% progress</span>
+                        <span className="font-semibold text-ink">{Number(report.realisasi_bobot)}% progress</span>
                       </div>
                       {report.catatan_pengawas && (
-                        <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs leading-5 text-amber-800">
+                        <p className="rounded-lg bg-warning-soft px-3 py-2 text-xs leading-5 text-warning-text">
                           Supervisor note: {report.catatan_pengawas}
                         </p>
                       )}
@@ -756,7 +733,7 @@ export default function MandorDashboard() {
                             alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
                             subtitle: `Submitted on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
                           })}
-                          className="group relative inline-block overflow-hidden rounded-lg border border-navy-200 transition hover:border-brand-400 hover:shadow-soft focus:outline-none"
+                          className="group relative inline-block overflow-hidden rounded-lg border border-line transition hover:border-orange-500 hover:shadow-card focus:outline-none"
                         >
                           <img
                             src={report.foto_bukti}
@@ -770,20 +747,20 @@ export default function MandorDashboard() {
                           <button
                             type="button"
                             onClick={() => handleEditReport(report)}
-                            className="btn-secondary min-h-10 rounded-lg px-3 py-2 text-sm"
+                            className="btn-secondary px-3"
                           >
                             Edit
                           </button>
                           <button
                             type="button"
                             onClick={() => setReportToDelete(report)}
-                            className="btn-danger-outline min-h-10 rounded-lg px-3 py-2 text-sm"
+                            className="btn-danger-outline px-3"
                           >
                             Delete
                           </button>
                         </div>
                       ) : (
-                        <p className="text-xs text-navy-400">Approved reports are locked.</p>
+                        <p className="text-xs text-ink-secondary">Approved reports are locked.</p>
                       )}
                     </article>
                   ))}
@@ -806,10 +783,9 @@ export default function MandorDashboard() {
                 role="tab"
                 aria-selected={activeTab === 'rab'}
                 onClick={() => setActiveTab('rab')}
-                className={`seg-item px-3 py-2 !text-xs ${
-                  activeTab === 'rab' ? 'seg-active' : ''
-                }`}
+                className={`seg-item isolate whitespace-nowrap px-3 ${ activeTab === 'rab' ? 'text-orange-700' : '' }`}
               >
+                {activeTab === 'rab' && <TabPill layoutId="foreman-activeTab" />}
                 <Layers className="h-3.5 w-3.5" />
                 Work items ({rabItems.length})
               </button>
@@ -818,10 +794,9 @@ export default function MandorDashboard() {
                 role="tab"
                 aria-selected={activeTab === 'laporan'}
                 onClick={() => setActiveTab('laporan')}
-                className={`seg-item px-3 py-2 !text-xs ${
-                  activeTab === 'laporan' ? 'seg-active' : ''
-                }`}
+                className={`seg-item isolate whitespace-nowrap px-3 ${ activeTab === 'laporan' ? 'text-orange-700' : '' }`}
               >
+                {activeTab === 'laporan' && <TabPill layoutId="foreman-activeTab" />}
                 <ClipboardList className="h-3.5 w-3.5" />
                 My reports ({history.length})
               </button>
@@ -830,7 +805,7 @@ export default function MandorDashboard() {
             <button
               type="button"
               onClick={() => selectProject(null)}
-              className="btn-secondary w-fit rounded-full px-3.5 py-1.5 text-xs"
+              className="btn-secondary w-fit px-3.5"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Change project
@@ -838,7 +813,7 @@ export default function MandorDashboard() {
           </div>
 
           {/* Stat Cards Ringkasan Pelaporan Proyek Ini */}
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4 stagger-grid">
+          <motion.div variants={listVariants} initial="hidden" animate="show" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
             <StatCard
               icon={<Layers className="w-4 h-4" />}
               tone="sky"
@@ -863,22 +838,17 @@ export default function MandorDashboard() {
               value={approvedCount}
               tone="emerald"
             />
-          </div>
+          </motion.div>
 
           {/* Section 1: RAB items available for reporting */}
           {activeTab === 'rab' && (
             <section key="work-items-panel" className="anim-content-enter overflow-hidden surface">
-              <div className="flex flex-col gap-3 border-b border-navy-100 p-4 lg:flex-row lg:items-center lg:justify-between">
-                <div>
-                  <h3 className="text-sm font-semibold text-navy-800">Work items</h3>
-                  <p className="mt-0.5 text-xs text-navy-500">
-                    Choose a task to send this week's progress update.
-                  </p>
-                </div>
+              <div className="flex flex-col gap-3 border-b border-line p-4 lg:flex-row lg:items-center lg:justify-between">
+                <h3 className="text-section text-ink">Work items</h3>
 
                 <div className="flex min-w-0 flex-col gap-2 lg:items-end">
-                  <label className="flex items-center gap-2 rounded-full border border-navy-200 bg-white px-3.5 py-2 shadow-sm transition focus-within:border-brand-400 focus-within:ring-2 focus-within:ring-brand-100 lg:w-64">
-                    <Search className="h-3.5 w-3.5 text-navy-400" />
+                  <label className="flex items-center gap-2 rounded-full border border-line bg-white px-3.5 py-2 shadow-sm transition focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-100 lg:w-64">
+                    <Search className="h-3.5 w-3.5 text-ink-secondary" />
                     <input
                       type="search"
                       value={rabSearch}
@@ -887,7 +857,7 @@ export default function MandorDashboard() {
                         setRabSearch(e.target.value);
                       }}
                       placeholder="Search items or codes..."
-                      className="w-full bg-transparent text-xs text-navy-700 outline-none placeholder:text-navy-400"
+                      className="w-full bg-transparent text-xs text-ink outline-none placeholder:text-ink-secondary"
                     />
                   </label>
                   <div role="group" aria-label="Filter work items by report status" className="seg w-full overflow-x-auto lg:w-auto">
@@ -905,12 +875,9 @@ export default function MandorDashboard() {
                           captureRabLayout();
                           setRabReportFilter(filter.value);
                         }}
-                        className={`seg-item shrink-0 px-2.5 py-1.5 !text-[11px] ${
-                          rabReportFilter === filter.value
-                            ? 'seg-active'
-                            : ''
-                        }`}
+                        className={`seg-item isolate whitespace-nowrap shrink-0 px-2.5 ${ rabReportFilter === filter.value ? 'text-orange-700' : '' }`}
                       >
+                        {rabReportFilter === filter.value && <TabPill layoutId="foreman-rabReportFilter" />}
                         {filter.label}
                       </button>
                     ))}
@@ -923,16 +890,16 @@ export default function MandorDashboard() {
                 className="min-h-[35vh] overflow-visible sm:h-[min(520px,65vh)] sm:min-h-[220px] sm:overflow-auto sm:overscroll-contain"
               >
                 {filteredRabItems.length === 0 ? (
-                  <p className="px-4 py-12 text-center text-xs text-navy-400">
+                  <p className="px-4 py-12 text-center text-xs text-ink-secondary">
                     {rabItems.length
-                      ? 'No Cost Estimate items match the selected filters.'
-                      : 'No Cost Estimate items for this project yet.'}
+                      ? 'No matching Cost Estimate items.'
+                      : 'No Cost Estimate items yet.'}
                   </p>
                 ) : (
                   <>
-                  <div className="hidden overflow-x-auto sm:block">
+                  <div className="hidden overflow-x-auto lg:block">
                   <table className="table-soft w-full min-w-[680px] text-left text-sm">
-                    <thead className="sticky top-0 z-[1] bg-navy-50 text-xs text-navy-500 shadow-[inset_0_-1px_0_rgba(226,232,240,1)]">
+                    <thead className="sticky top-0 z-[1] bg-canvas text-xs text-ink-secondary shadow-[inset_0_-1px_0_theme(colors.line)]">
                       <tr>
                         <th className="px-4 py-3 font-medium">Code</th>
                         <th className="px-4 py-3 font-medium">Work Item</th>
@@ -942,33 +909,33 @@ export default function MandorDashboard() {
                         <th className="px-4 py-3 text-right font-medium">Action</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-navy-100">
+                    <tbody className="divide-y divide-line">
                       {filteredRabItems.map((item) => (
                         <tr
                           key={item.id}
                           onClick={() => handleOpenReportForm(item.id)}
                           className="cursor-pointer"
                         >
-                          <td className="px-4 py-3 text-xs font-mono text-navy-600">{item.kode_pekerjaan}</td>
+                          <td className="px-4 py-3 text-xs font-mono text-ink-secondary">{item.kode_pekerjaan}</td>
                           <td className="px-4 py-3">
-                            <span className="font-medium text-navy-800">{item.nama_pekerjaan}</span>
+                            <span className="font-medium text-ink">{item.nama_pekerjaan}</span>
                           </td>
-                          <td className="px-4 py-3 text-right text-xs text-navy-500 tabular-nums">
+                          <td className="px-4 py-3 text-right text-xs text-ink-secondary tabular-nums">
                             {item.volume ? `${item.volume} ${item.satuan || ''}` : '—'}
                           </td>
-                          <td className="px-4 py-3 text-right text-xs font-medium tabular-nums text-navy-700">
-                            {item.bobot_persen}%
+                          <td className="px-4 py-3 text-right">
+                            <span className="badge badge-weight tabular-nums">{item.bobot_persen}%</span>
                           </td>
                           <td className="px-4 py-3 text-center">
                             {itemReportsMap[item.id]?.length > 0 ? (
-                              <span className="inline-block rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-medium text-sky-700 ring-1 ring-sky-200/70">
+                              <span className="badge bg-canvas text-ink">
                                 {itemReportsMap[item.id].length} reports
                               </span>
                             ) : (
-                              <span className="text-[11px] text-navy-400">Not reported</span>
+                              <span className="text-[11px] text-ink-secondary">Not reported</span>
                             )}
                             {itemReportsMap[item.id]?.length > 0 && (
-                              <p className="mt-1 text-[10px] text-navy-500">
+                              <p className="mt-1 text-[10px] text-ink-secondary">
                                 Weeks: {itemReportsMap[item.id]
                                   .map((report) => `${report.minggu_ke} (${report.status_verifikasi})`)
                                   .join(', ')}
@@ -976,7 +943,7 @@ export default function MandorDashboard() {
                             )}
                           </td>
                           <td className="px-4 py-3 text-right">
-                            <span className="btn-primary rounded-lg px-3 py-1.5 text-xs">
+                            <span className="btn-primary px-3">
                               <Send className="h-3 w-3" />
                               Report progress
                             </span>
@@ -986,23 +953,23 @@ export default function MandorDashboard() {
                     </tbody>
                   </table>
                   </div>
-                  <div className="divide-y divide-navy-100 sm:hidden">
+                  <div className="divide-y divide-line lg:hidden">
                     {filteredRabItems.map((item) => {
                       const reports = itemReportsMap[item.id] || [];
                       return (
                         <article key={item.id} data-rab-card={item.id} className="space-y-3 p-4">
                           <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
-                              <p className="text-[11px] font-mono text-navy-500">{item.kode_pekerjaan}</p>
-                              <h4 className="mt-1 break-words text-sm font-semibold leading-5 text-navy-800">
+                              <p className="text-[11px] font-mono text-ink-secondary">{item.kode_pekerjaan}</p>
+                              <h4 className="mt-1 break-words text-sm font-semibold leading-5 text-ink">
                                 {item.nama_pekerjaan}
                               </h4>
                             </div>
-                            <span className="shrink-0 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700 ring-1 ring-brand-200/70">
+                            <span className="badge badge-weight shrink-0 tabular-nums">
                               {item.bobot_persen}% weight
                             </span>
                           </div>
-                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-navy-500">
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-secondary">
                             <span>Volume: {item.volume ? `${item.volume} ${item.satuan || ''}` : '—'}</span>
                             <span>{reports.length ? `${reports.length} report${reports.length === 1 ? '' : 's'}` : 'Not reported'}</span>
                           </div>
@@ -1011,7 +978,7 @@ export default function MandorDashboard() {
                               {reports.map((report) => (
                                 <span
                                   key={report.id}
-                                  className="rounded-full bg-navy-50 px-2 py-1 text-[11px] text-navy-600 ring-1 ring-navy-200/70"
+                                  className="rounded-full bg-canvas px-2 py-1 text-[11px] text-ink-secondary ring-1 ring-line/70"
                                 >
                                   Week {report.minggu_ke} · {report.status_verifikasi}
                                 </span>
@@ -1021,7 +988,7 @@ export default function MandorDashboard() {
                           <button
                             type="button"
                             onClick={() => handleOpenReportForm(item.id)}
-                            className="btn-primary min-h-10 w-full rounded-lg px-3 py-2 text-sm"
+                            className="btn-primary w-full px-3"
                           >
                             <Send className="h-4 w-4" />
                             Report progress
@@ -1039,13 +1006,8 @@ export default function MandorDashboard() {
           {/* Section 2: project report history */}
           {activeTab === 'laporan' && (
             <section key="project-reports-panel" className="anim-content-enter overflow-hidden surface">
-              <div className="flex flex-col gap-3 border-b border-navy-100 p-4 lg:flex-row lg:items-center lg:justify-between">
-                <div>
-                  <h3 className="text-sm font-semibold text-navy-800">Project Report History</h3>
-                  <p className="mt-0.5 text-xs text-navy-500">
-                    Verification status of the progress reports you submitted for this project.
-                  </p>
-                </div>
+              <div className="flex flex-col gap-3 border-b border-line p-4 lg:flex-row lg:items-center lg:justify-between">
+                <h3 className="text-section text-ink">Project Report History</h3>
 
                 <div role="group" aria-label="Filter report status" className="seg w-fit max-w-full overflow-x-auto">
                   {[
@@ -1058,25 +1020,22 @@ export default function MandorDashboard() {
                       key={filter.value}
                       type="button"
                       onClick={() => setHistoryFilter(filter.value)}
-                      className={`seg-item shrink-0 px-3 py-1.5 !text-xs ${
-                        historyFilter === filter.value
-                          ? 'seg-active'
-                          : ''
-                      }`}
+                      className={`seg-item isolate whitespace-nowrap shrink-0 px-3 ${ historyFilter === filter.value ? 'text-orange-700' : '' }`}
                     >
+                      {historyFilter === filter.value && <TabPill layoutId="foreman-historyFilter" />}
                       {filter.label}
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="border-b border-navy-100 px-4 py-3">
-                <label className="flex min-w-0 flex-col gap-1.5 text-xs text-navy-600 sm:flex-row sm:items-center sm:gap-2">
+              <div className="border-b border-line px-4 py-3">
+                <label className="flex min-w-0 flex-col gap-1.5 text-xs text-ink-secondary sm:flex-row sm:items-center sm:gap-2">
                   <span className="shrink-0 font-medium">Filter by work item</span>
                   <select
                     value={historyItemFilter}
                     onChange={(event) => setHistoryItemFilter(event.target.value)}
-                    className="min-w-0 max-w-full rounded-full border border-navy-200 bg-white px-3 py-1.5 text-xs text-navy-700 shadow-sm hover:border-navy-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 sm:max-w-md"
+                    className="min-w-0 max-w-full rounded-full border border-line bg-white px-3 py-1.5 text-xs text-ink shadow-sm hover:border-line focus:border-orange-500 focus:ring-2 focus:ring-orange-100 sm:max-w-md"
                   >
                     <option value="all">All work items</option>
                     {rabItems.map((item) => (
@@ -1091,18 +1050,15 @@ export default function MandorDashboard() {
               <div className="min-h-[35vh] overflow-visible sm:h-[min(520px,65vh)] sm:min-h-[220px] sm:overflow-auto sm:overscroll-contain">
                 {visibleHistory.length === 0 ? (
                   <div className="px-4 py-10 text-center">
-                    <p className="text-sm font-medium text-navy-700">
+                    <p className="text-sm font-medium text-ink">
                       {history.length ? 'No reports with this status.' : 'No reports for this project yet.'}
                     </p>
                     {!history.length && (
                       <>
-                        <p className="mt-1 text-xs text-navy-500">
-                          Open Work items to send your first progress update.
-                        </p>
                         <button
                           type="button"
                           onClick={() => setActiveTab('rab')}
-                          className="btn-primary mt-3 min-h-10 rounded-lg px-4 py-2 text-sm"
+                          className="btn-primary mt-3 px-4"
                         >
                           View work items
                         </button>
@@ -1111,9 +1067,9 @@ export default function MandorDashboard() {
                   </div>
                 ) : (
                   <>
-                  <div className="hidden overflow-x-auto sm:block">
+                  <div className="hidden overflow-x-auto lg:block">
                   <table key={`${historyFilter}-${historyItemFilter}`} className="table-soft w-full min-w-[680px] animate-[fade-in_180ms_ease-out] text-left text-sm">
-                    <thead className="sticky top-0 z-[1] bg-navy-50 text-xs text-navy-500 shadow-[inset_0_-1px_0_rgba(226,232,240,1)]">
+                    <thead className="sticky top-0 z-[1] bg-canvas text-xs text-ink-secondary shadow-[inset_0_-1px_0_theme(colors.line)]">
                       <tr>
                         <th className="px-4 py-3 font-medium">Work Item</th>
                         <th className="px-4 py-3 font-medium">Week</th>
@@ -1123,14 +1079,14 @@ export default function MandorDashboard() {
                         <th className="px-4 py-3 text-right font-medium">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-navy-100">
+                    <tbody className="divide-y divide-line">
                       {visibleHistory.map((report) => (
                         <tr key={report.id}>
                           <td className="px-4 py-3">
-                            <p className="font-medium text-navy-800">{report.nama_pekerjaan}</p>
-                            <p className="text-xs text-navy-400">[{report.kode_pekerjaan}] · Weight: {report.bobot_persen}%</p>
+                            <p className="font-medium text-ink">{report.nama_pekerjaan}</p>
+                            <p className="text-xs text-ink-secondary">[{report.kode_pekerjaan}] · Weight: {report.bobot_persen}%</p>
                             {report.catatan_pengawas && (
-                              <p className="mt-1 text-xs text-amber-700 bg-amber-50 rounded-lg px-2 py-1 ring-1 ring-amber-200/60">
+                              <p className="mt-1 text-xs text-warning-text bg-warning-soft rounded-lg px-2 py-1 ring-1 ring-warning/30">
                                 Supervisor Note: {report.catatan_pengawas}
                               </p>
                             )}
@@ -1142,7 +1098,7 @@ export default function MandorDashboard() {
                                   alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
                                   subtitle: `Submitted on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
                                 })}
-                                className="group relative mt-2 block overflow-hidden rounded-md border border-navy-200 transition hover:border-brand-400 hover:shadow-soft focus:outline-none"
+                                className="group relative mt-2 block overflow-hidden rounded-md border border-line transition hover:border-orange-500 hover:shadow-card focus:outline-none"
                               >
                                 <img
                                   src={report.foto_bukti}
@@ -1152,9 +1108,9 @@ export default function MandorDashboard() {
                               </button>
                             )}
                           </td>
-                          <td className="px-4 py-3 text-xs text-navy-600">Week {report.minggu_ke}</td>
-                          <td className="px-4 py-3 text-xs text-navy-500">{formatDate(report.tgl_laporan)}</td>
-                          <td className="px-4 py-3 text-right text-xs font-semibold tabular-nums text-navy-800">
+                          <td className="px-4 py-3 text-xs text-ink-secondary">Week {report.minggu_ke}</td>
+                          <td className="px-4 py-3 text-xs text-ink-secondary">{formatDate(report.tgl_laporan)}</td>
+                          <td className="px-4 py-3 text-right text-xs font-semibold tabular-nums text-ink">
                             {Number(report.realisasi_bobot)}%
                           </td>
                           <td className="px-4 py-3 text-right">
@@ -1166,20 +1122,20 @@ export default function MandorDashboard() {
                                 <button
                                   type="button"
                                   onClick={() => handleEditReport(report)}
-                                  className="btn-secondary rounded-lg px-2.5 py-1 text-xs"
+                                  className="btn-secondary px-2.5"
                                 >
                                   Edit
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => setReportToDelete(report)}
-                                  className="btn-danger-outline rounded-lg px-2.5 py-1 text-xs"
+                                  className="btn-danger-outline px-2.5"
                                 >
                                   Delete
                                 </button>
                               </div>
                             ) : report.status_verifikasi === 'approved' ? (
-                              <span className="text-xs text-navy-400">Locked</span>
+                              <span className="text-xs text-ink-secondary">Locked</span>
                             ) : null}
                           </td>
                         </tr>
@@ -1187,28 +1143,28 @@ export default function MandorDashboard() {
                     </tbody>
                   </table>
                   </div>
-                  <div key={`${historyFilter}-${historyItemFilter}`} className="divide-y divide-navy-100 animate-[fade-in_180ms_ease-out] sm:hidden">
+                  <div key={`${historyFilter}-${historyItemFilter}`} className="divide-y divide-line animate-[fade-in_180ms_ease-out] lg:hidden">
                     {visibleHistory.map((report) => (
-                      <article key={report.id} className="space-y-3 p-4 even:bg-navy-50/60">
+                      <article key={report.id} className="space-y-3 p-4 even:bg-canvas">
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
-                            <h4 className="break-words text-sm font-semibold leading-5 text-navy-800">
+                            <h4 className="break-words text-sm font-semibold leading-5 text-ink">
                               {report.nama_pekerjaan}
                             </h4>
-                            <p className="mt-1 text-xs text-navy-500">
+                            <p className="mt-1 text-xs text-ink-secondary">
                               [{report.kode_pekerjaan}] · Week {report.minggu_ke}
                             </p>
                           </div>
                           <StatusBadge status={report.status_verifikasi} />
                         </div>
-                        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-navy-500">
+                        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-ink-secondary">
                           <span>{formatDate(report.tgl_laporan)}</span>
-                          <span className="font-semibold text-navy-800">
+                          <span className="font-semibold text-ink">
                             {Number(report.realisasi_bobot)}% actual
                           </span>
                         </div>
                         {report.catatan_pengawas && (
-                          <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs leading-5 text-amber-800">
+                          <p className="rounded-lg bg-warning-soft px-3 py-2 text-xs leading-5 text-warning-text">
                             Supervisor note: {report.catatan_pengawas}
                           </p>
                         )}
@@ -1220,7 +1176,7 @@ export default function MandorDashboard() {
                               alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
                               subtitle: `Submitted on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
                             })}
-                            className="group relative inline-block overflow-hidden rounded-lg border border-navy-200 transition hover:border-brand-400 hover:shadow-soft focus:outline-none"
+                            className="group relative inline-block overflow-hidden rounded-lg border border-line transition hover:border-orange-500 hover:shadow-card focus:outline-none"
                           >
                             <img
                               src={report.foto_bukti}
@@ -1234,20 +1190,20 @@ export default function MandorDashboard() {
                             <button
                               type="button"
                               onClick={() => handleEditReport(report)}
-                              className="btn-secondary min-h-10 rounded-lg px-3 py-2 text-sm"
+                              className="btn-secondary px-3"
                             >
                               Edit
                             </button>
                             <button
                               type="button"
                               onClick={() => setReportToDelete(report)}
-                              className="btn-danger-outline min-h-10 rounded-lg px-3 py-2 text-sm"
+                              className="btn-danger-outline px-3"
                             >
                               Delete
                             </button>
                           </div>
                         ) : (
-                          <p className="text-xs text-navy-400">Approved reports are locked.</p>
+                          <p className="text-xs text-ink-secondary">Approved reports are locked.</p>
                         )}
                       </article>
                     ))}
@@ -1265,7 +1221,7 @@ export default function MandorDashboard() {
           type="button"
           onClick={() => router.push('/dashboard/mandor/laporan-baru')}
           aria-label="Submit progress report"
-          className="btn-primary fixed bottom-5 right-5 z-30 rounded-full px-4 py-3 text-xs active:scale-95 md:hidden"
+          className="btn-primary fixed bottom-5 right-5 z-30 px-4 active:scale-95 md:hidden"
         >
           <Send className="h-4 w-4" />
           <span>+ Report</span>
@@ -1275,7 +1231,7 @@ export default function MandorDashboard() {
       {/* Delete Report Confirmation Modal */}
       {reportToDelete && portalReady && createPortal(
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center min-h-screen overflow-y-auto bg-navy-900/30 p-4 modal-backdrop"
+          className="fixed inset-0 z-[100] flex items-center justify-center min-h-screen overflow-y-auto bg-navy-950/40 p-4 modal-backdrop"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget && !deletingReportId) {
               setReportToDelete(null);
@@ -1287,16 +1243,16 @@ export default function MandorDashboard() {
             aria-modal="true"
             aria-labelledby="delete-report-title"
             aria-describedby="delete-report-description"
-            className="modal-panel w-full max-w-sm rounded-2xl border border-navy-200/70 bg-white p-5 shadow-lift"
+            className="modal-panel w-full max-w-sm rounded-dialog border border-line bg-surface p-5 shadow-dialog"
           >
-            <h2 id="delete-report-title" className="text-base font-semibold text-navy-800">
+            <h2 id="delete-report-title" className="text-base font-semibold text-ink">
               Delete this report?
             </h2>
-            <p id="delete-report-description" className="mt-2 text-sm leading-6 text-navy-600">
+            <p id="delete-report-description" className="mt-2 text-sm leading-6 text-ink-secondary">
               The report for Week {reportToDelete.minggu_ke} will be permanently deleted. This action cannot be undone.
             </p>
             {actionMsg?.type === 'error' && (
-              <p role="alert" className="mt-3 rounded-xl bg-rose-50 px-3 py-2 text-xs text-rose-700">
+              <p role="alert" className="mt-3 rounded-xl bg-danger-soft px-3 py-2 text-xs text-danger">
                 {actionMsg.text}
               </p>
             )}
@@ -1305,7 +1261,7 @@ export default function MandorDashboard() {
                 type="button"
                 disabled={Boolean(deletingReportId)}
                 onClick={() => setReportToDelete(null)}
-                className="btn-secondary min-h-10 px-4 py-2 text-sm"
+                className="btn-secondary px-4"
               >
                 Cancel
               </button>
@@ -1313,7 +1269,7 @@ export default function MandorDashboard() {
                 type="button"
                 disabled={Boolean(deletingReportId)}
                 onClick={() => handleDeleteReport(reportToDelete)}
-                className="btn-danger min-h-10 px-4 py-2 text-sm disabled:cursor-wait"
+                className="btn-danger px-4 disabled:cursor-wait"
               >
                 {deletingReportId ? 'Deleting...' : 'Delete report'}
               </button>

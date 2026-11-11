@@ -31,9 +31,12 @@ import {
   Pencil,
   Upload,
   X,
+  Info,
 } from 'lucide-react';
 import { useProject } from '@/components/ProjectContext';
 import DashboardHeader from '@/components/DashboardHeader';
+import { motion } from 'framer-motion';
+import { listVariants, itemVariants, TabPill } from '@/components/motion';
 
 function formatDate(value) {
   if (!value) return '—';
@@ -47,8 +50,8 @@ function InfoRow({ icon, label, value }) {
     <div className="flex items-start gap-3 px-5 py-3">
       <span className="chip-orange flex h-8 w-8 shrink-0 items-center justify-center rounded-lg">{icon}</span>
       <div>
-        <p className="text-[11px] text-navy-500">{label}</p>
-        <p className="mt-0.5 text-sm font-medium text-navy-800">{value || '—'}</p>
+        <p className="text-[11px] text-ink-secondary">{label}</p>
+        <p className="mt-0.5 text-sm font-medium text-ink">{value || '—'}</p>
       </div>
     </div>
   );
@@ -407,36 +410,36 @@ export default function ManajemenDashboard() {
   const scheduleTone =
     delayStatus === 'delayed'
       ? {
-          chip: 'bg-rose-50 text-rose-700 border border-rose-200/80',
-          value: 'text-rose-700',
+          chip: 'bg-danger-soft text-danger border border-danger/30',
+          value: 'text-danger',
           icon: (
             <span className="relative flex h-2 w-2 mr-0.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-danger"></span>
             </span>
           ),
         }
       : delayStatus === 'ahead'
       ? {
-          chip: 'bg-emerald-50 text-emerald-700 border border-emerald-200/80',
-          value: 'text-emerald-700',
+          chip: 'bg-success-soft text-success-text border border-success/30',
+          value: 'text-success-text',
           icon: (
             <span className="relative flex h-2 w-2 mr-0.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
             </span>
           ),
         }
       : delayStatus === 'on_track'
       ? {
-          chip: 'bg-amber-50 text-amber-700 border border-amber-200/80',
-          value: 'text-amber-700',
-          icon: <span className="inline-flex rounded-full h-2 w-2 bg-amber-500 mr-0.5"></span>,
+          chip: 'bg-warning-soft text-warning-text border border-warning/30',
+          value: 'text-warning-text',
+          icon: <span className="inline-flex rounded-full h-2 w-2 bg-warning mr-0.5"></span>,
         }
       : {
-          chip: 'bg-navy-100 text-navy-600 border border-navy-200',
-          value: 'text-navy-500',
-          icon: <span className="inline-flex rounded-full h-2 w-2 bg-navy-400 mr-0.5"></span>,
+          chip: 'bg-canvas text-ink-secondary border border-line',
+          value: 'text-ink-secondary',
+          icon: <span className="inline-flex rounded-full h-2 w-2 bg-navy-300 mr-0.5"></span>,
         };
 
   const totalBobot  = rabItems.reduce((s, i) => s + Number(i.bobot_persen || 0), 0);
@@ -481,7 +484,7 @@ export default function ManajemenDashboard() {
         }
         subtitle={
           activeView === 'detail' && selectedWorkItem
-            ? `${selectedWorkItem.kode_pekerjaan} · Review records and evidence`
+            ? selectedWorkItem.kode_pekerjaan
             : activeView === 'detail' && activeProject
             ? `${activeProject.lokasi || 'Active project'} · ${rabItems.length} Cost Estimate items · ${laporan.length} reports`
             : `${projects.length} projects · ${totalRabItems} Cost Estimate items`
@@ -500,11 +503,12 @@ export default function ManajemenDashboard() {
               selectProject(null);
               setActiveView('projects');
             }}
-            className={`seg-item px-2 sm:px-4 ${activeView === 'projects' ? 'seg-active' : ''}`}
+            className={`seg-item isolate whitespace-nowrap px-2 sm:px-4 ${activeView === 'projects' ? 'text-orange-700' : ''}`}
           >
+            {activeView === 'projects' && <TabPill layoutId="mgmt-tab-pill" />}
             <FolderKanban className="h-4 w-4" />
             All Projects
-            <span className={`rounded-full px-1.5 text-[11px] font-semibold ${activeView === 'projects' ? 'bg-white/25 text-white' : 'bg-navy-100 text-navy-500'}`}>{projects.length}</span>
+            <span className={`rounded-full px-1.5 text-[11px] font-semibold ${activeView === 'projects' ? 'bg-orange-50 text-orange-700' : 'bg-surface text-ink-secondary'}`}>{projects.length}</span>
           </button>
           <button
             type="button"
@@ -512,30 +516,18 @@ export default function ManajemenDashboard() {
             aria-selected={activeView === 'detail'}
             onClick={() => { if (selectedId) setActiveView('detail'); }}
             disabled={!selectedId}
-            className={`seg-item px-2 sm:px-4 ${
-              activeView === 'detail'
-                ? 'seg-active'
-                : selectedId
-                ? ''
-                : 'cursor-not-allowed !text-navy-300'
-            }`}
+            className={`seg-item isolate whitespace-nowrap px-2 sm:px-4 ${ activeView === 'detail' ? 'text-orange-700' : selectedId ? '' : 'cursor-not-allowed !text-ink-muted' }`}
           >
+            {activeView === 'detail' && <TabPill layoutId="mgmt-tab-pill" />}
             <LayoutDashboard className="h-4 w-4" />
             Project Detail
             {selectedId && activeProject && (
-              <span className={`max-w-[100px] truncate text-[11px] font-medium ${activeView === 'detail' ? 'text-white/85' : 'text-brand-700'}`}>
+              <span className={`hidden max-w-[100px] truncate text-[11px] font-medium sm:inline ${activeView === 'detail' ? 'text-orange-700' : 'text-ink-secondary'}`}>
                 {activeProject.nama_proyek}
               </span>
             )}
           </button>
         </div>
-        <p className="text-xs text-navy-400">
-          {activeView === 'projects'
-            ? 'Click “Open” on a project to view its details and S-Curve.'
-            : selectedWorkItem
-            ? 'Review all reports and evidence submitted for this work item.'
-            : 'Showing details and S-Curve for the selected project.'}
-        </p>
       </div>
 
       {/* ══════════════════════════════════════════════════ */}
@@ -543,7 +535,7 @@ export default function ManajemenDashboard() {
       {/* ══════════════════════════════════════════════════ */}
       {activeView === 'projects' && (
         <div className="anim-content-enter space-y-5">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 stagger-grid">
+          <motion.div variants={listVariants} initial="hidden" animate="show" className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
             <StatCard
               icon={<FolderKanban className="h-4 w-4" />}
               tone="orange"
@@ -556,93 +548,98 @@ export default function ManajemenDashboard() {
               label="Cost Estimate Items"
               value={projectsLoading ? '—' : totalRabItems}
             />
-            <div className="surface card-hover col-span-2 flex min-w-0 items-center gap-3 p-4 sm:col-span-1 sm:p-5">
-              <span className="chip-teal flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
+            <motion.div variants={itemVariants} className="surface col-span-2 flex min-w-0 items-center gap-3 p-4 sm:p-5 lg:col-span-1">
+              <span className="chip-orange flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
                 <LayoutDashboard className="h-4 w-4" />
               </span>
               <div className="min-w-0">
-                <p className="text-xs font-medium text-navy-500">Current Project</p>
-                <p className="mt-1 truncate text-base font-semibold text-navy-800">
+                <p className="text-xs font-medium text-ink-secondary">Current Project</p>
+                <p className="mt-1 truncate text-base font-semibold text-ink">
                   {selected?.nama_proyek || 'None selected'}
                 </p>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           <section className="overflow-hidden surface">
-          <div className="flex flex-col gap-3 border-b border-navy-100 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-            <div>
-              <h3 className="text-sm font-semibold text-navy-800">All Projects</h3>
-              <p className="mt-0.5 text-xs text-navy-500">
-                Choose a project to view its progress, S-Curve, and work items.
-              </p>
-            </div>
-            <label className="flex w-full items-center gap-2 rounded-full border border-navy-200 bg-white px-3.5 py-2 shadow-sm sm:max-w-xs focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-100 transition">
-              <Search className="h-4 w-4 shrink-0 text-navy-400" />
+          <div className="flex flex-col gap-3 border-b border-line p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+            <h3 className="shrink-0 whitespace-nowrap text-section text-ink">All Projects</h3>
+            <label className="flex h-10 w-full min-w-0 items-center gap-2 rounded-xl border border-line bg-surface px-3 transition focus-within:border-orange-500 focus-within:ring-4 focus-within:ring-orange-100 sm:max-w-xs">
+              <Search className="h-4 w-4 shrink-0 text-ink-secondary" />
               <input
                 type="search"
                 value={projectQuery}
                 onChange={(e) => setProjectQuery(e.target.value)}
                 placeholder="Search projects or location..."
-                className="w-full bg-transparent text-base sm:text-sm outline-none placeholder:text-navy-400"
+                className="w-full bg-transparent text-base sm:text-sm outline-none placeholder:text-ink-secondary"
               />
             </label>
           </div>
           <div className="p-3 sm:p-5">
             {projectsLoading ? (
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 2xl:grid-cols-3">
                 {Array.from({ length: 3 }, (_, index) => (
-                  <div key={index} className="h-40 rounded-xl shimmer border border-navy-100" />
+                  <div key={index} className="h-40 rounded-xl shimmer border border-line" />
                 ))}
               </div>
             ) : visibleProjects.length > 0 ? (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 stagger-grid">
+              <motion.div variants={listVariants} initial="hidden" animate="show" className="grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-3">
                 {visibleProjects.map((project) => {
                   const active = Number(selectedId) === Number(project.id);
                   return (
-                    <article
+                    <motion.article
                       key={project.id}
-                      className={`card-hover flex min-w-0 flex-col rounded-2xl border p-5 ${
-                        active ? 'border-brand-300 bg-brand-50/50 shadow-soft ring-1 ring-brand-200/60' : 'border-navy-200/70 bg-white shadow-sm'
-                      }`}
+                      variants={itemVariants}
+                      className={`flex min-w-0 flex-col rounded-card border p-5 shadow-card ${ active ? 'border-orange-100 bg-cream' : 'border-line bg-surface' }`}
                     >
                       <div className="flex items-start gap-3">
                         <span className="chip-orange flex h-11 w-11 shrink-0 items-center justify-center rounded-xl">
                           <FolderKanban className="h-5 w-5" />
                         </span>
                         <div className="min-w-0 flex-1">
-                          <h4 className="break-words text-sm font-semibold leading-5 text-navy-800">
+                          <h4 className="break-words text-sm font-semibold leading-5 text-ink">
                             {project.nama_proyek}
                           </h4>
-                          <p className="mt-1 flex items-start gap-1.5 break-words text-xs text-navy-500">
+                          <p className="mt-1 flex items-start gap-1.5 break-words text-xs text-ink-secondary">
                             <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                             {project.lokasi || 'Location not set'}
                           </p>
                         </div>
                       </div>
-                      <div className="mt-4 grid grid-cols-2 gap-2 rounded-xl border border-navy-100 bg-navy-50/70 px-3.5 py-3">
+                      <div className="mt-4 grid grid-cols-2 gap-2 rounded-xl bg-canvas px-3.5 py-3">
                         <div>
-                          <p className="text-[10px] uppercase tracking-wide text-navy-400">Cost Estimate Items</p>
-                          <p className="mt-0.5 text-sm font-semibold text-navy-800">{Number(project.rab_count || 0)}</p>
+                          <p className="text-[10px] uppercase tracking-wide text-ink-secondary">Cost Estimate Items</p>
+                          <p className="mt-0.5 text-sm font-semibold text-ink">{Number(project.rab_count || 0)}</p>
                         </div>
                         <div>
-                          <p className="text-[10px] uppercase tracking-wide text-navy-400">Start Date</p>
-                          <p className="mt-0.5 text-xs font-medium text-navy-700">{formatDate(project.tgl_mulai)}</p>
+                          <p className="text-[10px] uppercase tracking-wide text-ink-secondary">Start Date</p>
+                          <p className="mt-0.5 text-xs font-medium text-ink">{formatDate(project.tgl_mulai)}</p>
                         </div>
                       </div>
-                      <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-                        {active ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-100/70 px-2 py-0.5 text-[11px] font-medium text-brand-700"><span className="h-1.5 w-1.5 rounded-full bg-brand-500" />Selected project</span>
-                        ) : <span />}
-                        <div className="flex flex-wrap items-center gap-1.5">
+                      <div className="mt-auto space-y-2 pt-4">
+                        {active && (
+                          <span className="badge bg-orange-50 text-orange-700"><span className="h-1.5 w-1.5 rounded-full bg-orange-500" />Selected project</span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            selectProject(project.id);
+                            setActiveView('detail');
+                          }}
+                          className="btn-primary w-full"
+                        >
+                          Open project
+                          <ChevronRight className="h-4 w-4" />
+                        </button>
+                        <div className="grid grid-cols-2 gap-2">
                           <button
                             type="button"
                             onClick={() => openEditProjectModal(project)}
                             aria-label={`Edit ${project.nama_proyek}`}
                             title="Edit project details"
-                            className="btn-secondary rounded-lg px-2.5 py-2 text-xs"
+                            className="btn-secondary px-3"
                           >
-                            <Pencil className="h-3.5 w-3.5" />
+                            <Pencil className="h-4 w-4" />
                             Edit
                           </button>
                           <button
@@ -650,40 +647,24 @@ export default function ManajemenDashboard() {
                             onClick={() => setProjectToDelete(project)}
                             aria-label={`Delete ${project.nama_proyek}`}
                             title="Delete project"
-                            className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-white px-2.5 py-2 text-xs font-medium text-rose-600 transition hover:border-rose-300 hover:bg-rose-50"
+                            className="btn-danger-outline px-3"
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
+                            <Trash2 className="h-4 w-4" />
                             Delete
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              selectProject(project.id);
-                              setActiveView('detail');
-                            }}
-                            className="btn-primary rounded-lg px-3 py-2 text-xs"
-                          >
-                            Open project
-                            <ChevronRight className="h-3.5 w-3.5" />
                           </button>
                         </div>
                       </div>
-                    </article>
+                    </motion.article>
                   );
                 })}
-              </div>
+              </motion.div>
             ) : (
               <div className="flex flex-col items-center px-4 py-10 text-center sm:py-14">
-                <span className="chip-orange flex h-12 w-12 items-center justify-center rounded-2xl">
+                <span className="chip-orange flex h-12 w-12 items-center justify-center rounded-xl">
                   <FolderKanban className="h-6 w-6" />
                 </span>
-                <h4 className="mt-4 text-sm font-semibold text-navy-800">
+                <p className="mt-3 text-sm font-medium text-ink-secondary">
                   {projects.length ? 'No projects match your search.' : 'No projects yet'}
-                </h4>
-                <p className="mt-1 max-w-sm text-xs leading-5 text-navy-500">
-                  {projects.length
-                    ? 'Try another project name or location.'
-                    : 'Create a project with the plus button in the sidebar and upload its Cost Estimate at the same time.'}
                 </p>
               </div>
             )}
@@ -697,15 +678,12 @@ export default function ManajemenDashboard() {
       {/* ══════════════════════════════════════════════════ */}
       {activeView === 'detail' && !selectedId && (
         <div className="anim-content-enter surface p-10 text-center">
-          <FolderKanban className="mx-auto h-12 w-12 text-brand-300" />
-          <h3 className="mt-3 text-base font-semibold text-navy-800">No project selected</h3>
-          <p className="mt-1 text-xs text-navy-500">
-            Pick a project from the list or sidebar to view its S-Curve and work items.
-          </p>
+          <FolderKanban className="mx-auto h-10 w-10 text-ink-muted" />
+          <h3 className="mt-3 text-section text-ink">No project selected</h3>
           <button
             type="button"
             onClick={() => setActiveView('projects')}
-            className="btn-primary mt-4 px-4 py-2.5 text-xs"
+            className="btn-primary mt-4 px-4"
           >
             <ArrowLeft className="h-4 w-4" />
             View All Projects
@@ -726,7 +704,7 @@ export default function ManajemenDashboard() {
                   setActiveView('projects');
                 }
               }}
-              className="btn-secondary rounded-full px-3.5 py-1.5 text-xs"
+              className="btn-secondary px-3.5"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               {selectedWorkItem ? 'Back to Work Items' : 'Back to Projects'}
@@ -736,7 +714,7 @@ export default function ManajemenDashboard() {
                 <button
                   type="button"
                   onClick={() => openEditProjectModal(activeProject)}
-                  className="btn-secondary rounded-full px-3.5 py-1.5 text-xs"
+                  className="btn-secondary px-3.5"
                 >
                   <Pencil className="h-3.5 w-3.5" />
                   Edit Project
@@ -744,7 +722,7 @@ export default function ManajemenDashboard() {
                 <button
                   type="button"
                   onClick={() => setProjectToDelete(activeProject)}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-white px-3.5 py-1.5 text-xs font-medium text-rose-600 shadow-sm hover:border-rose-300 hover:bg-rose-50 transition"
+                  className="btn-danger-outline"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                   Delete Project
@@ -756,7 +734,7 @@ export default function ManajemenDashboard() {
           {/* ── Stat Cards ── */}
           {!selectedWorkItem && (
             <>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 stagger-grid">
+            <motion.div variants={listVariants} initial="hidden" animate="show" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
               <StatCard
                 icon={<Wallet className="w-4 h-4" />}
                 tone="sky"
@@ -806,18 +784,14 @@ export default function ManajemenDashboard() {
                     : 'slate'
                 }
               />
-            </div>
+            </motion.div>
 
             {/* ── Schedule Status: Actual vs Planned ── */}
             <section className="anim-content-enter overflow-hidden surface">
-              <div className="flex flex-col gap-3 border-b border-navy-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+              <div className="flex flex-col gap-3 border-b border-line px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
                 <div className="min-w-0">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">Schedule Status</p>
-                  <h3 className="mt-1 text-sm font-semibold text-navy-800">Actual vs Planned Status</h3>
-                  <p className="mt-0.5 text-xs text-navy-500">
-                    {currentWeekNumber ? `As of Week ${currentWeekNumber}. ` : ''}
-                    A quick read of how far the actual work is from the plan.
-                  </p>
+                  <h3 className="text-section text-ink">Actual vs Planned Status</h3>
+                  {currentWeekNumber ? <p className="mt-0.5 text-xs text-ink-secondary">As of Week {currentWeekNumber}</p> : null}
                 </div>
                 <span className={`inline-flex shrink-0 items-center gap-1.5 self-start rounded-full px-3 py-1.5 text-xs font-semibold ${scheduleTone.chip}`}>
                   {scheduleTone.icon}
@@ -825,50 +799,48 @@ export default function ManajemenDashboard() {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 divide-y divide-navy-100 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+              <div className="grid grid-cols-1 divide-y divide-line lg:grid-cols-3 lg:divide-x lg:divide-y-0">
                 {/* Actual */}
-                <div className="p-4 sm:p-5">
+                <div className="p-4 sm:p-5" title="Work completed so far">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-medium text-navy-500">Actual progress</p>
-                    <Activity className="h-4 w-4 text-brand-500" />
+                    <p className="text-xs font-medium text-ink-secondary">Actual progress</p>
+                    <Activity className="h-4 w-4 text-orange-500" />
                   </div>
-                  <div className="mt-2 text-2xl font-semibold tracking-tight text-navy-800">
+                  <div className="mt-2 text-2xl font-semibold tracking-tight text-ink">
                     {loading ? '—' : lastRealisasi != null ? <AnimatedCounter value={lastRealisasi} suffix="%" /> : '—'}
                   </div>
-                  <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-navy-100">
-                    <div className="h-full rounded-full bg-brand-500 transition-all duration-700 ease-out" style={{ width: `${clampPct(lastRealisasi)}%` }} />
+                  <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-canvas">
+                    <div className="h-full rounded-full bg-orange-500 transition-all duration-700 ease-out" style={{ width: `${clampPct(lastRealisasi)}%` }} />
                   </div>
-                  <p className="mt-2 text-[11px] text-navy-400">Work completed so far</p>
                 </div>
 
                 {/* Planned */}
-                <div className="p-4 sm:p-5">
+                <div className="p-4 sm:p-5" title="What should be done by now">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-medium text-navy-500">
+                    <p className="text-xs font-medium text-ink-secondary">
                       {currentWeekNumber ? `Planned target (W${currentWeekNumber})` : 'Planned target'}
                     </p>
-                    <TrendingUp className="h-4 w-4 text-teal-500" />
+                    <TrendingUp className="h-4 w-4 text-navy-800" />
                   </div>
-                  <div className="mt-2 text-2xl font-semibold tracking-tight text-navy-800">
+                  <div className="mt-2 text-2xl font-semibold tracking-tight text-ink">
                     {loading ? '—' : plannedDisplayValue != null ? <AnimatedCounter value={plannedDisplayValue} suffix="%" /> : '—'}
                   </div>
-                  <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-navy-100">
-                    <div className="h-full rounded-full bg-teal-500 transition-all duration-700 ease-out" style={{ width: `${clampPct(plannedDisplayValue)}%` }} />
+                  <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-canvas">
+                    <div className="h-full rounded-full bg-navy-800 transition-all duration-700 ease-out" style={{ width: `${clampPct(plannedDisplayValue)}%` }} />
                   </div>
-                  <p className="mt-2 text-[11px] text-navy-400">What should be done by now</p>
                 </div>
 
                 {/* Status / Variance */}
                 <div className="p-4 sm:p-5">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-medium text-navy-500">
+                    <p className="text-xs font-medium text-ink-secondary">
                       {delayStatus === 'ahead'
                         ? 'Ahead of Schedule'
                         : delayStatus === 'delayed'
                         ? 'Delay'
                         : 'Schedule Status'}
                     </p>
-                    <Clock className="h-4 w-4 text-navy-300" />
+                    <Clock className="h-4 w-4 text-ink-muted" />
                   </div>
                   <p className={`mt-2 text-2xl font-semibold tracking-tight ${scheduleTone.value}`}>
                     {loading ? '—' : delayBigValue}
@@ -877,7 +849,7 @@ export default function ManajemenDashboard() {
                     {scheduleTone.icon}
                     {loading ? 'Loading...' : delayBigCaption}
                   </p>
-                  <p className="mt-2 text-[11px] text-navy-400">
+                  <p className="mt-2 text-[11px] text-ink-secondary">
                     {deviasi != null
                       ? `${deviasi > 0 ? '+' : ''}${deviasi}% vs plan`
                       : 'No approved reports yet'}
@@ -886,7 +858,7 @@ export default function ManajemenDashboard() {
               </div>
 
               {!loading && delaySummaryText && (
-                <p className="border-t border-navy-100 bg-navy-50/60 px-4 py-3 text-xs leading-5 text-navy-600 sm:px-5">
+                <p className="border-t border-line bg-canvas/60 px-4 py-3 text-xs leading-5 text-ink-secondary sm:px-5">
                   {delaySummaryText}
                 </p>
               )}
@@ -896,28 +868,28 @@ export default function ManajemenDashboard() {
 
           {/* Item review records */}
           {selectedWorkItem && <section className="anim-content-enter overflow-hidden surface">
-            <div className="border-b border-navy-100 px-4 py-4 sm:px-5">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">
+            <div className="border-b border-line px-4 py-4 sm:px-5">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-secondary">
                 Work Item · {selectedWorkItem.kode_pekerjaan}
               </p>
-              <h3 className="mt-1 text-base font-semibold text-navy-800">{selectedWorkItem.nama_pekerjaan}</h3>
-              <p className="mt-0.5 text-xs text-navy-500">
+              <h3 className="mt-1 text-base font-semibold text-ink">{selectedWorkItem.nama_pekerjaan}</h3>
+              <p className="mt-0.5 text-xs text-ink-secondary">
                 {selectedWorkItem.volume ? `${selectedWorkItem.volume} ${selectedWorkItem.satuan || ''} · ` : ''}
                 Cost Estimate weight {Number(selectedWorkItem.bobot_persen).toFixed(2)}% ·{' '}
                 {selectedWorkItemApprovedProgress}% approved · {selectedWorkItemReports.length} reports
               </p>
             </div>
             {loading ? (
-              <p className="px-5 py-8 text-center text-sm text-navy-400">Loading reports...</p>
+              <p className="px-5 py-8 text-center text-sm text-ink-secondary">Loading reports...</p>
             ) : selectedWorkItemReports.length === 0 ? (
-              <p className="px-5 py-8 text-center text-sm text-navy-400">
+              <p className="px-5 py-8 text-center text-sm text-ink-secondary">
                 No progress reports have been submitted for this work item yet.
               </p>
             ) : (
               <>
                 <div className="hidden overflow-x-auto md:block">
                   <table className="table-soft w-full min-w-[760px] text-left text-sm">
-                    <thead className="bg-navy-50/80 text-xs text-navy-500">
+                    <thead className="bg-canvas/80 text-xs text-ink-secondary">
                       <tr>
                         <th className="px-4 py-3 font-medium">Week / Date</th>
                         <th className="px-4 py-3 font-medium">Foreman</th>
@@ -926,32 +898,32 @@ export default function ManajemenDashboard() {
                         <th className="px-4 py-3 font-medium">Evidence</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-navy-100">
+                    <tbody className="divide-y divide-line">
                       {selectedWorkItemReports.map((report) => (
                         <tr key={report.id} className="align-top">
                           <td className="px-4 py-3">
-                            <p className="font-medium text-navy-800">Week {report.minggu_ke}</p>
-                            <p className="mt-0.5 text-xs text-navy-400">
+                            <p className="font-medium text-ink">Week {report.minggu_ke}</p>
+                            <p className="mt-0.5 text-xs text-ink-secondary">
                               {formatDate(report.tgl_laporan)}
                             </p>
                           </td>
-                          <td className="px-4 py-3 text-xs text-navy-600">
+                          <td className="px-4 py-3 text-xs text-ink-secondary">
                             <p>{report.mandor_nama || 'Foreman'}</p>
                           </td>
-                          <td className="px-4 py-3 text-right font-semibold tabular-nums text-navy-800">
+                          <td className="px-4 py-3 text-right font-semibold tabular-nums text-ink">
                             {Number(report.realisasi_bobot)}%
                           </td>
                           <td className="max-w-[260px] px-4 py-3">
                             <StatusBadge status={report.status_verifikasi} />
                             {report.pengawas_nama && (
-                              <p className="mt-1 text-xs text-navy-500">Reviewed by {report.pengawas_nama}</p>
+                              <p className="mt-1 text-xs text-ink-secondary">Reviewed by {report.pengawas_nama}</p>
                             )}
                             {report.catatan_pengawas ? (
-                              <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-5 text-navy-600">
+                              <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-5 text-ink-secondary">
                                 {report.catatan_pengawas}
                               </p>
                             ) : (
-                              <p className="mt-1 text-xs text-navy-400">No review note</p>
+                              <p className="mt-1 text-xs text-ink-secondary">No review note</p>
                             )}
                           </td>
                           <td className="px-4 py-3">
@@ -963,7 +935,7 @@ export default function ManajemenDashboard() {
                                   alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
                                   subtitle: `Submitted by ${report.mandor_nama || 'Foreman'} on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
                                 })}
-                                className="group relative block overflow-hidden rounded-lg border border-navy-200 transition hover:border-brand-500 focus:outline-none"
+                                className="group relative block overflow-hidden rounded-lg border border-line transition hover:border-orange-500 focus:outline-none"
                               >
                                 <img
                                   src={report.foto_bukti}
@@ -972,7 +944,7 @@ export default function ManajemenDashboard() {
                                 />
                               </button>
                             ) : (
-                              <span className="text-xs text-navy-400">No photo attached</span>
+                              <span className="text-xs text-ink-secondary">No photo attached</span>
                             )}
                           </td>
                         </tr>
@@ -980,30 +952,30 @@ export default function ManajemenDashboard() {
                     </tbody>
                   </table>
                 </div>
-                <div className="divide-y divide-navy-100 md:hidden">
+                <div className="divide-y divide-line md:hidden">
                   {selectedWorkItemReports.map((report) => (
                     <article key={report.id} className="space-y-3 p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <h4 className="break-words text-sm font-semibold leading-5 text-navy-800">
+                          <h4 className="break-words text-sm font-semibold leading-5 text-ink">
                             Week {report.minggu_ke}
                           </h4>
-                          <p className="mt-1 text-xs text-navy-500">{formatDate(report.tgl_laporan)}</p>
+                          <p className="mt-1 text-xs text-ink-secondary">{formatDate(report.tgl_laporan)}</p>
                         </div>
                         <StatusBadge status={report.status_verifikasi} />
                       </div>
-                      <div className="flex items-center justify-between gap-3 text-xs text-navy-500">
+                      <div className="flex items-center justify-between gap-3 text-xs text-ink-secondary">
                         <span className="truncate">{report.mandor_nama || 'Foreman'}</span>
-                        <span className="shrink-0 font-semibold text-navy-800">
+                        <span className="shrink-0 font-semibold text-ink">
                           {Number(report.realisasi_bobot)}% actual
                         </span>
                       </div>
                       {report.pengawas_nama && (
-                        <p className="text-xs text-navy-500">Reviewed by {report.pengawas_nama}</p>
+                        <p className="text-xs text-ink-secondary">Reviewed by {report.pengawas_nama}</p>
                       )}
-                      <div className="rounded-lg bg-navy-50 p-3">
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-navy-500">Supervisor note</p>
-                        <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-5 text-navy-700">
+                      <div className="rounded-lg bg-canvas p-3">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-secondary">Supervisor note</p>
+                        <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-5 text-ink">
                           {report.catatan_pengawas || 'No review note'}
                         </p>
                       </div>
@@ -1015,17 +987,17 @@ export default function ManajemenDashboard() {
                             alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
                             subtitle: `Submitted by ${report.mandor_nama || 'Foreman'} on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
                           })}
-                          className="group relative block overflow-hidden rounded-lg border border-navy-200 transition hover:border-brand-500 focus:outline-none"
+                          className="group relative block overflow-hidden rounded-lg border border-line transition hover:border-orange-500 focus:outline-none"
                         >
                           <img
                             src={report.foto_bukti}
                             alt={`Evidence for ${report.nama_pekerjaan}, week ${report.minggu_ke}`}
                             className="h-28 w-40 rounded-lg object-cover transition duration-200 group-hover:scale-105"
                           />
-                          <span className="mt-1 block text-left text-xs font-medium text-brand-700">Tap to enlarge photo</span>
+                          <span className="mt-1 block text-left text-xs font-medium text-orange-700">Tap to enlarge photo</span>
                         </button>
                       ) : (
-                        <p className="text-xs text-navy-400">No photo evidence attached.</p>
+                        <p className="text-xs text-ink-secondary">No photo evidence attached.</p>
                       )}
                     </article>
                   ))}
@@ -1041,18 +1013,20 @@ export default function ManajemenDashboard() {
             <div className="space-y-5">
               {/* Kurva-S */}
               <section className="overflow-hidden surface">
-                <div className="border-b border-navy-100 px-5 py-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">Progress Visualization</p>
-                  <h3 className="mt-1 text-sm font-semibold text-navy-800">S-Curve (Planned vs Actual)</h3>
-                  <p className="mt-0.5 text-xs text-navy-500">
+                <div className="border-b border-line px-5 py-4">
+                  <h3 className="flex items-center gap-1.5 text-section text-ink">
+                    S-Curve (Planned vs Actual)
+                    <span tabIndex={0} role="img" aria-label="Weekly cumulative comparison. Actual progress includes approved reports from this and earlier weeks." title="Weekly cumulative comparison. Actual progress includes approved reports from this and earlier weeks." className="inline-flex cursor-help rounded-full text-ink-muted hover:text-orange-500"><Info className="h-3.5 w-3.5" /></span>
+                  </h3>
+                  <p className="mt-0.5 text-xs text-ink-secondary">
                     Weekly cumulative comparison. Actual progress includes approved reports from this and earlier weeks.
                   </p>
                 </div>
                 <div className="p-5">
                   {loading ? (
                     <div className="flex h-72 items-center justify-center">
-                      <div className="flex flex-col items-center gap-2 text-navy-400">
-                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-navy-200 border-t-brand-500" />
+                      <div className="flex flex-col items-center gap-2 text-ink-secondary">
+                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-line border-t-brand-500" />
                         <span className="text-xs">Loading data...</span>
                       </div>
                     </div>
@@ -1069,23 +1043,20 @@ export default function ManajemenDashboard() {
                   )}
                 </div>
                 {selectedCurveWeek && (
-                  <div className="border-t border-navy-100 bg-navy-50/60 p-4 sm:p-5">
+                  <div className="border-t border-line bg-canvas/60 p-4 sm:p-5">
                     <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
                       <div>
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">
-                          Selected week
-                        </p>
-                        <h4 className="mt-1 text-base font-semibold text-navy-800">
+                        <h4 className="text-section text-ink">
                           Week {selectedCurveWeek} reported work
                         </h4>
                       </div>
-                      <p className="text-xs text-navy-500">
+                      <p className="text-xs text-ink-secondary">
                         Planned cumulative: {sCurveData.rencana[selectedCurveWeek - 1] ?? 0}% ·
                         {' '}Actual cumulative: {sCurveData.realisasi[selectedCurveWeek - 1] ?? '—'}%
                       </p>
                     </div>
                     {laporan.filter((report) => Number(report.minggu_ke) === selectedCurveWeek).length ? (
-                      <div className="mt-3 divide-y divide-navy-200 overflow-hidden surface">
+                      <div className="mt-3 divide-y divide-line overflow-hidden surface">
                         {laporan
                           .filter((report) => Number(report.minggu_ke) === selectedCurveWeek)
                           .map((report) => (
@@ -1094,18 +1065,18 @@ export default function ManajemenDashboard() {
                               className="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4"
                             >
                               <div className="min-w-0">
-                                <p className="break-words text-sm font-medium text-navy-800">
-                                  <span className="mr-1 font-mono text-xs text-navy-400">
+                                <p className="break-words text-sm font-medium text-ink">
+                                  <span className="mr-1 font-mono text-xs text-ink-secondary">
                                     {report.kode_pekerjaan}
                                   </span>
                                   {report.nama_pekerjaan}
                                 </p>
-                                <p className="mt-1 text-xs text-navy-500">
+                                <p className="mt-1 text-xs text-ink-secondary">
                                   {Number(report.realisasi_bobot)}% reported · {report.mandor_nama || 'Foreman'} ·{' '}
                                   {formatDate(report.tgl_laporan)}
                                 </p>
                                 {report.catatan_pengawas && (
-                                  <p className="mt-1 whitespace-pre-wrap break-words text-xs text-navy-500">
+                                  <p className="mt-1 whitespace-pre-wrap break-words text-xs text-ink-secondary">
                                     Supervisor note: {report.catatan_pengawas}
                                   </p>
                                 )}
@@ -1120,7 +1091,7 @@ export default function ManajemenDashboard() {
                                       alt: `Week ${report.minggu_ke} · ${report.nama_pekerjaan}`,
                                       subtitle: `Submitted by ${report.mandor_nama || 'Foreman'} on ${formatDate(report.tgl_laporan)} · Status: ${report.status_verifikasi}`
                                     })}
-                                    className="text-xs font-medium text-brand-700 underline decoration-brand-300 underline-offset-2 hover:text-brand-900 transition"
+                                    className="text-xs font-medium text-orange-700 underline decoration-orange-100 underline-offset-2 hover:text-orange-700 transition"
                                   >
                                     View evidence
                                   </button>
@@ -1130,7 +1101,7 @@ export default function ManajemenDashboard() {
                           ))}
                       </div>
                     ) : (
-                      <p className="mt-3 rounded-xl border border-dashed border-navy-300 bg-white px-4 py-5 text-center text-sm text-navy-500">
+                      <p className="mt-3 rounded-xl border border-dashed border-line bg-white px-4 py-5 text-center text-sm text-ink-secondary">
                         No reports were submitted for this week.
                       </p>
                     )}
@@ -1140,28 +1111,26 @@ export default function ManajemenDashboard() {
 
               {/* Cost Estimate items table */}
               <section className="overflow-hidden surface">
-                <div className="flex items-center justify-between border-b border-navy-100 px-5 py-4">
+                <div className="flex items-center justify-between border-b border-line px-5 py-4">
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">Cost Estimate</p>
-                    <h3 className="mt-1 text-sm font-semibold text-navy-800">Work Items</h3>
-                    <p className="mt-0.5 text-xs text-navy-500">Select an item to view its review records and evidence.</p>
+                    <h3 className="text-section text-ink">Work Items</h3>
                   </div>
-                  <span className="rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700 ring-1 ring-brand-200/70">
+                  <span className="rounded-full bg-orange-50 px-2.5 py-1 text-xs font-semibold text-orange-700 ring-1 ring-orange-100/70">
                     {loading ? '—' : rabItems.length} items
                   </span>
                 </div>
                 {loading ? (
-                  <p className="px-5 py-10 text-center text-sm text-navy-400">Loading...</p>
+                  <p className="px-5 py-10 text-center text-sm text-ink-secondary">Loading...</p>
                 ) : rabItems.length === 0 ? (
                   <div className="flex flex-col items-center gap-2 py-14">
-                    <FileText className="h-8 w-8 text-navy-200" />
-                    <p className="text-sm text-navy-400">No work items yet for this project.</p>
+                    <FileText className="h-8 w-8 text-ink-muted" />
+                    <p className="text-sm text-ink-secondary">No work items yet for this project.</p>
                   </div>
                 ) : (
                   <>
                   <div className="hidden max-h-[380px] overflow-auto md:block">
                     <table className="table-soft w-full min-w-[760px] text-left text-sm">
-                      <thead className="sticky top-0 z-[1] bg-navy-50 text-xs text-navy-500 shadow-[inset_0_-1px_0_rgba(226,232,240,1)]">
+                      <thead className="sticky top-0 z-[1] bg-canvas text-xs text-ink-secondary shadow-[inset_0_-1px_0_rgba(226,232,240,1)]">
                         <tr>
                           <th className="px-5 py-3 font-medium">Code</th>
                           <th className="px-5 py-3 font-medium">Work Item</th>
@@ -1171,7 +1140,7 @@ export default function ManajemenDashboard() {
                           <th className="px-5 py-3 text-right font-medium">Weight</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-navy-100">
+                      <tbody className="divide-y divide-line">
                         {rabItems.map((item) => (
                           <tr
                             key={item.id}
@@ -1184,68 +1153,68 @@ export default function ManajemenDashboard() {
                                 setSelectedWorkItemId(item.id);
                               }
                             }}
-                            className="cursor-pointer focus:bg-brand-50 focus:outline-none"
+                            className="cursor-pointer focus:bg-cream focus:outline-none"
                             aria-label={`View reports for ${item.kode_pekerjaan} ${item.nama_pekerjaan}`}
                           >
-                            <td className="px-5 py-3 font-mono text-xs text-navy-500">{item.kode_pekerjaan}</td>
-                            <td className="px-5 py-3 font-medium text-navy-800">
+                            <td className="px-5 py-3 font-mono text-xs text-ink-secondary">{item.kode_pekerjaan}</td>
+                            <td className="px-5 py-3 font-medium text-ink">
                               <span className="flex items-center justify-between gap-3">
                                 <span>{item.nama_pekerjaan}</span>
-                                <ChevronRight className="h-4 w-4 shrink-0 text-navy-400" />
+                                <ChevronRight className="h-4 w-4 shrink-0 text-ink-secondary" />
                               </span>
                             </td>
-                            <td className="px-5 py-3 text-right text-xs tabular-nums text-navy-500">
+                            <td className="px-5 py-3 text-right text-xs tabular-nums text-ink-secondary">
                               {item.volume ? `${item.volume} ${item.satuan || ''}` : '—'}
                             </td>
-                            <td className="px-5 py-3 text-right text-xs tabular-nums text-navy-500 whitespace-nowrap">
+                            <td className="px-5 py-3 text-right text-xs tabular-nums text-ink-secondary whitespace-nowrap">
                               {formatIDR(item.harga_satuan ?? item.unit_price)}
                             </td>
-                            <td className="px-5 py-3 text-right text-xs tabular-nums text-navy-700 whitespace-nowrap">
+                            <td className="px-5 py-3 text-right text-xs tabular-nums text-ink whitespace-nowrap">
                               {formatIDR(item.total_harga ?? item.total_price)}
                             </td>
                             <td className="px-5 py-3 text-right tabular-nums">
-                              <span className="font-semibold text-brand-700">{item.bobot_persen}%</span>
+                              <span className="badge badge-weight tabular-nums">{item.bobot_persen}%</span>
                             </td>
                           </tr>
                         ))}
                       </tbody>
-                      <tfoot className="sticky bottom-0 bg-brand-50/80 text-xs backdrop-blur">
+                      <tfoot className="sticky bottom-0 bg-canvas text-xs">
                         <tr>
                           <td className="px-5 py-3" />
-                          <td className="px-5 py-3 font-semibold text-navy-800" colSpan={3}>Total</td>
-                          <td className="px-5 py-3 text-right font-semibold tabular-nums text-navy-800 whitespace-nowrap">
+                          <td className="px-5 py-3 font-semibold text-ink" colSpan={3}>Total</td>
+                          <td className="px-5 py-3 text-right font-semibold tabular-nums text-ink whitespace-nowrap">
                             {formatIDR(rabItems.reduce((sum, it) => sum + Number(it.total_harga ?? it.total_price ?? 0), 0))}
                           </td>
-                          <td className="px-5 py-3 text-right font-semibold tabular-nums text-brand-700">
+                          <td className="px-5 py-3 text-right font-semibold tabular-nums text-orange-700">
                             {rabItems.reduce((sum, it) => sum + Number(it.bobot_persen || 0), 0).toFixed(2)}%
                           </td>
                         </tr>
                       </tfoot>
                     </table>
                   </div>
-                  <div className="divide-y divide-navy-100 md:hidden">
+                  <div className="divide-y divide-line md:hidden">
                     {rabItems.map((item) => (
                       <button
                         key={item.id}
                         type="button"
                         onClick={() => setSelectedWorkItemId(item.id)}
-                        className="flex w-full items-center justify-between gap-3 p-4 text-left transition hover:bg-brand-50/60 focus:bg-brand-50 focus:outline-none"
+                        className="flex w-full items-center justify-between gap-3 p-4 text-left transition hover:bg-orange-50/60 focus:bg-orange-50 focus:outline-none"
                         aria-label={`View reports for ${item.kode_pekerjaan} ${item.nama_pekerjaan}`}
                       >
                         <span className="min-w-0">
-                          <span className="block font-mono text-[11px] text-navy-400">{item.kode_pekerjaan}</span>
-                          <span className="mt-1 block break-words text-sm font-medium leading-5 text-navy-800">
+                          <span className="block font-mono text-[11px] text-ink-secondary">{item.kode_pekerjaan}</span>
+                          <span className="mt-1 block break-words text-sm font-medium leading-5 text-ink">
                             {item.nama_pekerjaan}
                           </span>
-                          <span className="mt-1 block text-xs text-navy-500">
+                          <span className="mt-1 block text-xs text-ink-secondary">
                             {item.volume ? `${item.volume} ${item.satuan || ''} · ` : ''}
                             Weight {Number(item.bobot_persen).toFixed(2)}%
                           </span>
-                          <span className="mt-0.5 block text-xs text-navy-400">
+                          <span className="mt-0.5 block text-xs text-ink-secondary">
                             {formatIDR(item.harga_satuan ?? item.unit_price)} / unit · Total {formatIDR(item.total_harga ?? item.total_price)}
                           </span>
                         </span>
-                        <ChevronRight className="h-4 w-4 shrink-0 text-navy-400" />
+                        <ChevronRight className="h-4 w-4 shrink-0 text-ink-secondary" />
                       </button>
                     ))}
                   </div>
@@ -1258,10 +1227,10 @@ export default function ManajemenDashboard() {
             <aside className="space-y-4">
               {/* Info Proyek */}
               <div className="overflow-hidden surface">
-                <div className="border-b border-navy-100 px-5 py-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-400">Project Info</p>
+                <div className="border-b border-line px-5 py-3">
+                  <h3 className="text-section text-ink">Project Info</h3>
                 </div>
-                <dl className="divide-y divide-navy-100">
+                <dl className="divide-y divide-line">
                   <InfoRow
                     icon={<FolderKanban className="h-4 w-4" />}
                     label="Project Name"
@@ -1294,18 +1263,18 @@ export default function ManajemenDashboard() {
 
               {/* Report summary */}
               <div className="overflow-hidden surface">
-                <div className="border-b border-navy-100 px-4 py-3.5 sm:px-5">
-                  <h3 className="text-sm font-semibold text-navy-800">Report summary</h3>
+                <div className="border-b border-line px-4 py-3.5 sm:px-5">
+                  <h3 className="text-section text-ink">Report summary</h3>
                 </div>
-                <div className="divide-y divide-navy-100 px-4 sm:px-5">
+                <div className="divide-y divide-line px-4 sm:px-5">
                   {[
-                    { label: 'Pending review', value: pendingCount, tone: 'text-amber-700' },
-                    { label: 'Approved', value: approvedCount, tone: 'text-emerald-700' },
-                    { label: 'Rejected', value: rejectedCount, tone: 'text-rose-700' },
-                    { label: 'Total reports', value: laporan.length, tone: 'text-navy-800' },
+                    { label: 'Pending review', value: pendingCount, tone: 'text-warning-text' },
+                    { label: 'Approved', value: approvedCount, tone: 'text-success-text' },
+                    { label: 'Rejected', value: rejectedCount, tone: 'text-danger' },
+                    { label: 'Total reports', value: laporan.length, tone: 'text-ink' },
                   ].map((row) => (
                     <div key={row.label} className="flex items-center justify-between gap-4 py-3">
-                      <span className="text-sm text-navy-600">{row.label}</span>
+                      <span className="text-sm text-ink-secondary">{row.label}</span>
                       <span className={`text-sm font-semibold tabular-nums ${row.tone}`}>
                         {loading ? '—' : row.value}
                       </span>
@@ -1319,7 +1288,7 @@ export default function ManajemenDashboard() {
                 <div className="surface p-4">
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="text-xs font-medium text-navy-500">Schedule variance</p>
+                      <p className="text-xs font-medium text-ink-secondary">Schedule variance</p>
                       <p className={`mt-1 text-sm font-semibold ${scheduleTone.value}`}>
                         {delayStatus === 'ahead'
                           ? 'Ahead of schedule'
@@ -1334,7 +1303,7 @@ export default function ManajemenDashboard() {
                       {deviasi != null ? `${deviasi > 0 ? '+' : ''}${deviasi}%` : '—'}
                     </p>
                   </div>
-                  <p className="mt-2 border-t border-navy-100 pt-2 text-xs leading-5 text-navy-500">
+                  <p className="mt-2 border-t border-line pt-2 text-xs leading-5 text-ink-secondary">
                     {deviasi != null
                       ? `Difference between actual progress (${lastRealisasi}%) and planned progress (${plannedAtCutoff}%)${currentWeekNumber ? ` at Week ${currentWeekNumber}` : ''}.`
                       : 'No approved progress reports yet for this project.'}
@@ -1361,7 +1330,7 @@ export default function ManajemenDashboard() {
         projectToEdit &&
         createPortal(
           <div
-            className="fixed inset-0 z-[70] flex items-center justify-center bg-navy-900/30 p-4 backdrop-blur-sm anim-fade"
+            className="fixed inset-0 z-[70] flex items-center justify-center bg-navy-950/40 p-4 backdrop-blur-sm anim-fade"
             onClick={() => {
               if (!savingEdit) setProjectToEdit(null);
             }}
@@ -1371,20 +1340,17 @@ export default function ManajemenDashboard() {
               aria-modal="true"
               aria-labelledby="edit-project-title"
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-lg overflow-hidden rounded-2xl border border-white/70 bg-white shadow-lift ring-1 ring-navy-900/5 anim-scale"
+              className="w-full max-w-lg overflow-hidden rounded-dialog border border-line bg-surface shadow-dialog anim-scale"
             >
-              <div className="flex items-start justify-between gap-3 border-b border-navy-100 px-5 py-4">
+              <div className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-700">
                     <Pencil className="h-5 w-5" />
                   </span>
                   <div>
-                    <h3 id="edit-project-title" className="text-base font-semibold text-navy-800">
+                    <h3 id="edit-project-title" className="text-base font-semibold text-ink">
                       Edit Project Details
                     </h3>
-                    <p className="text-xs text-navy-500">
-                      Update the project name, location, or contract schedule dates.
-                    </p>
                   </div>
                 </div>
                 <button
@@ -1392,7 +1358,7 @@ export default function ManajemenDashboard() {
                   disabled={savingEdit}
                   onClick={() => setProjectToEdit(null)}
                   aria-label="Close"
-                  className="rounded-lg p-1.5 text-navy-400 hover:bg-navy-100 hover:text-navy-600 disabled:opacity-50"
+                  className="rounded-lg p-1.5 text-ink-secondary hover:bg-canvas hover:text-ink-secondary disabled:opacity-50"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -1401,8 +1367,8 @@ export default function ManajemenDashboard() {
               <form onSubmit={handleSaveEditProject}>
                 <div className="space-y-4 px-5 py-4">
                   <div>
-                    <label className="mb-1.5 block text-xs font-medium text-navy-700">
-                      Project Name <span className="text-rose-500">*</span>
+                    <label className="field-label">
+                      Project Name <span className="text-danger">*</span>
                     </label>
                     <input
                       type="text"
@@ -1412,12 +1378,12 @@ export default function ManajemenDashboard() {
                         setEditForm((prev) => ({ ...prev, nama_proyek: e.target.value }))
                       }
                       placeholder="Enter project name"
-                      className="w-full rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-base text-navy-800 sm:text-sm outline-none hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
+                      className="field"
                     />
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-medium text-navy-700">
+                    <label className="field-label">
                       Location
                     </label>
                     <input
@@ -1427,13 +1393,13 @@ export default function ManajemenDashboard() {
                         setEditForm((prev) => ({ ...prev, lokasi: e.target.value }))
                       }
                       placeholder="Enter project site location"
-                      className="w-full rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-base text-navy-800 sm:text-sm outline-none hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
+                      className="field"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1.5 block text-xs font-medium text-navy-700">
+                      <label className="field-label">
                         Start Date
                       </label>
                       <input
@@ -1442,11 +1408,11 @@ export default function ManajemenDashboard() {
                         onChange={(e) =>
                           setEditForm((prev) => ({ ...prev, tgl_mulai: e.target.value }))
                         }
-                        className="w-full rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-base text-navy-800 sm:text-sm outline-none hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
+                        className="field"
                       />
                     </div>
                     <div>
-                      <label className="mb-1.5 block text-xs font-medium text-navy-700">
+                      <label className="field-label">
                         Target End Date
                       </label>
                       <input
@@ -1455,16 +1421,16 @@ export default function ManajemenDashboard() {
                         onChange={(e) =>
                           setEditForm((prev) => ({ ...prev, tgl_selesai: e.target.value }))
                         }
-                        className="w-full rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-base text-navy-800 sm:text-sm outline-none hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
+                        className="field"
                       />
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-3 rounded-xl border border-brand-100 bg-cream px-3.5 py-3">
+                  <div className="flex items-center justify-between gap-3 rounded-xl border border-line bg-canvas px-3.5 py-3">
                     <div className="min-w-0">
-                      <p className="text-xs font-medium text-navy-800">Update Cost Estimate Items (.xlsx)</p>
-                      <p className="mt-0.5 text-[11px] text-navy-500">
-                        Re-upload an Excel file to replace work items and weekly planned weights.
+                      <p className="flex items-center gap-1.5 text-[13px] font-semibold text-ink">
+                        Update Cost Estimate Items (.xlsx)
+                        <span tabIndex={0} role="img" aria-label="Re-upload an Excel file to replace work items and weekly planned weights." title="Re-upload an Excel file to replace work items and weekly planned weights." className="inline-flex cursor-help rounded-full text-ink-muted hover:text-orange-500"><Info className="h-3.5 w-3.5" /></span>
                       </p>
                     </div>
                     <button
@@ -1475,7 +1441,7 @@ export default function ManajemenDashboard() {
                         selectProject(targetId);
                         router.push('/dashboard/manajemen/import-rab');
                       }}
-                      className="btn-secondary shrink-0 rounded-lg px-2.5 py-1.5 text-xs"
+                      className="btn-secondary shrink-0 px-2.5"
                     >
                       <Upload className="h-3.5 w-3.5" />
                       Upload Excel
@@ -1483,19 +1449,19 @@ export default function ManajemenDashboard() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-end gap-2.5 border-t border-navy-100 bg-navy-50/70 px-5 py-3.5">
+                <div className="flex items-center justify-end gap-2.5 border-t border-line bg-canvas px-5 py-3.5">
                   <button
                     type="button"
                     disabled={savingEdit}
                     onClick={() => setProjectToEdit(null)}
-                    className="btn-secondary px-4 py-2 text-xs font-semibold"
+                    className="btn-secondary px-4 font-semibold"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={savingEdit}
-                    className="btn-primary px-4 py-2 text-xs"
+                    className="btn-primary px-4"
                   >
                     {savingEdit ? (
                       <>
@@ -1518,7 +1484,7 @@ export default function ManajemenDashboard() {
         projectToDelete &&
         createPortal(
           <div
-            className="fixed inset-0 z-[70] flex items-center justify-center bg-navy-900/30 p-4 backdrop-blur-sm anim-fade"
+            className="fixed inset-0 z-[70] flex items-center justify-center bg-navy-950/40 p-4 backdrop-blur-sm anim-fade"
             onClick={() => {
               if (!deletingProject) setProjectToDelete(null);
             }}
@@ -1528,18 +1494,18 @@ export default function ManajemenDashboard() {
               aria-modal="true"
               aria-labelledby="delete-project-title"
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md overflow-hidden rounded-2xl border border-white/70 bg-white shadow-lift ring-1 ring-navy-900/5 anim-scale"
+              className="w-full max-w-md overflow-hidden rounded-dialog border border-line bg-surface shadow-dialog anim-scale"
             >
-              <div className="flex items-start justify-between gap-3 border-b border-navy-100 px-5 py-4">
+              <div className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-danger-soft text-danger">
                     <Trash2 className="h-5 w-5" />
                   </span>
                   <div>
-                    <h3 id="delete-project-title" className="text-base font-semibold text-navy-800">
+                    <h3 id="delete-project-title" className="text-base font-semibold text-ink">
                       Delete project?
                     </h3>
-                    <p className="text-xs text-navy-500">This action cannot be undone.</p>
+                    <p className="text-xs text-ink-secondary">This action cannot be undone.</p>
                   </div>
                 </div>
                 <button
@@ -1547,26 +1513,26 @@ export default function ManajemenDashboard() {
                   disabled={deletingProject}
                   onClick={() => setProjectToDelete(null)}
                   aria-label="Close"
-                  className="rounded-lg p-1.5 text-navy-400 hover:bg-navy-100 hover:text-navy-600 disabled:opacity-50"
+                  className="rounded-lg p-1.5 text-ink-secondary hover:bg-canvas hover:text-ink-secondary disabled:opacity-50"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <div className="px-5 py-4">
-                <p className="text-sm leading-6 text-navy-600">
+                <p className="text-sm leading-6 text-ink-secondary">
                   Are you sure you want to permanently delete{' '}
-                  <span className="font-semibold text-navy-800">&ldquo;{projectToDelete.nama_proyek}&rdquo;</span>?
+                  <span className="font-semibold text-ink">&ldquo;{projectToDelete.nama_proyek}&rdquo;</span>?
                   All associated Cost Estimate work items, weekly planned schedules, and progress reports will also be deleted.
                 </p>
               </div>
 
-              <div className="flex items-center justify-end gap-2.5 border-t border-navy-100 bg-navy-50/70 px-5 py-3.5">
+              <div className="flex items-center justify-end gap-2.5 border-t border-line bg-canvas px-5 py-3.5">
                 <button
                   type="button"
                   disabled={deletingProject}
                   onClick={() => setProjectToDelete(null)}
-                  className="btn-secondary px-4 py-2 text-xs font-semibold"
+                  className="btn-secondary px-4 font-semibold"
                 >
                   Cancel
                 </button>
@@ -1574,7 +1540,7 @@ export default function ManajemenDashboard() {
                   type="button"
                   disabled={deletingProject}
                   onClick={handleConfirmDeleteProject}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-700 disabled:opacity-60 transition"
+                  className="btn-danger"
                 >
                   {deletingProject ? (
                     <>

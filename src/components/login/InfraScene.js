@@ -1,11 +1,12 @@
 'use client';
 
 // Lightweight low-poly infrastructure scene for the login visual panel.
-// Loaded only via next/dynamic (ssr: false) from LoginVisual — never imported by dashboards.
+// Loaded only via next/dynamic (ssr: false) from LoginVisual.
 
 import { useMemo, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { ReadySignal, usePageVisible } from '@/components/three/sceneUtils';
 
 const NAVY = '#1f2a40';
 const NAVY_LIGHT = '#36425c';
@@ -127,9 +128,7 @@ function Skyline() {
 function Ground() {
   return (
     <group position={[0, -1.2, 0]}>
-      <gridHelper args={[16, 32, ORANGE, '#36425c']} position={[0, 0.001, 0]}>
-        {/* keep grid subtle */}
-      </gridHelper>
+      <gridHelper args={[16, 32, ORANGE, '#36425c']} position={[0, 0.001, 0]} />
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[8, 6]} />
         <meshStandardMaterial color="#131c2e" roughness={1} flatShading />
@@ -153,26 +152,35 @@ function Rig({ animate }) {
   );
 }
 
-export default function InfraScene({ reducedMotion = false, onReady }) {
+// compact: small version for the bottom of the navy dashboard sidebar. Same scene, wider framing,
+// fog matched to the sidebar navy (#131c2e) so the edges melt into it. Login uses the default.
+const FRAMING = {
+  full: { camera: { position: [6.5, 4.2, 7.5], fov: 38, near: 0.1, far: 60 }, fog: ['#0b1324', 9, 22], scale: 0.82 },
+  compact: { camera: { position: [7.6, 5.2, 8.8], fov: 36, near: 0.1, far: 60 }, fog: ['#131c2e', 10, 21], scale: 0.86 },
+};
+
+export default function InfraScene({ reducedMotion = false, compact = false, onReady }) {
+  const pageVisible = usePageVisible();
+  // Reduced motion → a single static frame. Hidden tab → stop the loop ("demand").
+  const animate = !reducedMotion && pageVisible;
+  const f = compact ? FRAMING.compact : FRAMING.full;
+
   return (
     <Canvas
-      // reduced motion: render once on demand and never loop
-      frameloop={reducedMotion ? 'demand' : 'always'}
+      frameloop={animate ? 'always' : 'demand'}
       dpr={[1, 1.5]}
-      camera={{ position: [6.5, 4.2, 7.5], fov: 38, near: 0.1, far: 60 }}
+      camera={f.camera}
       gl={{ antialias: true, alpha: true, powerPreference: 'low-power' }}
-      onCreated={({ camera }) => {
-        camera.lookAt(0, 0.6, 0);
-        onReady?.();
-      }}
+      onCreated={({ camera }) => camera.lookAt(0, 0.6, 0)}
       aria-hidden="true"
     >
-      <fog attach="fog" args={['#0b1324', 9, 22]} />
+      <ReadySignal onReady={onReady} />
+      <fog attach="fog" args={f.fog} />
       <ambientLight intensity={0.55} />
       <hemisphereLight args={['#ffd9c4', '#0b1324', 0.6]} />
       <directionalLight position={[5, 8, 4]} intensity={1.4} color="#ffffff" />
       <pointLight position={[-3, 2, 3]} intensity={6} distance={10} color={ORANGE} />
-      <group scale={0.82} position={[0, -0.2, 0]}>
+      <group scale={f.scale} position={[0, -0.2, 0]}>
         <Rig animate={!reducedMotion} />
       </group>
     </Canvas>

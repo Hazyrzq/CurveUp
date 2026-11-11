@@ -43,13 +43,13 @@ export default function ImageLightbox({
       }}
     >
       {/* Top Header / Bar */}
-      <div className="flex w-full max-w-5xl items-center justify-between text-navy-800 shrink-0 z-10">
+      <div className="flex w-full max-w-5xl items-center justify-between text-ink shrink-0 z-10">
         <div className="min-w-0 pr-4">
-          <p className="truncate text-sm font-semibold tracking-tight text-navy-800 sm:text-base">
+          <p className="truncate text-sm font-semibold tracking-tight text-ink sm:text-base">
             {alt}
           </p>
           {subtitle && (
-            <p className="truncate text-xs text-navy-500 mt-0.5">{subtitle}</p>
+            <p className="truncate text-xs text-ink-secondary mt-0.5">{subtitle}</p>
           )}
         </div>
 
@@ -58,7 +58,7 @@ export default function ImageLightbox({
             type="button"
             onClick={() => setIsZoomed(!isZoomed)}
             aria-label={isZoomed ? 'Zoom out' : 'Zoom in'}
-            className="btn-secondary hidden h-9 w-9 rounded-lg sm:inline-flex active:scale-95"
+            className="btn-secondary hidden w-10 px-0 sm:inline-flex active:scale-95"
           >
             {isZoomed ? <ZoomOut className="h-4 w-4" /> : <ZoomIn className="h-4 w-4" />}
           </button>
@@ -67,7 +67,7 @@ export default function ImageLightbox({
             target="_blank"
             rel="noreferrer"
             aria-label="Open original image in new tab"
-            className="btn-secondary h-9 rounded-lg px-3 text-xs active:scale-95"
+            className="btn-secondary px-3 active:scale-95"
           >
             <ExternalLink className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Original</span>
@@ -76,7 +76,7 @@ export default function ImageLightbox({
             type="button"
             onClick={onClose}
             aria-label="Close image preview"
-            className="btn-primary h-9 w-9 rounded-lg active:scale-95"
+            className="btn-primary w-10 px-0 active:scale-95"
           >
             <X className="h-5 w-5" />
           </button>
@@ -94,17 +94,13 @@ export default function ImageLightbox({
           src={src}
           alt={alt}
           onClick={() => setIsZoomed(!isZoomed)}
-          className={`rounded-2xl object-contain shadow-lift ring-1 ring-navy-200/70 transition-transform duration-200 cursor-zoom-in select-none ${
-            isZoomed
-              ? 'scale-150 cursor-zoom-out'
-              : 'max-h-[75vh] w-auto max-w-full'
-          }`}
+          className={`rounded-card object-contain shadow-card-hover ring-1 ring-line transition-transform duration-200 cursor-zoom-in select-none ${ isZoomed ? 'scale-150 cursor-zoom-out' : 'max-h-[75vh] w-auto max-w-full' }`}
         />
       </div>
 
       {/* Bottom Caption Bar */}
       {caption && (
-        <div className="w-full max-w-2xl rounded-full bg-white/90 px-4 py-2 text-center text-xs text-navy-500 shadow-soft backdrop-blur-sm shrink-0 z-10 border border-navy-200/70">
+        <div className="w-full max-w-2xl rounded-full bg-surface px-4 py-2 text-center text-xs text-ink-secondary shadow-card shrink-0 z-10 border border-line">
           {caption}
         </div>
       )}

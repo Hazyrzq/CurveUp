@@ -83,23 +83,26 @@ export default function LoginPage() {
   return (
     <div className="min-h-[100dvh] w-full max-w-full overflow-x-hidden bg-canvas flex items-center justify-center p-3 sm:p-8 anim-fade">
       {transition === 'exit' && (
+        // Sign-in transition: light canvas + navy card + orange accents (same balance as the login page)
         <div
           aria-hidden="true"
-          className="login-overlay fixed inset-0 z-[120] flex flex-col items-center justify-center bg-[radial-gradient(120%_90%_at_50%_40%,#fff8f1_0%,#ffe7d9_55%,#fd6925_140%)]"
+          className="login-overlay fixed inset-0 z-[120] flex items-center justify-center bg-canvas p-6"
         >
-          <div className="login-overlay-mark flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 shadow-glow">
-              <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round">
-                <path d="M4 19c5 0 6-14 16-14" />
-                <path d="M4 19h16" strokeOpacity="0.55" />
-              </svg>
-            </span>
-            <span className="text-2xl font-semibold tracking-tight text-navy-800">CurveUp</span>
+          <div className="login-overlay-mark flex w-full max-w-sm flex-col items-center rounded-[28px] bg-navy-900 px-8 py-10 shadow-dialog">
+            <div className="flex items-center gap-3">
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-500">
+                <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round">
+                  <path d="M4 19c5 0 6-14 16-14" />
+                  <path d="M4 19h16" strokeOpacity="0.55" />
+                </svg>
+              </span>
+              <span className="text-2xl font-semibold tracking-tight text-white">CurveUp</span>
+            </div>
+            <svg viewBox="0 0 240 70" className="mt-6 h-16 w-60" fill="none" strokeLinecap="round">
+              <path d="M6 64h228" stroke="currentColor" className="text-navy-600" strokeWidth="2" />
+              <path className="login-curve text-orange-500" pathLength="1" d="M6 64C70 64 82 58 110 36S170 6 234 6" stroke="currentColor" strokeWidth="4" />
+            </svg>
           </div>
-          <svg viewBox="0 0 240 70" className="mt-6 h-16 w-60" fill="none" strokeLinecap="round">
-            <path d="M6 64h228" stroke="#fd6925" strokeOpacity="0.2" strokeWidth="2" />
-            <path className="login-curve" pathLength="1" d="M6 64C70 64 82 58 110 36S170 6 234 6" stroke="#fd6925" strokeWidth="4" />
-          </svg>
         </div>
       )}
       {toast && (
@@ -124,16 +127,16 @@ export default function LoginPage() {
                   <path d="M4 19h16" strokeOpacity="0.55" />
                 </svg>
               </span>
-              <p className="text-base font-semibold tracking-tight text-navy-800">CurveUp</p>
+              <p className="text-base font-semibold tracking-tight text-legacy-800">CurveUp</p>
             </div>
 
-            <h1 className="text-[28px] font-semibold leading-tight tracking-tight text-navy-800 anim-up-1">Sign in to CurveUp</h1>
-            <p className="mt-2 text-sm leading-6 text-navy-500 anim-up-1">Choose your role, then enter your account details.</p>
+            <h1 className="text-[28px] font-semibold leading-tight tracking-tight text-legacy-800 anim-up-1">Sign in to CurveUp</h1>
+            <p className="mt-2 text-sm leading-6 text-legacy-500 anim-up-1">Choose your role, then enter your account details.</p>
 
             <form onSubmit={handleLogin} className="mt-8 space-y-5 anim-up-2">
               <div>
-                <p className="mb-2 text-sm font-medium text-navy-700">Your role</p>
-                <div className="grid grid-cols-3 gap-1 rounded-2xl border border-navy-200/80 bg-navy-50/80 p-1">
+                <p className="mb-2 text-sm font-medium text-legacy-700">Your role</p>
+                <div className="grid grid-cols-3 gap-1 rounded-2xl border border-legacy-200/80 bg-legacy-50/80 p-1">
                   {ROLES.map((r) => {
                     const Icon = r.icon;
                     const active = selectedRole === r.id;
@@ -148,11 +151,11 @@ export default function LoginPage() {
                         }}
                         className={`flex min-h-[44px] min-w-0 items-center justify-center gap-1.5 rounded-xl px-2 py-2 text-xs font-semibold duration-200 sm:text-[13px] ${
                           active
-                            ? 'bg-white text-navy-800 shadow-soft ring-1 ring-brand-200'
-                            : 'text-navy-500 hover:bg-white/70 hover:text-navy-700'
+                            ? 'bg-white text-legacy-800 shadow-soft ring-1 ring-brand-200'
+                            : 'text-legacy-500 hover:bg-white/70 hover:text-legacy-700'
                         }`}
                       >
-                        <Icon className={`h-4 w-4 shrink-0 duration-200 ${active ? 'text-brand-500' : 'text-navy-400'}`} />
+                        <Icon className={`h-4 w-4 shrink-0 duration-200 ${active ? 'text-brand-500' : 'text-legacy-400'}`} />
                         <span className="truncate">{r.label}</span>
                       </button>
                     );
@@ -161,7 +164,7 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-navy-700">Username</label>
+                <label className="mb-1.5 block text-sm font-medium text-legacy-700">Username</label>
                 <input
                   type="text"
                   value={username}
@@ -169,12 +172,12 @@ export default function LoginPage() {
                   required
                   autoComplete="username"
                   placeholder="Enter your username"
-                  className="w-full rounded-xl border border-navy-200 bg-white px-4 py-3 text-base text-navy-800 shadow-sm placeholder:text-navy-400 hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 md:text-sm"
+                  className="w-full rounded-xl border border-legacy-200 bg-white px-4 py-3 text-base text-legacy-800 shadow-sm placeholder:text-legacy-400 hover:border-legacy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 md:text-sm"
                 />
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-navy-700">Password</label>
+                <label className="mb-1.5 block text-sm font-medium text-legacy-700">Password</label>
                 <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -183,12 +186,12 @@ export default function LoginPage() {
                     required
                     autoComplete="current-password"
                     placeholder="Enter your password"
-                    className="w-full rounded-xl border border-navy-200 bg-white px-4 py-3 text-base text-navy-800 shadow-sm placeholder:text-navy-400 hover:border-navy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 md:text-sm pr-11"
+                    className="w-full rounded-xl border border-legacy-200 bg-white px-4 py-3 text-base text-legacy-800 shadow-sm placeholder:text-legacy-400 hover:border-legacy-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 md:text-sm pr-11"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-navy-400 hover:text-brand-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-legacy-400 hover:text-brand-600"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -201,7 +204,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading || transition !== 'idle'}
-                className="btn-primary btn-press w-full py-3.5 text-sm disabled:!opacity-100"
+                className="login-btn-primary btn-press w-full py-3.5 text-sm disabled:!opacity-100"
               >
                 {transition !== 'idle' ? (
                   <span className="login-check inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/25">
@@ -220,9 +223,9 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className="relative hidden min-h-[620px] overflow-hidden bg-navy-950 md:flex">
+        <div className="relative hidden min-h-[620px] overflow-hidden bg-legacy-950 md:flex">
           <LoginVisual />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-navy-950/50 via-transparent to-navy-950/85" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-legacy-950/50 via-transparent to-legacy-950/85" />
           <div className="pointer-events-none relative z-10 flex w-full flex-col justify-between p-8 xl:p-10">
             <div className="flex items-center gap-3 text-white">
               <p className="text-xs font-semibold uppercase tracking-[0.12em]">Project delivery</p>

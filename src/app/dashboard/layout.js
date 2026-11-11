@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import { ProjectProvider } from '@/components/ProjectContext';
+import { MotionProvider } from '@/components/motion';
 import { useScrollLock } from '@/lib/useScrollLock';
 
 const ROLE_HOME = {
@@ -92,18 +93,41 @@ function DashboardShell({ children }) {
   };
 
   if (!ready) {
-    return <div className="min-h-screen bg-canvas" />;
+    // Shell skeleton while the session is checked: navy sidebar + light content (no single-color flash).
+    return (
+      <div aria-busy="true" className="h-[100dvh] w-full overflow-hidden bg-canvas p-0 sm:p-6 lg:p-8">
+        <div className="mx-auto flex h-full w-full max-w-[1400px] overflow-hidden border-line sm:h-[calc(100dvh-3rem)] sm:rounded-2xl sm:border sm:shadow-card md:rounded-[28px] lg:h-[calc(100dvh-4rem)]">
+          <div className="hidden w-[220px] shrink-0 bg-navy-900 p-4 md:block lg:w-[250px] lg:p-5">
+            <div className="flex items-center gap-2.5 px-1">
+              <span className="h-8 w-8 rounded-lg bg-orange-500" />
+              <span className="h-3 w-20 rounded-full bg-white/15" />
+            </div>
+            <div className="mt-6 h-10 rounded-lg bg-white/10" />
+          </div>
+          <div className="flex min-w-0 flex-1 flex-col">
+            <div className="h-14 shrink-0 border-b border-line bg-surface sm:h-16" />
+            <div className="flex-1 space-y-4 bg-canvas p-4 sm:p-6 lg:p-8">
+              <div className="h-24 rounded-card border border-line bg-surface" />
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                <div className="h-28 rounded-card border border-line bg-surface" />
+                <div className="h-28 rounded-card border border-line bg-surface" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="h-[100dvh] w-full max-w-full overflow-hidden bg-white sm:bg-canvas sm:h-auto sm:min-h-screen sm:overflow-visible p-0 sm:p-6 lg:p-8 anim-fade">
-      <div className="relative mx-auto flex h-full w-full max-w-[1400px] flex-col overflow-hidden border-0 sm:border border-white bg-white/80 sm:backdrop-blur-xl ring-0 sm:ring-1 sm:ring-brand-900/5 shadow-none sm:shadow-shell sm:rounded-2xl sm:h-[calc(100dvh-3rem)] md:h-[calc(100dvh-3rem)] md:rounded-[28px] lg:h-[calc(100dvh-4rem)] md:flex-row anim-shell">
+    <div className="h-[100dvh] w-full max-w-full overflow-hidden bg-canvas sm:h-auto sm:min-h-screen sm:overflow-visible p-0 sm:p-6 lg:p-8 anim-fade">
+      <div className="relative mx-auto flex h-full w-full max-w-[1400px] flex-col overflow-hidden border-0 sm:border border-line bg-canvas shadow-none sm:shadow-card sm:rounded-2xl sm:h-[calc(100dvh-3rem)] md:h-[calc(100dvh-3rem)] md:rounded-[28px] lg:h-[calc(100dvh-4rem)] md:flex-row anim-shell">
         <Sidebar
           role={role}
           mobileOpen={mobileSidebarOpen}
           onMobileClose={closeMobileSidebar}
         />
-        <div className="flex-1 min-w-0 w-full max-w-full flex flex-col overflow-hidden bg-white/60">
+        <div className="flex-1 min-w-0 w-full max-w-full flex flex-col overflow-hidden bg-canvas">
           <Navbar
             title={PAGE_TITLE[pathname] || 'Dashboard'}
             userNama={userNama}
@@ -111,7 +135,7 @@ function DashboardShell({ children }) {
             onLogout={handleLogout}
             onMenuClick={() => setMobileSidebarOpen(true)}
           />
-          <main key={pathname} className="min-w-0 w-full max-w-full flex-1 min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain p-3 sm:p-6 anim-page pb-6 bg-transparent">
+          <main key={pathname} className="min-w-0 w-full max-w-full flex-1 min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain p-4 sm:p-6 lg:p-8 anim-page pb-6 bg-canvas">
             {children}
           </main>
         </div>
@@ -123,7 +147,9 @@ function DashboardShell({ children }) {
 export default function DashboardLayout({ children }) {
   return (
     <ProjectProvider>
-      <DashboardShell>{children}</DashboardShell>
+      <MotionProvider>
+        <DashboardShell>{children}</DashboardShell>
+      </MotionProvider>
     </ProjectProvider>
   );
 }

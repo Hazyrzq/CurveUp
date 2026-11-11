@@ -12,7 +12,7 @@ export default function InfraSceneFallback() {
         sizes="(min-width: 768px) 52vw, 0px"
         className="object-cover object-center"
       />
-      <div className="absolute inset-0 bg-gradient-to-br from-navy-950/30 via-navy-950/10 to-brand-900/30 mix-blend-multiply" />
+      <div className="absolute inset-0 bg-gradient-to-br from-legacy-950/30 via-legacy-950/10 to-brand-900/30 mix-blend-multiply" />
     </>
   );
 }

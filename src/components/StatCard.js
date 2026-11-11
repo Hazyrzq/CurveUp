@@ -1,19 +1,20 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import AnimatedCounter from '@/components/AnimatedCounter';
+import { itemVariants } from '@/components/motion';
 
-// Icon chip tints. Status tones (emerald / amber / rose) keep their meaning;
-// orange / sky / teal / violet are decorative accents for neutral metrics.
+// Icon chips (40px). Neutral metrics → orange tint. Status metrics → soft status colors.
 const TONE_CLASSES = {
   orange: 'chip-orange',
-  sky: 'chip-sky',
-  teal: 'chip-teal',
-  violet: 'chip-violet',
-  amber: 'bg-amber-50 text-amber-600 ring-1 ring-amber-200/70',
-  emerald: 'bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200/70',
-  rose: 'bg-rose-50 text-rose-600 ring-1 ring-rose-200/70',
-  slate: 'bg-navy-50 text-navy-500 ring-1 ring-navy-200/70',
+  sky: 'chip-orange',
+  teal: 'chip-orange',
+  violet: 'chip-orange',
+  amber: 'bg-warning-soft text-warning-text',
+  emerald: 'bg-success-soft text-success-text',
+  rose: 'bg-danger-soft text-danger',
+  slate: 'bg-canvas text-ink-secondary',
 };
 
 function renderValue(val) {
@@ -44,19 +45,20 @@ function renderValue(val) {
   return val;
 }
 
+// Inside a <Stagger> grid the card fades up in sequence (variants); elsewhere it renders static.
 export default function StatCard({ icon, label, value, hint, tone = 'slate' }) {
   return (
-    <div className="group relative overflow-hidden surface p-4 card-hover sm:p-5">
-      <div className="flex items-start justify-between gap-2">
-        <div className={`flex h-10 w-10 items-center justify-center rounded-xl transition duration-200 group-hover:scale-105 ${TONE_CLASSES[tone] || TONE_CLASSES.slate}`}>
+    <motion.div variants={itemVariants} className="surface p-4 sm:p-5">
+      <div className="flex min-w-0 flex-wrap items-start justify-between gap-2">
+        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${TONE_CLASSES[tone] || TONE_CLASSES.slate}`}>
           {icon}
         </div>
-        {hint ? <span className="rounded-full bg-navy-50 px-2 py-0.5 text-[11px] font-medium text-navy-500 ring-1 ring-navy-200/60">{hint}</span> : null}
+        {hint ? <span title={hint} className="badge bg-canvas text-ink-secondary">{hint}</span> : null}
       </div>
-      <p className="mt-4 text-xs font-medium text-navy-500">{label}</p>
-      <div className="mt-1 break-words text-[22px] font-semibold leading-tight tracking-tight text-navy-800 tabular-nums sm:text-[28px]">
+      <p className="mt-4 text-xs font-medium text-ink-secondary">{label}</p>
+      <div className="mt-1 break-words text-[22px] font-bold leading-tight tracking-tight text-ink tabular-nums sm:text-[28px]">
         {renderValue(value)}
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -86,7 +86,7 @@ export default function AnimatedCounter({
 
   if (!isNumeric) {
     return <span className={className}>{value}</span>;
-  }
+ }
 
   const formatted = displayValue.toLocaleString('en-US', {
     minimumFractionDigits: targetDecimals,
@@ -95,7 +95,7 @@ export default function AnimatedCounter({
 
   return (
     <span className={className}>
-      {prefix}{formatted}{suffix}
+ {prefix}{formatted}{suffix}
     </span>
   );
 }

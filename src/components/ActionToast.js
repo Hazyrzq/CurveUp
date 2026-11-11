@@ -34,16 +34,16 @@ export default function ActionToast({
 
   const tone = isError
     ? {
-        chip: 'bg-rose-50 text-rose-600 ring-rose-200',
-        bar: 'bg-rose-500',
-        track: 'bg-rose-100',
-        border: 'border-rose-200/80',
+        chip: 'bg-danger-soft text-danger ring-danger/30',
+        bar: 'bg-danger',
+        track: 'bg-danger-soft',
+        border: 'border-danger/30',
       }
     : {
-        chip: 'bg-brand-50 text-brand-600 ring-brand-200',
-        bar: 'bg-gradient-to-r from-brand-400 to-brand-600',
-        track: 'bg-brand-100/70',
-        border: 'border-brand-200/80',
+        chip: 'bg-orange-50 text-orange-600 ring-orange-100',
+        bar: 'bg-orange-500',
+        track: 'bg-orange-100/70',
+        border: 'border-orange-100/80',
       };
 
   return (
@@ -51,7 +51,7 @@ export default function ActionToast({
       <div
         role="status"
         aria-live="polite"
-        className={`pointer-events-auto relative flex w-full max-w-md items-center gap-3.5 overflow-hidden rounded-2xl border ${tone.border} bg-white/95 px-4 py-3.5 shadow-lift backdrop-blur-xl anim-content-enter`}
+        className={`pointer-events-auto relative flex w-full max-w-md items-center gap-3.5 overflow-hidden rounded-2xl border ${tone.border} bg-white/95 px-4 py-3.5 shadow-card-hover backdrop-blur-xl anim-content-enter`}
       >
         <span
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ring-4 ${tone.chip}`}
@@ -59,14 +59,14 @@ export default function ActionToast({
           {isError ? <AlertTriangle className="h-5 w-5" /> : <CheckCircle className="h-5 w-5" />}
         </span>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-navy-800">{title}</p>
-          {message && <p className="mt-0.5 text-xs leading-5 text-navy-500">{message}</p>}
+          <p className="text-sm font-semibold text-ink">{title}</p>
+          {message && <p className="mt-0.5 text-xs leading-5 text-ink-secondary">{message}</p>}
         </div>
         <button
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss message"
-          className="shrink-0 rounded-full p-1.5 text-navy-400 transition hover:bg-navy-100 hover:text-navy-700 active:scale-95"
+          className="shrink-0 rounded-full p-1.5 text-ink-secondary transition hover:bg-canvas hover:text-ink active:scale-95"
         >
           <X className="h-4 w-4" />
         </button>
